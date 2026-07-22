@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+<div class="card shadow border-0 rounded-4">
+
+<div class="card-header bg-primary text-white">
+
+<h4 class="mb-0">
+
+Appoint Course Representative
+
+</h4>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Select Member
+
+</label>
+
+<select
+name="member_id"
+class="form-select"
+required>
+
+<option value="">
+-- Select Member --
+</option>
+
+{% for member in members %}
+
+<option value="{{ member.id }}">
+
+{{ member.first_name }}
+{{ member.last_name }}
+
+—
+
+{{ member.programme }}
+
+—
+
+Level {{ member.level }}
+
+—
+
+{{ member.session }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+    <label class="form-label">
+
+        Position
+
+    </label>
+
+    <select
+        name="position"
+        class="form-select"
+        required>
+
+        <option value="">
+            -- Select Position --
+        </option>
+
+        <option value="Course Rep">
+            Course Representative
+        </option>
+
+        <option value="Assistant Course Rep">
+            Assistant Course Representative
+        </option>
+
+    </select>
+
+</div>
+
+<hr>
+
+<a href="{{ url_for('course_reps.course_reps') }}"
+class="btn btn-secondary">
+
+<i class="bi bi-arrow-left"></i>
+
+Back
+
+</a>
+
+<button
+class="btn btn-success">
+
+<i class="bi bi-check-circle"></i>
+
+Appoint
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

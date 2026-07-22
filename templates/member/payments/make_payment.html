@@ -1,0 +1,101 @@
+{% extends "member_portal/layout.html" %}
+
+{% block title %}Make Payment{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Make Payment</h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="alert alert-info">
+
+                <h5>Payment Details</h5>
+
+                <p><strong>Network:</strong> {{ settings.momo_network }}</p>
+
+                <p><strong>MoMo Number:</strong> {{ settings.momo_number }}</p>
+
+                <p><strong>Account Name:</strong> {{ settings.account_name }}</p>
+
+                <p><strong>Instructions:</strong><br>
+                    {{ settings.payment_instruction }}
+                </p>
+
+            </div>
+
+            <form
+    action="{{ url_for('member_payments.make_payment') }}"
+    method="POST"
+    enctype="multipart/form-data">
+
+                <div class="mb-3">
+                    <label class="form-label">Payment Type</label>
+
+                    <select class="form-select" name="payment_type" required>
+                        <option value="">Select Payment Type</option>
+                        <option>Registration Fee</option>
+                        <option>ESA Dues</option>
+                        <option>Event Fee</option>
+                        <option>Donation</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Amount (GH₵)</label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        class="form-control"
+                        name="amount"
+                        required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Transaction Reference
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="reference"
+                        required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">
+                        Upload Payment Proof
+                    </label>
+
+                    <input
+                        type="file"
+                        class="form-control"
+                        name="proof_image"
+                        accept=".jpg,.jpeg,.png,.pdf"
+                        required>
+                </div>
+
+                <button
+    type="submit"
+    class="btn btn-success">
+    Submit Payment
+</button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

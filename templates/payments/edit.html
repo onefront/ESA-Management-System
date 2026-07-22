@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<a href="javascript:history.back()"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+    Back
+
+</a>
+<div class="container-fluid mt-4">
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-warning text-dark">
+
+            <h4 class="mb-0">
+                <i class="bi bi-pencil-square"></i>
+                Edit Payment
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Payment Type
+                        </label>
+
+                        <select
+                            name="payment_type"
+                            class="form-select"
+                            required>
+
+                            <option value="Registration"
+                                {% if payment.payment_type=="Registration" %}selected{% endif %}>
+                                Registration
+                            </option>
+
+                            <option value="Dues"
+                                {% if payment.payment_type=="Dues" %}selected{% endif %}>
+                                Dues
+                            </option>
+
+                            <option value="Donation"
+                                {% if payment.payment_type=="Donation" %}selected{% endif %}>
+                                Donation
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Amount
+                        </label>
+
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="amount"
+                            value="{{ payment.amount }}"
+                            class="form-control"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Payment Method
+                        </label>
+
+                        <input
+                            type="text"
+                            name="payment_method"
+                            value="{{ payment.payment_method }}"
+                            class="form-control">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Reference
+                        </label>
+
+                        <input
+                            type="text"
+                            name="reference"
+                            value="{{ payment.reference }}"
+                            class="form-control">
+
+                    </div>
+
+                </div>
+
+                <button class="btn btn-warning">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Update Payment
+
+                </button>
+
+                <a href="{{ url_for('payments.payments') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

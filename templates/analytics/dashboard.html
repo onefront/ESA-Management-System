@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-graph-up text-primary"></i>
+
+                Election Analytics
+
+            </h2>
+
+            <p class="text-muted">
+
+                Live election statistics and voter turnout.
+
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('elections.dashboard') }}"
+           class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-people-fill display-4 text-primary"></i>
+                    <h2>{{ total_members }}</h2>
+                    <small class="text-muted">Registered Members</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-check2-square display-4 text-success"></i>
+                    <h2>{{ voted_members }}</h2>
+                    <small class="text-muted">Members Voted</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-x-fill display-4 text-danger"></i>
+                    <h2>{{ remaining_members }}</h2>
+                    <small class="text-muted">Yet To Vote</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-bar-chart-fill display-4 text-warning"></i>
+                    <h2>{{ turnout }}%</h2>
+                    <small class="text-muted">Voter Turnout</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-toggle-on display-4 text-success"></i>
+                    <h2>{{ settings.voting_status }}</h2>
+                    <small class="text-muted">Voting Status</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="bi bi-eye-fill display-4 text-info"></i>
+                    <h2>
+                        {% if settings.results_visible %}
+                            Visible
+                        {% else %}
+                            Hidden
+                        {% endif %}
+                    </h2>
+                    <small class="text-muted">Results Status</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,329 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="dashboard-header mb-5">
+
+    <h2 class="fw-bold">
+        Welcome Back,
+        <span class="text-primary">Administrator 👋</span>
+    </h2>
+
+    <p class="text-muted">
+        Here's what's happening in the ESA Management System today.
+    </p>
+
+</div>
+
+{% if slides %}
+<!--{% set slide = slides[0] %}-->
+{% if slides %}
+
+<div id="dashboardSlider"
+     class="carousel slide mb-4"
+     data-bs-ride="carousel">
+
+    <div class="carousel-indicators">
+
+        {% for slide in slides %}
+        <button type="button"
+                data-bs-target="#dashboardSlider"
+                data-bs-slide-to="{{ loop.index0 }}"
+                class="{% if loop.first %}active{% endif %}">
+        </button>
+        {% endfor %}
+
+    </div>
+
+    <div class="carousel-inner">
+
+        {% for slide in slides %}
+
+        <div class="carousel-item {% if loop.first %}active{% endif %}">
+
+            <div class="card border-0 shadow rounded-4 overflow-hidden">
+
+                <div class="row g-0">
+
+                    <div class="col-lg-7 px-3 py-3 d-flex flex-column justify-content-center">
+
+                        <span class="badge bg-primary rounded-pill mb-3">
+                            ESA MANAGEMENT SYSTEM
+                        </span>
+
+                        <h2 class="fw-bold">
+                            {{ slide.title }}
+                        </h2>
+
+                        <p class="text-muted">
+                            {{ slide.subtitle }}
+                        </p>
+
+                        {% if slide.button_text %}
+                        <a href="{{ slide.button_link or '#' }}"
+                           class="btn btn-primary rounded-pill px-4">
+                            {{ slide.button_text }}
+                        </a>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="col-lg-5">
+
+                        <div class="hero-image-wrapper">
+
+                            <img src="{{ url_for('static', filename=slide.image) }}"
+                                 class="hero-image"
+                                 alt="{{ slide.title }}">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <button class="carousel-control-prev"
+            type="button"
+            data-bs-target="#dashboardSlider"
+            data-bs-slide="prev">
+
+        <span class="carousel-control-prev-icon"></span>
+
+    </button>
+
+    <button class="carousel-control-next"
+            type="button"
+            data-bs-target="#dashboardSlider"
+            data-bs-slide="next">
+
+        <span class="carousel-control-next-icon"></span>
+
+    </button>
+
+</div>
+
+{% endif %}
+
+
+
+{% endif %}
+
+
+
+<div class="row g-4 mb-5">
+
+    <div class="col-xl-2 col-lg-4 col-md-6">
+
+        <div class="card stat-card bg-members h-100">
+
+            <div class="card-body">
+
+                <h6>Total Members</h6>
+
+                <h2>{{ total_members }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-2 col-lg-4 col-md-6">
+
+        <div class="card stat-card bg-programmes h-100">
+
+            <div class="card-body">
+
+                <h6>Programmes</h6>
+
+                <h2>{{ total_programmes }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-2 col-lg-4 col-md-6">
+
+        <div class="card stat-card bg-weekend h-100">
+
+            <div class="card-body">
+
+                <h6>Weekend</h6>
+
+                <h2>{{ weekend_members }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-2 col-lg-4 col-md-6">
+
+        <div class="card stat-card bg-evening h-100">
+
+            <div class="card-body">
+
+                <h6>Evening</h6>
+
+                <h2>{{ evening_members }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-2 col-lg-4 col-md-6">
+
+        <div class="card stat-card bg-revenue h-100">
+
+            <div class="card-body">
+
+                <h6>Total Revenue</h6>
+
+                <h3>GH₵ {{ "{:,.2f}".format(total_revenue) }}</h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-2 col-lg-4 col-md-6">
+
+        <div class="card stat-card bg-payments h-100">
+
+            <div class="card-body">
+
+                <h6>Payments</h6>
+
+                <h2>{{ total_payments }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!--<div class="row g-4">-->
+<div class="row g-4 align-items-stretch">
+
+    <!-- LEFT -->
+    <div class="col-lg-4">
+    <!-- LEFT -->
+<!--    <div class="col-lg-3">-->
+
+        <div class="card border-0 shadow-sm rounded-4 h-80">
+
+            <div class="card-header bg-white border-0 pt-2 px-2">
+                <h4 class="fw-bold mb-0">
+                    Member Distribution
+                </h4>
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="memberChart" height="120"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT -->
+<!--    <div class="col-lg-4">-->
+    <!-- RIGHT -->
+<div class="col-lg-8">
+
+<!--        <div class="card border-0 shadow-sm rounded-4">-->
+    <div class="card border-0 shadow-sm rounded-4 h-100">
+
+            <div class="card-header bg-primary text-white">
+
+                <h5 class="mb-0">
+                    Quick Actions
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="d-grid gap-3">
+
+                    <a href="{{ url_for('members.add_member') }}"
+                       class="btn btn-primary">
+                        Add Member
+                    </a>
+
+                    <a href="{{ url_for('members.members') }}"
+                       class="btn btn-success">
+                        Members
+                    </a>
+
+<!--                    <a href="{{ url_for('attendance.attendance_by_event') }}"-->
+<!--                       class="btn btn-info">-->
+<!--                        Attendance-->
+<!--                    </a>-->
+
+                    <a href="{{ url_for('events.events') }}"
+                       class="btn btn-warning">
+                        Events
+                    </a>
+
+                    <a href="{{ url_for('executives.executives') }}"
+                       class="btn btn-secondary">
+                        Executives
+                    </a>
+
+<!--                    <a href="{{ url_for('members.members_by_programme') }}"-->
+<!--                       class="btn btn-dark">-->
+<!--                        Programmes-->
+<!--                    </a>-->
+
+<!--                    <a href="{{ url_for('members.recent_members') }}"-->
+<!--                       class="btn btn-outline-primary">-->
+<!--                        Recent Members-->
+<!--                    </a>-->
+
+                    <a href="{{ url_for('payments.reports') }}"
+                       class="btn btn-outline-danger">
+                        Payment Reports
+                    </a>
+
+                    <a href="{{ url_for('audit.dashboard') }}"
+                       class="btn btn-outline-dark">
+                        Audit Logs
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

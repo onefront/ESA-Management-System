@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+
+{% block title %}Review Payment{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header">
+            <h4>Review Payment</h4>
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <th>Member</th>
+                    <td>{{ payment.member.full_name if payment.member else "N/A" }}</td>
+                </tr>
+
+                <tr>
+                    <th>Payment Type</th>
+                    <td>{{ payment.payment_type }}</td>
+                </tr>
+
+                <tr>
+                    <th>Amount</th>
+                    <td>GH₵ {{ payment.amount }}</td>
+                </tr>
+
+                <tr>
+                    <th>Reference</th>
+                    <td>{{ payment.reference_number }}</td>
+                </tr>
+
+                <tr>
+                    <th>Status</th>
+                    <td>{{ payment.status }}</td>
+                </tr>
+
+                <tr>
+                    <th>Proof</th>
+                    <td>
+
+                        {% if payment.proof_image %}
+
+                        <a
+                            href="{{ url_for('static', filename='uploads/payments/' ~ payment.proof_image) }}"
+                            target="_blank"
+                            class="btn btn-primary btn-sm">
+
+                            View Proof
+
+                        </a>
+
+                        {% else %}
+
+                        No Proof Uploaded
+
+                        {% endif %}
+
+                    </td>
+                </tr>
+
+            </table>
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Remarks
+                    </label>
+
+                    <textarea
+                        name="remarks"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Enter remarks..."></textarea>
+
+                </div>
+
+                <button
+                    type="submit"
+                    name="action"
+                    value="approve"
+                    class="btn btn-success">
+
+                    Approve
+
+                </button>
+
+                <button
+                    type="submit"
+                    name="action"
+                    value="reject"
+                    class="btn btn-danger">
+
+                    Reject
+
+                </button>
+
+                <a
+                    href="{{ url_for('payment_approval.index') }}"
+                    class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

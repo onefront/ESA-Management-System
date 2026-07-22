@@ -1,0 +1,649 @@
+<!-- ==============================
+     MEMBER FORM COMPONENT
+================================ -->
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-primary text-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-camera-fill"></i>
+
+            Passport Photo
+
+        </h5>
+
+    </div>
+
+    <div class="card-body text-center">
+
+        {% if member and member.passport %}
+
+            <img
+                id="preview"
+                src="{{ url_for('static', filename='uploads/' + member.passport) }}"
+                class="rounded-circle border shadow"
+                width="170"
+                height="170"
+                style="object-fit:cover;">
+
+        {% else %}
+
+            <img
+                id="preview"
+                src="{{ url_for('static', filename='images/default-avatar.png') }}"
+                class="rounded-circle border shadow"
+                width="170"
+                height="170"
+                style="object-fit:cover;">
+
+        {% endif %}
+
+        <div class="mt-4">
+
+            <input
+                type="file"
+                class="form-control"
+                id="passport"
+                name="passport"
+                accept="image/*">
+
+            <small class="text-muted">
+
+                JPG, JPEG or PNG only.
+
+            </small>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==============================
+     PERSONAL INFORMATION
+================================ -->
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-success text-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-person-fill"></i>
+
+            Personal Information
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+            <!-- Student ID -->
+
+<div class="col-md-6 mb-3">
+
+    <label class="form-label fw-bold">
+
+        Student ID
+
+    </label>
+
+    <input
+        type="text"
+        class="form-control"
+        name="student_id"
+        value="{{ member.student_id if member else '' }}"
+        required>
+
+</div>
+
+
+<!-- ESA ID (Admin Only) -->
+
+{% if page != "registration" %}
+
+<div class="col-md-6 mb-3">
+
+    <label class="form-label fw-bold">
+
+        ESA ID
+
+    </label>
+
+    <input
+        type="text"
+        class="form-control"
+        value="{{ member.esa_id if member else 'Automatically Generated' }}"
+        readonly>
+
+</div>
+
+{% endif %}
+
+
+<!-- First Name -->
+
+<div class="col-md-6 mb-3">
+
+    <label class="form-label fw-bold">
+
+        First Name
+
+    </label>
+
+    <input
+        type="text"
+        class="form-control"
+        name="first_name"
+        value="{{ member.first_name if member else '' }}"
+        required>
+
+</div>
+
+
+<!-- Last Name -->
+
+<div class="col-md-6 mb-3">
+
+    <label class="form-label fw-bold">
+
+        Last Name
+
+    </label>
+
+    <input
+        type="text"
+        class="form-control"
+        name="last_name"
+        value="{{ member.last_name if member else '' }}"
+        required>
+
+</div>
+
+
+<!-- Gender -->
+
+<div class="col-md-6 mb-3">
+
+    <label class="form-label fw-bold">
+
+        Gender
+
+    </label>
+
+    <select
+        class="form-select"
+        name="gender"
+        required>
+
+        <option value="">Select Gender</option>
+
+        <option value="Male"
+        {% if member and member.gender=="Male" %}
+        selected
+        {% endif %}>
+        Male
+        </option>
+
+        <option value="Female"
+        {% if member and member.gender=="Female" %}
+        selected
+        {% endif %}>
+        Female
+        </option>
+
+    </select>
+
+</div>
+
+
+<!-- Phone -->
+
+<div class="col-md-6 mb-3">
+
+    <label class="form-label fw-bold">
+
+        Phone Number
+
+    </label>
+
+    <input
+        type="text"
+        class="form-control"
+        name="phone"
+        value="{{ member.phone if member else '' }}"
+        required>
+
+</div>
+
+
+<!-- Email -->
+
+<div class="col-md-6 mb-3">
+
+    <label class="form-label fw-bold">
+
+        Email Address
+
+    </label>
+
+    <input
+        type="email"
+        class="form-control"
+        name="email"
+        value="{{ member.email if member else '' }}"
+        required>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<!-- ==============================
+     ACADEMIC INFORMATION
+================================ -->
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-info text-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-mortarboard-fill"></i>
+
+            Academic Information
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <!-- Faculty -->
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-bold">
+
+                    Faculty
+
+                </label>
+
+                <select
+                    class="form-select"
+                    id="faculty"
+                    name="faculty_id"
+                    required>
+
+                    <option value="">
+                        Select Faculty
+                    </option>
+
+                    {% for faculty in faculties %}
+
+                    <option
+                        value="{{ faculty.id }}"
+                        {% if member and faculty.id == member.faculty_id %}
+                            selected
+                        {% endif %}>
+
+                        {{ faculty.faculty_name }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <!-- Department -->
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-bold">
+
+                    Department
+
+                </label>
+
+                <select
+                    class="form-select"
+                    id="department"
+                    name="department"
+                    required>
+
+                    <option value="">
+
+                        Select Department
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- Programme -->
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-bold">
+
+                    Programme
+
+                </label>
+
+                <select
+                    class="form-select"
+                    id="programme"
+                    name="programme"
+                    required>
+
+                    <option value="">
+                        Select Programme
+                    </option>
+
+                    {% for programme in programmes %}
+
+                    <option
+                        value="{{ programme.programme_name }}"
+                        {% if member and programme.programme_name == member.programme %}
+                            selected
+                        {% endif %}>
+
+                        {{ programme.programme_name }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <!-- Academic Year -->
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-bold">
+
+                    Academic Year
+
+                </label>
+
+                <select
+                    class="form-select"
+                    name="academic_year"
+                    required>
+
+                    <option value="">Select Academic Year</option>
+
+                    {% for year in [
+                        "2025/2026",
+                        "2026/2027",
+                        "2027/2028",
+                        "2028/2029"
+                    ] %}
+
+                    <option
+                        value="{{ year }}"
+                        {% if member and member.academic_year == year %}
+                            selected
+                        {% endif %}>
+
+                        {{ year }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <!-- Level -->
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-bold">
+
+                    Level
+
+                </label>
+
+                <select
+                    class="form-select"
+                    name="level"
+                    required>
+
+                    {% for lvl in ["100","200","300","400"] %}
+
+                    <option
+                        value="{{ lvl }}"
+                        {% if member and member.level == lvl %}
+                            selected
+                        {% endif %}>
+
+                        {{ lvl }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <!-- Session -->
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-bold">
+
+                    Session
+
+                </label>
+
+                <select
+                    class="form-select"
+                    name="session"
+                    required>
+
+                    <option
+                        value="Weekend"
+                        {% if member and member.session=="Weekend" %}
+                            selected
+                        {% endif %}>
+
+                        Weekend Programme
+
+                    </option>
+
+                    <option
+                        value="Evening"
+                        {% if member and member.session=="Evening" %}
+                            selected
+                        {% endif %}>
+
+                        Evening Programme
+
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ===================================
+    MEMBERSHIP INFORMATION
+==================================== -->
+
+{% if page != "registration" %}
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-warning">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-person-check-fill"></i>
+
+            Membership Information
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <label class="form-label fw-bold">
+
+                    Status
+
+                </label>
+
+                <select
+                    class="form-select"
+                    name="status">
+
+                    <option value="Active"
+                        {% if member and member.status=="Active" %}
+                        selected
+                        {% endif %}>
+
+                        Active
+
+                    </option>
+
+                    <option value="Inactive"
+                        {% if member and member.status=="Inactive" %}
+                        selected
+                        {% endif %}>
+
+                        Inactive
+
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+<!-- ===================================
+      ACCOUNT SECURITY
+==================================== -->
+
+{% if page == "registration" %}
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-dark text-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-shield-lock-fill"></i>
+
+            Account Security
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-bold">
+
+                    Password
+
+                </label>
+
+                <input
+                    type="password"
+                    class="form-control"
+                    name="password"
+                    required>
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label fw-bold">
+
+                    Confirm Password
+
+                </label>
+
+                <input
+                    type="password"
+                    class="form-control"
+                    name="confirm_password"
+                    required>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="d-flex justify-content-end gap-3">
+
+    <a
+        href="javascript:history.back()"
+        class="btn btn-secondary">
+
+        <i class="bi bi-arrow-left"></i>
+
+        Back
+
+    </a>
+
+    <button
+        type="reset"
+        class="btn btn-warning">
+
+        <i class="bi bi-arrow-counterclockwise"></i>
+
+        Reset
+
+    </button>
+
+    <button
+        type="submit"
+        class="btn btn-success">
+
+        <i class="bi bi-check-circle-fill"></i>
+
+        Save
+
+    </button>
+
+</div>
+
+{% endif %}

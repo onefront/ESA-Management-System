@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+
+{% block title %}Add Class Group{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Add Class Group</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Class Group Name</label>
+                        <input type="text"
+       name="name"
+       class="form-control"
+       value="{{ group.name }}"
+       required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Programme</label>
+
+                        <select name="programme_id"
+                                class="form-select"
+                                required>
+
+                            <option value="">Select Programme</option>
+
+                            {% for programme in programmes %}
+
+                            <option value="{{ programme.id }}">
+                                {{ programme.programme_name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Level</label>
+
+                        <select name="level"
+                                class="form-select"
+                                required>
+
+                            <option>100</option>
+                            <option>200</option>
+                            <option>300</option>
+                            <option>400</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Admission Year</label>
+
+                        <input type="text"
+                               name="admission_year"
+                               class="form-control"
+                               placeholder="2026">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Graduation Year</label>
+
+                        <input type="text"
+                               name="graduation_year"
+                               class="form-control"
+                               placeholder="2029">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Status</label>
+
+                        <select name="status"
+                                class="form-select">
+
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <button class="btn btn-success">
+                    Save Class Group
+                </button>
+
+                <a href="{{ url_for('class_groups.index') }}"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

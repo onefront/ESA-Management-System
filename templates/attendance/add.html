@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>
+
+                <i class="bi bi-person-check-fill"></i>
+
+                Mark Attendance
+
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label>Select Member</label>
+
+                    <select
+                        name="member_id"
+                        class="form-select"
+                        required>
+
+                        {% for member in members %}
+
+                            <option value="{{ member.id }}">
+
+                                {{ member.esa_id }} -
+                                {{ member.first_name }}
+                                {{ member.last_name }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Select Event</label>
+
+                    <select
+                        name="event_id"
+                        class="form-select"
+                        required>
+
+                        {% for event in events %}
+
+                            <option value="{{ event.id }}">
+
+                                {{ event.title }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Status</label>
+
+                    <select
+                        name="status"
+                        class="form-select">
+
+                        <option value="Present">
+                            Present
+                        </option>
+
+                        <option value="Absent">
+                            Absent
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button class="btn btn-success">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Save Attendance
+
+                </button>
+
+                <a href="{{ url_for('attendance.attendance') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

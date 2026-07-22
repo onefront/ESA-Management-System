@@ -1,0 +1,399 @@
+<form method="POST" enctype="multipart/form-data">
+
+<div class="row">
+
+    <!-- Passport -->
+    <div class="col-12 text-center mb-4">
+
+        {% if member and member.passport %}
+
+        <img id="preview"
+             src="{{ url_for('static', filename='uploads/' + member.passport) }}"
+             class="rounded-circle shadow border"
+             width="170"
+             height="170"
+             style="object-fit:cover;">
+
+        {% else %}
+
+        <img id="preview"
+             src="{{ url_for('static', filename='images/default-avatar.png') }}"
+             class="rounded-circle shadow border"
+             width="170"
+             height="170"
+             style="object-fit:cover;">
+
+        {% endif %}
+
+        <br><br>
+
+        <input
+            type="file"
+            name="passport"
+            id="passport"
+            class="form-control w-50 mx-auto"
+            accept="image/*">
+
+    </div>
+
+    <!-- Student ID -->
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">
+
+            Student ID <span class="text-danger">*</span>
+
+        </label>
+
+        <input
+            type="text"
+            name="student_id"
+            class="form-control"
+            value="{{ member.student_id if member else '' }}"
+            required>
+
+    </div>
+
+    <!-- Full Name -->
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">
+
+            Full Name
+
+        </label>
+
+        <input
+            type="text"
+            class="form-control"
+            value="{{ current_user.full_name }}"
+            readonly>
+
+    </div>
+
+    <!-- Email -->
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">
+
+            Email
+
+        </label>
+
+        <input
+            type="email"
+            class="form-control"
+            value="{{ current_user.email }}"
+            readonly>
+
+    </div>
+
+    <!-- Gender -->
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">
+
+            Gender
+
+        </label>
+
+        <select
+            name="gender"
+            class="form-select">
+
+            <option value="Male"
+            {% if member and member.gender=="Male" %}selected{% endif %}>
+            Male
+            </option>
+
+            <option value="Female"
+            {% if member and member.gender=="Female" %}selected{% endif %}>
+            Female
+            </option>
+
+        </select>
+
+    </div>
+
+    <!-- Phone -->
+    <div class="col-md-6 mb-4">
+
+        <label class="form-label">
+
+            Phone Number
+
+        </label>
+
+        <input
+            type="text"
+            name="phone"
+            class="form-control"
+            value="{{ member.phone if member else '' }}">
+
+    </div>
+
+</div>
+
+<hr>
+
+<h4 class="text-primary mb-4">
+
+<i class="bi bi-mortarboard"></i>
+
+Academic Information
+
+</h4>
+
+<div class="col-md-6 mb-3">
+
+<label>
+
+Passport
+
+</label>
+
+<input
+type="file"
+name="passport"
+class="form-control">
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>
+
+Faculty
+
+</label>
+
+<select
+name="faculty_id"
+class="form-select"
+id="faculty">
+
+<option value="">Select Faculty</option>
+
+{% for faculty in faculties %}
+
+<option value="{{ faculty.id }}">
+
+{{ faculty.faculty_name }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>
+
+Programme
+
+</label>
+
+<select
+name="programme"
+class="form-select"
+id="programme">
+
+<option value="">Select Programme</option>
+
+{% for programme in programmes %}
+
+<option value="{{ programme.id }}">
+
+{{ programme.programme_name }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>
+
+Department
+
+</label>
+
+<select
+name="department"
+class="form-select"
+id="department">
+
+<option value="">
+
+Select Department
+
+</option>
+
+</select>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>
+
+Level
+
+</label>
+
+<select
+name="level"
+class="form-select">
+
+<option>100</option>
+<option>200</option>
+<option>300</option>
+<option>400</option>
+
+</select>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>
+
+Session
+
+</label>
+
+<select
+name="session"
+class="form-select">
+
+<option>Weekend</option>
+
+<option>Evening</option>
+
+</select>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label>
+
+Academic Year
+
+</label>
+
+<select
+name="academic_year"
+class="form-select">
+
+    <option>2026/2027</option>
+
+    <option>2027/2028</option>
+
+    <option>2028/2029</option>
+
+    <option>2029/2030</option>
+
+</select>
+
+</div>
+
+</div>
+
+<hr>
+
+<button
+type="submit"
+class="btn btn-success btn-lg">
+
+    <i class="bi bi-check-circle-fill"></i>
+
+    Complete My Profile
+
+</button>
+</form>
+<script>
+
+const faculty = document.getElementById("faculty");
+const programme = document.getElementById("programme");
+const department = document.getElementById("department");
+
+// Load Programmes
+faculty.addEventListener("change", function(){
+
+    if(!this.value){
+        programme.innerHTML =
+            '<option value="">Select Programme</option>';
+
+        department.innerHTML =
+            '<option value="">Select Department</option>';
+
+        return;
+    }
+
+    fetch("/get_programmes/" + this.value)
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        programme.innerHTML =
+            '<option value="">Select Programme</option>';
+
+        department.innerHTML =
+            '<option value="">Select Department</option>';
+
+        data.forEach(function(item){
+
+            programme.innerHTML +=
+            `<option value="${item.id}">
+                ${item.name}
+            </option>`;
+
+        });
+
+    });
+
+});
+
+// Load Departments
+programme.addEventListener("change", function(){
+
+    if(!this.value){
+
+        department.innerHTML =
+            '<option value="">Select Department</option>';
+
+        return;
+    }
+
+    fetch("/get_departments/" + this.value)
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        department.innerHTML =
+            '<option value="">Select Department</option>';
+
+        data.forEach(function(item){
+
+            department.innerHTML +=
+            `<option value="${item.id}">
+                ${item.name}
+            </option>`;
+
+        });
+
+    });
+
+});
+
+</script>

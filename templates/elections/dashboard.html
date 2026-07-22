@@ -1,0 +1,206 @@
+{% extends "layout.html" %}
+{% from "components/dashboard_card.html" import dashboard_card %}
+{% block content %}
+
+<div class="container-fluid py-4 election-dashboard">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">
+                <i class="bi bi-check2-square text-primary"></i>
+                Election Management
+            </h2>
+            <p class="text-muted">
+                Manage elections, candidates, voting and election administration.
+            </p>
+        </div>
+
+        <a href="{{ url_for('elections.add_election') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i>
+            New Election
+        </a>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row g-4 mb-5">
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+               <div class="card-body">
+                    <div class="text-center">
+
+<i class="bi bi-check2-square text-primary"></i>
+
+</div>
+                    <h2 class="fw-bold mt-2">{{ total_elections }}</h2>
+                    <p class="text-muted mb-0">Total Elections</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body text-center">
+                    <i class="bi bi-play-circle fs-1 text-success"></i>
+                    <h2 class="fw-bold mt-2">{{ active_elections }}</h2>
+                    <p class="text-muted mb-0">Active</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body text-center">
+                    <i class="bi bi-hourglass-split fs-1 text-warning"></i>
+                    <h2 class="fw-bold mt-2">{{ pending_elections }}</h2>
+                    <p class="text-muted mb-0">Pending</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body text-center">
+                    <i class="bi bi-lock-fill fs-1 text-danger"></i>
+                    <h2 class="fw-bold mt-2">{{ closed_elections }}</h2>
+                    <p class="text-muted mb-0">Closed</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Election Setup -->
+    <h4 class="section-title">
+    Election Setup
+</h4>
+
+    <div class="row g-4">
+
+    <div class="col-lg-4">
+        {{ dashboard_card(
+            "Elections",
+            "Create and manage elections.",
+            "bi-check2-square",
+            "primary",
+            "elections.elections"
+        ) }}
+    </div>
+
+    <div class="col-lg-4">
+        {{ dashboard_card(
+            "Portfolios",
+            "Manage election portfolios.",
+            "bi-briefcase-fill",
+            "success",
+            "portfolios.portfolios"
+        ) }}
+    </div>
+
+    <div class="col-lg-4">
+        {{ dashboard_card(
+            "Candidates",
+            "Register and manage candidates.",
+            "bi-people-fill",
+            "warning",
+            "candidates.candidates"
+        ) }}
+    </div>
+
+</div>
+<!-- ================= Election Operations ================= -->
+
+<div class="mt-5">
+
+<h4 class="section-title">
+    Election Operations
+</h4>
+
+    <div class="row g-4">
+
+    <div class="col-lg-3">
+        {{ dashboard_card(
+            "Voting",
+            " manage voting.",
+            "bi-check2-square",
+            "warning",
+            "voting.dashboard"
+        ) }}
+    </div>
+
+    <div class="col-lg-3">
+        {{ dashboard_card(
+            "Results",
+            "View election results.",
+            "bi-bar-chart-fill",
+            "danger",
+            "results.dashboard"
+        ) }}
+    </div>
+
+    <div class="col-lg-3">
+        {{ dashboard_card(
+            "Analytics",
+            "Live election statistics.",
+            "bi-graph-up-arrow",
+            "primary",
+            "analytics.dashboard"
+        ) }}
+    </div>
+
+    <div class="col-lg-3">
+        {{ dashboard_card(
+            "Election Control",
+            "Open,close voting.",
+            "bi-sliders",
+            "secondary",
+            "control.dashboard"
+        ) }}
+    </div>
+
+</div>
+    </div>
+<!-- ================= Administration ================= -->
+
+<div class="mt-5">
+
+<h4 class="section-title">
+    Administration
+</h4>
+
+   <div class="row g-4">
+
+    <div class="col-lg-4">
+        {{ dashboard_card(
+            "Audit Log",
+            "View election activity history.",
+            "bi-clock-history",
+            "secondary",
+            "audit.dashboard"
+        ) }}
+    </div>
+
+    <div class="col-lg-4">
+        {{ dashboard_card(
+            "Election History",
+            "Browse previous elections.",
+            "bi-calendar-week",
+            "primary",
+            "history.dashboard"
+        ) }}
+    </div>
+
+    <div class="col-lg-4">
+      {{ dashboard_card(
+    "Settings",
+    "Election configuration.",
+    "bi-gear-fill",
+    "warning",
+    "settings.dashboard"
+) }}
+    </div>
+   </div>
+   </div>
+</div>
+       {% endblock %}

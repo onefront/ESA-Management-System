@@ -1,0 +1,179 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<a href="{{ url_for('dashboard.dashboard') }}"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+
+    Back to Dashboard
+
+</a>
+<div class="container-fluid mt-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                <i class="bi bi-cash-stack"></i>
+                Payments Report
+            </h2>
+
+            <p class="text-muted">
+                Complete report of all payments received.
+            </p>
+
+        </div>
+
+        <div>
+
+            <button onclick="window.print()"
+                    class="btn btn-dark">
+
+                <i class="bi bi-printer"></i>
+
+                Print
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-6">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <h6>Total Payments</h6>
+
+                    <h2 class="text-primary">
+
+                        {{ total_payments }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <h6>Total Revenue</h6>
+
+                    <h2 class="text-success">
+
+                        GH₵ {{ "{:,.2f}".format(total_revenue) }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Table -->
+
+    <div class="card shadow border-0">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover table-bordered">
+
+                    <thead class="table-success">
+
+                        <tr>
+
+                            <th>#</th>
+                            <th>Member</th>
+                            <th>Payment Type</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Reference</th>
+                            <th>Date</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for payment in payments %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+
+                                {{ payment.member.first_name }}
+
+                                {{ payment.member.last_name }}
+
+                            </td>
+
+                            <td>{{ payment.payment_type }}</td>
+
+                            <td>
+
+                                GH₵ {{ "%.2f"|format(payment.amount) }}
+
+                            </td>
+
+                            <td>{{ payment.payment_method }}</td>
+
+                            <td>{{ payment.reference }}</td>
+
+                            <td>
+
+                                {{ payment.date_paid.strftime("%d-%m-%Y") }}
+
+                            </td>
+
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="7" class="text-center">
+
+                                No payments found.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

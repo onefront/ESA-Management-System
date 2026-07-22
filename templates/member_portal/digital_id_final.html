@@ -1,0 +1,218 @@
+{% extends "shared/id_layout.html" %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="top-bar">
+
+        <a href="{{ url_for('member_portal.dashboard') }}" class="btn btn-primary">
+            <i class="bi bi-arrow-left-circle"></i>
+            Back to Dashboard
+        </a>
+
+        <div>
+            <button onclick="window.print()" class="btn btn-success">
+                <i class="bi bi-printer"></i>
+                Print ID
+            </button>
+        </div>
+
+    </div>
+
+    <div class="id-card">
+
+        <!-- HEADER -->
+
+        <div class="card-header">
+
+            <img src="{{ url_for('static', filename='images/logo.png') }}"
+                 class="esa-logo">
+
+            <div class="school-details">
+
+                <h2>EXECUTIVE STUDENT ASSOCIATION</h2>
+
+                <p>
+                    University of Skills Training &
+                    Entrepreneurial Development
+                </p>
+
+                <span>Together We Build</span>
+
+            </div>
+
+        </div>
+
+        <!-- BODY -->
+
+        <div class="card-body">
+
+            <!-- LEFT -->
+
+            <div class="left-panel">
+
+                {% if member.passport %}
+
+                    <img
+                        src="{{ url_for('static',
+                        filename='uploads/' ~ member.passport) }}"
+                        class="passport">
+
+                {% else %}
+
+                    <img
+                        src="{{ url_for('static',
+                        filename='images/default-avatar.png') }}"
+                        class="passport">
+
+                {% endif %}
+
+                <div class="status">
+
+                    {% if member.status=="Active" %}
+
+                        <span class="badge bg-success">
+
+                            ACTIVE MEMBER
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-danger">
+
+                            {{ member.status }}
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+
+            <div class="right-panel">
+
+                <h3>
+
+                    {{ member.first_name }}
+                    {{ member.last_name }}
+
+                </h3>
+
+                <table class="table table-borderless">
+
+                    <tr>
+
+                        <th>ESA ID</th>
+
+                        <td>{{ member.esa_id }}</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Index Number</th>
+
+                        <td>{{ member.student_id }}</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Programme</th>
+
+                        <td>{{ member.programme }}</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Department</th>
+
+                        <td>{{ member.department }}</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Level</th>
+
+                        <td>{{ member.level }}</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>Session</th>
+
+                        <td>{{ member.session }}</td>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+
+        <div class="card-footer">
+
+            <div class="footer-box">
+
+                <img
+                    src="{{ url_for('static',
+                    filename='qrcodes/' ~ qr_code) }}"
+                    class="qr">
+
+                <small>
+
+                    Scan To Verify
+
+                </small>
+
+            </div>
+
+            <div class="footer-box">
+
+                <img
+                    src="{{ url_for('static',
+                    filename='images/ceo_signature.png') }}"
+                    class="signature">
+
+                <small>
+
+                    CEO Signature
+
+                </small>
+
+            </div>
+
+            <div class="footer-box">
+
+                <h5>
+
+                    ESA CONNECT
+
+                </h5>
+
+                <small>
+
+                    © 2026 Executive Student Association
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,144 @@
+<!--{% extends "shared/id_layout.html" %}-->
+
+<!--{% block content %}-->
+
+<!--<div class="id-wrapper">-->
+
+<!--    <div class="id-card">-->
+
+<!--        &lt;!&ndash; HEADER &ndash;&gt;-->
+<!--        <div class="id-header">-->
+
+<!--            <img src="{{ url_for('static', filename='images/logo.png') }}"-->
+<!--                 class="logo">-->
+
+<!--            <div class="header-text">-->
+<!--                <h2>EXECUTIVE STUDENT ASSOCIATION</h2>-->
+<!--                <p>University of Skills Training & Entrepreneurial Development</p>-->
+<!--                <span>Together We Build</span>-->
+<!--            </div>-->
+
+<!--        </div>-->
+
+<!--        &lt;!&ndash; BODY &ndash;&gt;-->
+
+<!--        <div class="id-body">-->
+
+<!--            &lt;!&ndash; PHOTO &ndash;&gt;-->
+
+<!--            <div class="photo-area">-->
+
+<!--                {% if member.passport %}-->
+<!--<img src="{{ url_for('static', filename='uploads/' ~ member.passport) }}"-->
+<!--     class="member-photo">-->
+<!--{% else %}-->
+<!--<img src="{{ url_for('static', filename='images/default-avatar.png') }}"-->
+<!--     class="member-photo">-->
+<!--{% endif %}-->
+
+<!--            </div>-->
+
+<!--            &lt;!&ndash; DETAILS &ndash;&gt;-->
+
+<!--            <div class="details-area">-->
+
+<!--                <h3>-->
+
+<!--                    {{ member.first_name }}-->
+<!--                    {{ member.last_name }}-->
+
+<!--                </h3>-->
+
+<!--                <div class="line">-->
+<!--                    <label>ESA ID</label>-->
+<!--                    <span>{{ member.esa_id }}</span>-->
+<!--                </div>-->
+
+<!--                <div class="line">-->
+<!--                    <label>Index Number</label>-->
+<!--                    <span>{{ member.student_id }}</span>-->
+<!--                </div>-->
+
+<!--                <div class="line">-->
+<!--                    <label>Programme</label>-->
+<!--                    <span>{{ member.programme }}</span>-->
+<!--                </div>-->
+
+<!--                <div class="line">-->
+<!--                    <label>Level</label>-->
+<!--                    <span>{{ member.level }}</span>-->
+<!--                </div>-->
+
+<!--                <div class="line">-->
+<!--                    <label>Session</label>-->
+<!--                    <span>{{ member.session }}</span>-->
+<!--                </div>-->
+
+<!--                <div class="line">-->
+<!--                    <label>Status</label>-->
+
+<!--                    {% if member.status=="Active" %}-->
+
+<!--                    <span class="active">-->
+
+<!--                        ACTIVE MEMBER-->
+
+<!--                    </span>-->
+
+<!--                    {% else %}-->
+
+<!--                    <span class="inactive">-->
+
+<!--                        {{ member.status }}-->
+
+<!--                    </span>-->
+
+<!--                    {% endif %}-->
+
+<!--                </div>-->
+
+<!--            </div>-->
+
+<!--        </div>-->
+
+<!--        &lt;!&ndash; FOOTER &ndash;&gt;-->
+
+<!--        <div class="id-footer">-->
+
+<!--            <div class="qr-section">-->
+
+<!--                <img src="{{ url_for('static',-->
+<!--filename='qrcodes/' ~ qr_code) }}">-->
+
+<!--                <small>SCAN TO VERIFY</small>-->
+
+<!--            </div>-->
+
+<!--            <div class="signature">-->
+
+<!--                ___________________-->
+
+<!--                <br>-->
+
+<!--                CEO Signature-->
+
+<!--            </div>-->
+
+<!--            <div class="copyright">-->
+
+<!--                ESA CONNECT-->
+
+<!--                <br>-->
+
+<!--                © 2026-->
+
+<!--            </div>-->
+
+<!--        </div>-->
+
+<!--    </div>-->
+
+<!--</div>-->
+
+<!--{% endblock %}-->
+

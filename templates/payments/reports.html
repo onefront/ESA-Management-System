@@ -1,0 +1,288 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-bar-chart-fill text-primary"></i>
+
+                Payment Reports
+
+            </h2>
+
+            <p class="text-muted">
+
+                Financial summary of all ESA payments.
+
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('payments.payments') }}"
+           class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+    <!-- Summary Cards -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body text-center">
+
+                    <h6 class="text-muted">
+
+                        Total Revenue
+
+                    </h6>
+
+                    <h3 class="text-success">
+
+                        GH₵ {{ "%.2f"|format(total_revenue) }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body text-center">
+
+                    <h6 class="text-muted">
+
+                        Total Payments
+
+                    </h6>
+
+                    <h3>
+
+                        {{ total_payments }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body text-center">
+
+                    <h6 class="text-muted">
+
+                        Members Paid
+
+                    </h6>
+
+                    <h3>
+
+                        {{ members_paid }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body text-center">
+
+                    <h6 class="text-muted">
+
+                        Outstanding Members
+
+                    </h6>
+
+                    <h3 class="text-danger">
+
+                        {{ outstanding_members }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Revenue by Payment Type -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-header bg-primary text-white">
+
+            <h5 class="mb-0">
+
+                Revenue by Payment Type
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Payment Type</th>
+
+                        <th>Total Revenue</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for item in payment_summary %}
+
+                    <tr>
+
+                        <td>{{ item[0] }}</td>
+
+                        <td class="fw-bold text-success">
+
+                            GH₵ {{ "%.2f"|format(item[1]) }}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- Recent Payments -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-success text-white">
+
+            <h5 class="mb-0">
+
+                Recent Payments
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-striped align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Receipt</th>
+
+                        <th>Member</th>
+
+                        <th>Payment Type</th>
+
+                        <th>Amount</th>
+
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for payment in recent_payments %}
+
+                    <tr>
+
+                        <td>{{ payment.reference }}</td>
+
+                        <td>
+
+                            {{ payment.member.first_name }}
+                            {{ payment.member.last_name }}
+
+                        </td>
+
+                        <td>{{ payment.payment_type }}</td>
+
+                        <td class="text-success fw-bold">
+
+                            GH₵ {{ "%.2f"|format(payment.amount) }}
+
+                        </td>
+
+                        <td>
+
+                            {{ payment.date_paid.strftime("%d %b %Y") }}
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="5"
+                            class="text-center text-muted">
+
+                            No payments found.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

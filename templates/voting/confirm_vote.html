@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-warning">
+
+            <h3>
+
+                Confirm Your Vote
+
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <p class="text-danger">
+
+                Please review your selections carefully.
+                Once you confirm, your vote cannot be changed.
+
+            </p>
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Portfolio</th>
+
+                        <th>Candidate</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for item in selections %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ item.portfolio.portfolio_name }}
+
+                        </td>
+
+                        <td>
+
+                            {{ item.candidate.member.first_name }}
+                            {{ item.candidate.member.last_name }}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <form method="POST"
+                  action="{{ url_for('voting.submit_vote', member_id=member_id) }}">
+
+                {% for item in selections %}
+
+                    <input type="hidden"
+                           name="portfolio_{{ item.portfolio.id }}"
+                           value="{{ item.candidate.id }}">
+
+                {% endfor %}
+
+                <a href="javascript:history.back()"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+                <button class="btn btn-success">
+
+                    Confirm Vote
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

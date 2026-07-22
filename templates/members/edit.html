@@ -1,0 +1,438 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="card shadow border-0 rounded-4">
+
+<div class="card-header bg-warning text-dark">
+    <h3>
+        <i class="bi bi-pencil-square"></i>
+        Edit Member
+    </h3>
+</div>
+
+<div class="card-body">
+
+<form method="POST" enctype="multipart/form-data">
+
+<div class="row">
+
+<div class="col-md-12 text-center mb-4">
+
+{% if member.passport %}
+
+<img id="preview"
+     src="{{ url_for('static', filename='uploads/' + member.passport) }}"
+     width="170"
+     height="170"
+     class="rounded-circle border shadow"
+     style="object-fit:cover;">
+
+{% else %}
+
+<img id="preview"
+     src="{{ url_for('static', filename='images/default-avatar.png') }}"
+     width="170"
+     height="170"
+     class="rounded-circle border shadow">
+
+{% endif %}
+
+<br><br>
+
+<label class="form-label fw-bold">
+Passport Photo
+</label>
+
+<input
+type="file"
+name="passport"
+id="passport"
+class="form-control"
+accept="image/*">
+
+</div>
+
+</div>
+    <hr>
+
+<h5 class="mb-3 text-primary">
+    <i class="bi bi-person"></i>
+    Personal Information
+</h5>
+
+<div class="row">
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Student ID</label>
+
+        <input
+            type="text"
+            class="form-control"
+            name="student_id"
+            value="{{ member.student_id }}">
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">First Name</label>
+
+        <input
+            type="text"
+            class="form-control"
+            name="first_name"
+            value="{{ member.first_name }}">
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Last Name</label>
+
+        <input
+            type="text"
+            class="form-control"
+            name="last_name"
+            value="{{ member.last_name }}">
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Gender</label>
+
+        <select class="form-select" name="gender">
+
+            <option value="Male"
+                {% if member.gender=="Male" %}selected{% endif %}>
+                Male
+            </option>
+
+            <option value="Female"
+                {% if member.gender=="Female" %}selected{% endif %}>
+                Female
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">
+            Phone Number
+        </label>
+
+        <input
+            type="text"
+            class="form-control"
+            name="phone"
+            value="{{ member.phone }}">
+
+    </div>
+
+
+
+</div>
+    <hr>
+
+<h5 class="mb-3 text-success">
+    <i class="bi bi-mortarboard"></i>
+    Academic Information
+</h5>
+
+<div class="row">
+
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">Faculty</label>
+
+        <select
+    class="form-select"
+    id="faculty"
+    name="faculty_id">
+
+    <option value="">-- Select Faculty --</option>
+
+    {% for faculty in faculties %}
+
+    <option value="{{ faculty.id }}"
+        {% if faculty.id == member.faculty_id %}selected{% endif %}>
+
+        {{ faculty.faculty_name }}
+
+    </option>
+
+    {% endfor %}
+
+</select>
+
+    </div>
+
+  <div class="col-md-6 mb-3">
+
+    <label class="form-label">Department</label>
+
+    <select
+        class="form-select"
+        id="department"
+        name="department">
+
+        <option value="">
+            -- Select Department --
+        </option>
+
+    </select>
+
+</div>
+
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">Programme</label>
+
+        <select
+    class="form-select"
+    id="programme"
+    name="programme">
+
+            {% for programme in programmes %}
+
+           <option value="{{ programme.id }}"
+    {% if programme.programme_name == member.programme %}
+        selected
+    {% endif %}>
+
+    {{ programme.programme_name }}
+
+</option>
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">Academic Year</label>
+
+        <input
+            type="text"
+            class="form-control"
+            name="academic_year"
+            value="{{ member.academic_year or '' }}">
+
+    </div>
+
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">Level</label>
+
+        <select class="form-select" name="level">
+
+            {% for lvl in ["100","200","300","400"] %}
+
+            <option value="{{ lvl }}"
+                {% if member.level == lvl %}
+                    selected
+                {% endif %}>
+
+                {{ lvl }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">Session</label>
+
+        <select class="form-select" name="session">
+
+            <option value="Weekend"
+                {% if member.session=="Weekend" %}
+                    selected
+                {% endif %}>
+                Weekend
+            </option>
+
+            <option value="Evening"
+                {% if member.session=="Evening" %}
+                    selected
+                {% endif %}>
+                Evening
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+    <hr>
+
+    <div class="col-md-6 mb-3">
+
+        <label class="form-label">Status</label>
+
+        <select class="form-select" name="status">
+
+            <option value="Active"
+                {% if member.status=="Active" %}selected{% endif %}>
+                Active
+            </option>
+
+            <option value="Inactive"
+                {% if member.status=="Inactive" %}selected{% endif %}>
+                Inactive
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+<hr>
+
+<div class="d-flex justify-content-between">
+
+    <a href="{{ url_for('members.member_profile', member_id=member.id) }}"
+       class="btn btn-secondary">
+
+        <i class="bi bi-arrow-left"></i>
+
+        Cancel
+
+    </a>
+
+    <button type="submit" class="btn btn-success">
+
+        <i class="bi bi-check-circle"></i>
+
+        Update Member
+
+    </button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+
+const faculty = document.getElementById("faculty");
+const programme = document.getElementById("programme");
+const department = document.getElementById("department");
+
+// -----------------------------
+// Load Programmes
+// -----------------------------
+faculty.addEventListener("change", function(){
+
+    fetch("/get_programmes/" + this.value)
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        programme.innerHTML =
+            '<option value="">Select Programme</option>';
+
+        department.innerHTML =
+            '<option value="">Select Department</option>';
+
+        data.forEach(function(item){
+
+            programme.innerHTML +=
+                `<option value="${item.id}">
+                    ${item.name}
+                 </option>`;
+
+        });
+
+    });
+
+});
+
+// -----------------------------
+// Load Departments
+// -----------------------------
+programme.addEventListener("change", function(){
+
+    fetch("/get_departments/" + this.value)
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        department.innerHTML =
+            '<option value="">Select Department</option>';
+
+        data.forEach(function(item){
+
+            department.innerHTML +=
+                `<option value="${item.id}">
+                    ${item.name}
+                 </option>`;
+
+        });
+
+    });
+
+});
+
+
+document.getElementById("passport").addEventListener("change", function(e){
+
+    const file = e.target.files[0];
+
+    if(file){
+
+        const reader = new FileReader();
+
+        reader.onload = function(event){
+
+            document.getElementById("preview").src = event.target.result;
+
+        }
+
+        reader.readAsDataURL(file);
+
+    }
+
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    {% if selected_programme %}
+
+    fetch("/get_departments/{{ selected_programme.id }}")
+        .then(response => response.json())
+        .then(data => {
+
+            department.innerHTML =
+                '<option value="">-- Select Department --</option>';
+
+            data.forEach(function(item){
+
+                department.innerHTML +=
+                    `<option value="${item.id}"
+                        ${item.name === "{{ member.department }}" ? "selected" : ""}>
+                        ${item.name}
+                    </option>`;
+            });
+
+        });
+</script>
+    {% endif %}
+
+});
+{% endblock %}

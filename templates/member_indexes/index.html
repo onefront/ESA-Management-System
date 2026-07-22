@@ -1,0 +1,279 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="card shadow-sm border-0">
+
+    <div class="page-header mb-4">
+
+    <div class="row align-items-center">
+
+    <!-- Left Side -->
+    <div class="col-lg-7">
+
+        <a href="{{ url_for('dashboard.dashboard') }}"
+           class="btn btn-outline-secondary mb-3">
+
+            <i class="bi bi-arrow-left"></i>
+            Back
+
+        </a>
+
+        <h2 class="mb-1">
+            <i class="bi bi-card-checklist"></i>
+            Member Index Management
+        </h2>
+
+        <p class="text-muted mb-0">
+            Manage approved student IDs for member registration.
+        </p>
+
+    </div>
+
+    <!-- Right Side -->
+    <div class="col-lg-5">
+
+        <div class="d-flex justify-content-end align-items-center gap-3">
+
+            <a href="{{ url_for('member_indexes.import_indexes') }}"
+               class="btn btn-success">
+
+                <i class="bi bi-file-earmark-excel"></i>
+                Import Excel
+
+            </a>
+
+            <a href="{{ url_for('member_indexes.add') }}"
+               class="btn btn-primary">
+
+                <i class="bi bi-plus-circle"></i>
+                Add Student ID
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+    </div>
+
+    <div class="card-body">
+
+      <div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-8">
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-search"></i>
+                    </span>
+
+                    <input
+                        type="text"
+                        id="indexSearch"
+                        class="form-control"
+                        placeholder="Search Student ID...">
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4 text-end">
+
+                <span class="badge bg-dark fs-6">
+                    {{ indexes|length }} Student IDs
+                </span>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+         <div class="btn-group">
+
+    <button id="filterAll" class="btn btn-outline-dark btn-sm">
+        All
+    </button>
+
+    <button id="filterAvailable" class="btn btn-outline-success btn-sm">
+        Available
+    </button>
+
+    <button id="filterUsed" class="btn btn-outline-danger btn-sm">
+        Used
+    </button>
+
+</div>
+
+    </div>
+
+</div>
+    </div>
+
+      <div class="table-responsive">
+
+
+<table class="table table-hover align-middle mb-0">
+
+            <thead class="table-dark">
+
+                <tr>
+
+    <th>#</th>
+    <th>Student ID</th>
+    <th>Status</th>
+    <th>Date Added</th>
+    <th class="text-center">Actions</th>
+
+</tr>
+
+            </thead>
+<tbody id="indexTable">
+
+    {% for index in indexes %}
+
+    <tr data-status="{{ 'used' if index.used else 'available' }}">
+
+        <td>{{ loop.index }}</td>
+
+        <td>{{ index.student_id }}</td>
+
+        <td>
+            {% if index.used %}
+                <span class="badge bg-danger">Used</span>
+            {% else %}
+                <span class="badge bg-success">Available</span>
+            {% endif %}
+        </td>
+
+        <td>
+            {{ index.created_at.strftime("%d-%m-%Y") }}
+        </td>
+
+        <td class="text-center">
+
+            <div class="d-flex justify-content-center gap-2">
+
+                <a href="{{ url_for('member_indexes.edit', index_id=index.id) }}"
+                   class="btn btn-warning btn-sm"
+                   title="Edit">
+
+                    <i class="bi bi-pencil"></i>
+
+                </a>
+
+                <a href="{{ url_for('member_indexes.delete', index_id=index.id) }}"
+                   class="btn btn-danger btn-sm"
+                   title="Delete">
+
+                    <i class="bi bi-trash"></i>
+
+                </a>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+    {% else %}
+
+    <tr>
+
+        <td colspan="5" class="text-center text-muted">
+
+            No approved student IDs found.
+
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("indexSearch");
+
+    const rows = document.querySelectorAll("#indexTable tr");
+
+    let currentFilter = "all";
+
+    function filterTable() {
+
+        const keyword = searchInput.value.toLowerCase();
+
+        rows.forEach(function(row) {
+
+            const text = row.innerText.toLowerCase();
+            const status = row.dataset.status;
+
+            const matchSearch = text.includes(keyword);
+            const matchStatus =
+                currentFilter === "all" ||
+                status === currentFilter;
+
+            row.style.display =
+                (matchSearch && matchStatus)
+                ? ""
+                : "none";
+
+        });
+
+    }
+
+    searchInput.addEventListener("keyup", filterTable);
+
+    document
+        .getElementById("filterAll")
+        .addEventListener("click", function () {
+
+            currentFilter = "all";
+            filterTable();
+
+        });
+
+    document
+        .getElementById("filterAvailable")
+        .addEventListener("click", function () {
+
+            currentFilter = "available";
+            filterTable();
+
+        });
+
+    document
+        .getElementById("filterUsed")
+        .addEventListener("click", function () {
+
+            currentFilter = "used";
+            filterTable();
+
+        });
+
+});
+</script>
+{% endblock %}

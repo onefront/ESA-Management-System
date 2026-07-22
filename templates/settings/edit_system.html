@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-warning">
+
+            <h3>
+
+                <i class="bi bi-pencil-square"></i>
+
+                Edit System Settings
+
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <div class="mb-3">
+
+                    <label>System Name</label>
+
+                    <input
+                        class="form-control"
+                        name="system_name"
+                        value="{{ settings.system_name }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Short Name</label>
+
+                    <input
+                        class="form-control"
+                        name="short_name"
+                        value="{{ settings.short_name }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Slogan</label>
+
+                    <input
+                        class="form-control"
+                        name="slogan"
+                        value="{{ settings.slogan }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>University Name</label>
+
+                    <input
+                        class="form-control"
+                        name="university_name"
+                        value="{{ settings.university_name }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Campus</label>
+
+                    <input
+                        class="form-control"
+                        name="campus"
+                        value="{{ settings.campus }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Membership Validity (Years)</label>
+
+                    <input
+                        type="number"
+                        class="form-control"
+                        name="membership_validity"
+                        value="{{ settings.membership_validity }}">
+
+                </div>
+              <hr>
+
+<h5 class="mb-3">
+
+    Branding
+
+</h5>
+
+<div class="mb-3">
+
+    <label class="form-label">
+
+        ESA Logo
+
+    </label>
+
+    <input
+        type="file"
+        class="form-control"
+        name="logo">
+
+</div>
+
+{% if settings.logo %}
+
+<div class="mb-4">
+
+    <img
+        src="{{ url_for('static',
+        filename='uploads/system/' ~ settings.logo) }}"
+        height="80"
+        class="border rounded p-2">
+
+</div>
+
+{% endif %}
+
+<div class="mb-3">
+
+    <label class="form-label">
+
+        CEO Signature
+
+    </label>
+
+    <input
+        type="file"
+        class="form-control"
+        name="ceo_signature">
+
+</div>
+
+{% if settings.ceo_signature %}
+
+<div class="mb-4">
+
+    <img
+        src="{{ url_for('static',
+        filename='uploads/system/' ~ settings.ceo_signature) }}"
+        height="70">
+
+</div>
+
+{% endif %}
+                <button class="btn btn-success">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Save Settings
+
+                </button>
+
+                <a href="{{ url_for('settings.system') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

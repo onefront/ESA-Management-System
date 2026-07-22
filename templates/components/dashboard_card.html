@@ -1,0 +1,35 @@
+{% macro dashboard_card(title, description, icon, color, endpoint) %}
+
+{% if endpoint == "#" %}
+<a href="#" class="text-decoration-none">
+{% else %}
+<a href="{{ url_for(endpoint) }}" class="text-decoration-none">
+{% endif %}
+
+    <div class="dashboard-card">
+
+        <div class="dashboard-icon bg-{{ color }}-subtle">
+
+            <i class="bi {{ icon }} text-{{ color }}"></i>
+
+        </div>
+
+        <div class="dashboard-content">
+
+            <h5>{{ title }}</h5>
+
+            <p>{{ description }}</p>
+
+        </div>
+
+        <div class="dashboard-arrow">
+
+            <i class="bi bi-chevron-right"></i>
+
+        </div>
+
+    </div>
+
+</a>
+
+{% endmacro %}

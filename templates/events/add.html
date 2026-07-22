@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>
+                <i class="bi bi-calendar-plus"></i>
+                Add Event
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <div class="mb-3">
+
+                    <label>Event Title</label>
+
+                    <input
+                        type="text"
+                        name="title"
+                        class="form-control"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Venue</label>
+
+                    <input
+                        type="text"
+                        name="venue"
+                        class="form-control"
+                        required>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Event Date</label>
+
+                        <input
+                            type="date"
+                            name="event_date"
+                            class="form-control"
+                            required>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Event Time</label>
+
+                        <input
+                            type="time"
+                            name="event_time"
+                            class="form-control"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Description</label>
+
+                    <textarea
+                        name="description"
+                        class="form-control"
+                        rows="4"></textarea>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Event Banner</label>
+
+                    <input
+                        type="file"
+                        name="banner"
+                        class="form-control">
+
+                </div>
+
+                <button class="btn btn-success">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Save Event
+
+                </button>
+
+                <a href="{{ url_for('events.events') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-danger text-white">
+
+            <h4 class="mb-0">
+
+                <i class="bi bi-trash"></i>
+
+                Delete Student Index
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="alert alert-warning">
+
+                <strong>Student ID:</strong>
+
+                {{ index.student_id }}
+
+                <hr>
+
+                {% if index.used %}
+
+                    <strong class="text-danger">
+
+                        This Student ID has already been used.
+
+                    </strong>
+
+                    <br>
+
+                    It will be detached from the user before deletion.
+
+                {% else %}
+
+                    This Student ID has not been used.
+
+                {% endif %}
+
+            </div>
+
+            <form method="POST">
+
+                <a href="{{ url_for('member_indexes.index') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+                <button
+                    class="btn btn-danger float-end">
+
+                    <i class="bi bi-trash"></i>
+
+                    Delete Student ID
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

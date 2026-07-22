@@ -1,0 +1,233 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between">
+
+        <h4 class="mb-0">
+            <i class="bi bi-mortarboard-fill"></i>
+            {{ group.name }}
+        </h4>
+
+        <a href="{{ url_for('class_groups.index') }}"
+           class="btn btn-light btn-sm">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+<!--    <div class="card border-0 shadow-sm mb-4">-->
+
+<!--    <div class="card-body d-flex flex-wrap gap-2">-->
+
+<!--        <a href="#" class="btn btn-primary">-->
+<!--            <i class="bi bi-person-plus-fill"></i>-->
+<!--            Add Member-->
+<!--        </a>-->
+
+<!--        <a href="#" class="btn btn-success">-->
+<!--            <i class="bi bi-people-fill"></i>-->
+<!--            View Members-->
+<!--        </a>-->
+
+<!--        <a href="#" class="btn btn-warning">-->
+<!--            <i class="bi bi-person-workspace"></i>-->
+<!--            Assign Reps-->
+<!--        </a>-->
+
+<!--        <a href="#" class="btn btn-info text-white">-->
+<!--            <i class="bi bi-megaphone-fill"></i>-->
+<!--            Send Notice-->
+<!--        </a>-->
+
+<!--        <a href="#" class="btn btn-secondary">-->
+<!--            <i class="bi bi-printer-fill"></i>-->
+<!--            Print Class List-->
+<!--        </a>-->
+
+<!--    </div>-->
+
+<!--</div>-->
+     <div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <i class="bi bi-people-fill display-5 text-primary"></i>
+                <h2 class="fw-bold mt-2">{{ total_members }}</h2>
+                <small class="text-muted">Total Members</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <i class="bi bi-person-fill display-5 text-success"></i>
+                <h2 class="fw-bold mt-2">{{ male_members }}</h2>
+                <small class="text-muted">Male Members</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <i class="bi bi-person-fill display-5 text-danger"></i>
+                <h2 class="fw-bold mt-2">{{ female_members }}</h2>
+                <small class="text-muted">Female Members</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <i class="bi bi-person-workspace display-5 text-warning"></i>
+                <h2 class="fw-bold mt-2">{{ course_rep_count }}</h2>
+                <small class="text-muted">Course Representatives</small>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="card-body">
+
+       <div class="row mt-4">
+
+    <!-- Academic Information -->
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-header bg-light">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-mortarboard-fill text-primary"></i>
+                    Academic Information
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-borderless mb-0">
+
+                    <tr>
+                        <th width="220">Programme</th>
+                        <td>{{ group.programme.programme_name }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Level</th>
+                        <td>{{ group.level }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Session</th>
+                        <td>{{ group.session }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Admission Year</th>
+                        <td>{{ group.admission_year }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Graduation Year</th>
+                        <td>{{ group.graduation_year }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Status</th>
+
+                        <td>
+
+                            {% if group.status == "Active" %}
+
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    {{ group.status }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Quick Actions -->
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-header bg-light">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-lightning-fill text-warning"></i>
+
+                    Quick Actions
+
+                </h5>
+
+            </div>
+
+            <div class="card-body d-grid gap-2">
+
+                <a href="{{ url_for('members.add_member', class_group_id=group.id) }}"
+   class="btn btn-primary">
+                    <i class="bi bi-person-plus-fill"></i>
+                    Add Member
+                </a>
+
+             <a href="{{ url_for('class_groups.members', id=group.id) }}"
+   class="btn btn-success">
+                    <i class="bi bi-people-fill"></i>
+                    View Members
+                </a>
+
+                <a href="#" class="btn btn-warning">
+                    <i class="bi bi-person-workspace"></i>
+                    Assign Representatives
+                </a>
+
+                <a href="#" class="btn btn-info text-white">
+                    <i class="bi bi-megaphone-fill"></i>
+                    Send Notice
+                </a>
+
+                <a href="#" class="btn btn-secondary">
+                    <i class="bi bi-printer-fill"></i>
+                    Print Class List
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

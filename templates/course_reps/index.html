@@ -1,0 +1,306 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold">
+                <i class="bi bi-person-workspace text-primary"></i>
+                Course Representatives
+            </h2>
+
+            <p class="text-muted">
+                Manage appointed course representatives.
+            </p>
+        </div>
+
+        <div>
+
+            <a href="{{ url_for('dashboard.dashboard') }}"
+               class="btn btn-secondary me-2">
+                <i class="bi bi-arrow-left"></i>
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('course_reps.add_course_rep') }}"
+               class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i>
+                Appoint Representative
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Summary Cards -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-people-fill fs-1 text-primary"></i>
+
+                    <h6 class="mt-2">Total Representatives</h6>
+
+                    <h3>{{ total_reps }}</h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-person-check-fill fs-1 text-success"></i>
+
+                    <h6 class="mt-2">Course Representatives</h6>
+
+                    <h3>{{ course_rep_count }}</h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-person-plus-fill fs-1 text-warning"></i>
+
+                    <h6 class="mt-2">Assistant Representatives</h6>
+
+                    <h3>{{ assistant_rep_count }}</h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Search -->
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-body">
+
+            <form method="GET" class="mb-4">
+
+                <div class="input-group">
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Search by Name, Student ID or Programme"
+                        value="{{ search }}">
+
+                    <button class="btn btn-primary">
+
+                        <i class="bi bi-search"></i>
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </form>
+
+            {% if reps %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+
+                    <tr>
+
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Student ID</th>
+                        <th>Programme</th>
+                        <th>Level</th>
+                        <th>Session</th>
+                        <th>Position</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for rep in reps %}
+
+                    <tr>
+
+                        <td>
+
+                            {% if rep.member.passport %}
+
+                            <img src="{{ url_for('static',
+                            filename='uploads/' ~ rep.member.passport) }}"
+                                 width="45"
+                                 height="45"
+                                 class="rounded-circle border">
+
+                            {% else %}
+
+                            <img src="{{ url_for('static',
+                            filename='images/default-avatar.png') }}"
+                                 width="45"
+                                 height="45"
+                                 class="rounded-circle border">
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <strong>
+
+                                {{ rep.member.first_name }}
+                                {{ rep.member.last_name }}
+
+                            </strong>
+
+                        </td>
+
+                        <td>{{ rep.member.student_id }}</td>
+
+                        <td>{{ rep.member.programme }}</td>
+
+                        <td>{{ rep.member.level }}</td>
+
+                        <td>{{ rep.member.session }}</td>
+
+                        <td>
+
+                            {% if rep.position == "Course Rep" %}
+
+                            <span class="badge bg-primary">
+
+                                Course Rep
+
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge bg-info">
+
+                                Assistant Rep
+
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>{{ rep.member.phone }}</td>
+
+                        <td>
+
+                            {% if rep.status == "Active" %}
+
+                            <span class="badge bg-success">
+
+                                Active
+
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge bg-secondary">
+
+                                {{ rep.status }}
+
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td class="text-center">
+                            <a href="{{ url_for('course_reps.view_course_rep', rep_id=rep.id) }}"
+                             class="btn btn-sm btn-info"
+                         title="View">
+
+                             <i class="bi bi-eye"></i>
+                            </a>
+
+                            <a href="{{ url_for('course_reps.edit_course_rep',
+rep_id=rep.id) }}"
+   class="btn btn-sm btn-warning"
+   title="Edit">
+                                <i class="bi bi-pencil"></i>
+
+                            </a>
+
+                            <a href="{{ url_for('course_reps.delete_course_rep',
+                            rep_id=rep.id) }}"
+                               class="btn btn-sm btn-danger"
+                               title="Remove">
+
+                                <i class="bi bi-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="text-center py-5">
+
+                <i class="bi bi-person-workspace display-3 text-muted"></i>
+
+                <h4>No Course Representatives Found</h4>
+
+                <p class="text-muted">
+
+                    Click <strong>Appoint Representative</strong> to add one.
+
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

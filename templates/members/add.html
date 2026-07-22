@@ -1,0 +1,626 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+<div class="card shadow border-0 rounded-4">
+
+<div class="card-header bg-primary text-white">
+
+<h3>
+
+<i class="bi bi-person-plus-fill"></i>
+
+{% if registration_mode %}
+
+Complete ESA Registration
+
+{% else %}
+
+Add New Member
+
+{% endif %}
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST" enctype="multipart/form-data">
+
+<div class="row">
+
+<!-- Student ID -->
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+
+Student ID
+
+</label>
+
+<input
+type="text"
+name="student_id"
+class="form-control"
+value="{{ student_id or '' }}"
+{% if registration_mode %}
+readonly
+{% endif %}
+required>
+
+</div>
+{% if registration_mode %}
+
+<div class="mb-3">
+
+    <label class="form-label">
+        Username
+    </label>
+
+    <input
+        type="text"
+        name="username"
+        class="form-control"
+        placeholder="Choose a unique username"
+        required>
+
+    <small class="text-muted">
+        This username will be used to log into the ESA Portal.
+    </small>
+
+</div>
+
+{% endif %}
+<!-- First Name -->
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+
+First Name
+
+</label>
+
+<input
+type="text"
+name="first_name"
+class="form-control"
+required>
+
+</div>
+
+<!-- Last Name -->
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+
+Last Name
+
+</label>
+
+<input
+type="text"
+name="last_name"
+class="form-control"
+required>
+
+</div>
+
+<!-- Gender -->
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+
+Gender
+
+</label>
+
+<select
+name="gender"
+class="form-select">
+
+<option>Male</option>
+
+<option>Female</option>
+
+</select>
+
+</div>
+
+<!-- Phone -->
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+
+Phone Number
+
+</label>
+
+<input
+type="text"
+name="phone"
+class="form-control">
+
+</div>
+
+<!-- Email -->
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+
+Email Address
+
+</label>
+
+<input
+type="email"
+name="email"
+class="form-control">
+
+</div>
+
+<!-- Passport -->
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+
+Passport
+
+</label>
+
+<input
+type="file"
+name="passport"
+class="form-control">
+
+</div>
+
+<!-- Faculty -->
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+
+Faculty
+
+</label>
+
+<select
+name="faculty_id"
+id="faculty"
+class="form-select">
+
+<option value="">Select Faculty</option>
+
+{% for faculty in faculties %}
+
+<option value="{{ faculty.id }}">
+
+{{ faculty.faculty_name }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<!-- Programme -->
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+
+Programme
+
+</label>
+
+<select
+name="programme"
+id="programme"
+class="form-select">
+
+<option value="">Select Programme</option>
+
+</select>
+
+</div>
+
+<!-- Department -->
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+
+Department
+
+</label>
+
+<select
+name="department"
+id="department"
+class="form-select">
+
+<option value="">Select Department</option>
+
+</select>
+
+</div>
+<!-- Academic Class -->
+
+<div class="col-md-6 mb-3">
+
+    <label class="form-label">
+        Academic Class
+    </label>
+
+<input
+    type="text"
+    id="class_group_name"
+    class="form-control"
+    placeholder="Academic Class will be assigned automatically"
+    readonly>
+
+<input
+    type="hidden"
+    id="class_group"
+    name="class_group_id">
+</div>
+<!-- Level -->
+
+<div class="col-md-6 mb-3">
+
+    <label class="form-label">
+        Level
+    </label>
+
+    <select
+        name="level"
+        class="form-select">
+
+        {% for lvl in ["100", "200", "300", "400"] %}
+
+        <option
+            value="{{ lvl }}"
+            {% if selected_group and selected_group.level == lvl %}
+            selected
+            {% endif %}>
+
+            {{ lvl }}
+
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+</div>
+
+    <!-- Session -->
+
+<div class="col-md-6 mb-3">
+
+    <label class="form-label">
+        Session
+    </label>
+
+    <select
+        name="session"
+        class="form-select">
+
+        <option
+            value="Weekend"
+            {% if selected_group and selected_group.session == "Weekend" %}
+            selected
+            {% endif %}>
+            Weekend
+        </option>
+
+        <option
+            value="Evening"
+            {% if selected_group and selected_group.session == "Evening" %}
+            selected
+            {% endif %}>
+            Evening
+        </option>
+
+    </select>
+
+</div>
+<!-- Academic Year -->
+
+<div class="col-md-6 mb-3">
+
+    <label class="form-label">
+        Academic Year
+    </label>
+
+    <select
+        name="academic_year"
+        class="form-select">
+
+        {% for year in academic_years %}
+
+        <option
+            value="{{ year }}"
+          {% if selected_group and selected_group.academic_year == year %}
+            selected
+            {% endif %}>
+
+            {{ year }}
+
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+</div>
+
+</div>
+<div class="row mt-4">
+
+    <div class="col-12">
+
+        <h5 class="border-bottom pb-2">
+
+            <i class="bi bi-shield-lock"></i>
+
+            Login Account
+
+        </h5>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <label class="form-label">
+
+            Temporary Password
+
+        </label>
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            required>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <label class="form-label">
+
+            Confirm Password
+
+        </label>
+
+        <input
+            type="password"
+            id="confirm_password"
+            name="confirm_password"
+            class="form-control"
+            required>
+
+    </div>
+
+</div>
+
+{% if not registration_mode %}
+
+<div class="mt-3">
+
+    <button
+        type="button"
+        class="btn btn-outline-primary"
+        onclick="generatePassword()">
+
+        <i class="bi bi-magic"></i>
+
+        Generate Password
+
+    </button>
+
+</div>
+
+{% endif %}
+<hr>
+
+<button
+type="submit"
+class="btn btn-success btn-lg">
+
+<i class="bi bi-check-circle-fill"></i>
+
+{% if registration_mode %}
+
+Create My ESA Account
+
+{% else %}
+
+Save Member
+
+{% endif %}
+
+</button>
+
+{% if not registration_mode %}
+
+<a href="{{ url_for('members.members') }}"
+class="btn btn-secondary btn-lg">
+
+Cancel
+
+</a>
+
+{% endif %}
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+<script>
+
+document.getElementById("faculty").addEventListener("change", function () {
+
+    let facultyId = this.value;
+
+    fetch("/get_programmes/" + facultyId)
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            let programme = document.getElementById("programme");
+
+            programme.innerHTML =
+                '<option value="">Select Programme</option>';
+
+            data.forEach(function (item) {
+
+                programme.innerHTML +=
+                    `<option value="${item.id}">${item.name}</option>`;
+
+            });
+
+            document.getElementById("department").innerHTML =
+                '<option value="">Select Department</option>';
+
+        });
+
+});
+
+
+document.getElementById("programme").addEventListener("change", function () {
+
+    let programmeId = this.value;
+
+    fetch("/get_departments/" + programmeId)
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            let department = document.getElementById("department");
+
+            department.innerHTML =
+                '<option value="">Select Department</option>';
+
+            data.forEach(function (item) {
+
+                department.innerHTML +=
+                    `<option value="${item.id}">${item.name}</option>`;
+
+            });
+
+        });
+
+});
+
+</script>
+<script>
+
+function generatePassword(){
+
+    const chars =
+        "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@#$";
+
+    let password = "";
+
+    for(let i = 0; i < 10; i++){
+
+        password += chars.charAt(
+            Math.floor(Math.random() * chars.length)
+        );
+
+    }
+
+    document.getElementById("password").value = password;
+    document.getElementById("confirm_password").value = password;
+
+}
+
+</script><script>
+
+function generatePassword(){
+
+    const chars =
+        "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@#$";
+
+    let password = "";
+
+    for(let i = 0; i < 10; i++){
+
+        password += chars.charAt(
+            Math.floor(Math.random() * chars.length)
+        );
+
+    }
+
+    document.getElementById("password").value = password;
+    document.getElementById("confirm_password").value = password;
+
+}
+
+</script>
+<script>
+function loadAcademicClass() {
+
+    const programme = document.getElementById("programme").value;
+    const level = document.querySelector("select[name='level']").value;
+    const session = document.querySelector("select[name='session']").value;
+
+    if (!programme || !level || !session) {
+        return;
+    }
+
+    fetch(
+        `/get_class_group?programme=${programme}&level=${level}&session=${session}`
+    )
+    .then(response => response.json())
+    .then(data => {
+
+        const classGroupId = document.getElementById("class_group");
+        const classGroupName = document.getElementById("class_group_name");
+
+        if (data.id) {
+
+            classGroupId.value = data.id;
+            classGroupName.value = data.name;
+
+        } else {
+
+            classGroupId.value = "";
+            classGroupName.value = "No Academic Class Found";
+
+        }
+
+    });
+
+}
+document.getElementById("programme")
+    .addEventListener("change", loadAcademicClass);
+
+document.querySelector("select[name='level']")
+    .addEventListener("change", loadAcademicClass);
+
+document.querySelector("select[name='session']")
+    .addEventListener("change", loadAcademicClass);
+
+</script>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block title %}Payment Settings{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Payment Settings</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="mb-3">
+                    <label class="form-label">Mobile Money Network</label>
+                    <select class="form-select" name="momo_network">
+                        <option value="MTN Mobile Money"
+                            {% if settings.momo_network == "MTN Mobile Money" %}selected{% endif %}>
+                            MTN Mobile Money
+                        </option>
+
+                        <option value="Telecel Cash"
+                            {% if settings.momo_network == "Telecel Cash" %}selected{% endif %}>
+                            Telecel Cash
+                        </option>
+
+                        <option value="AirtelTigo Money"
+                            {% if settings.momo_network == "AirtelTigo Money" %}selected{% endif %}>
+                            AirtelTigo Money
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">MoMo Number</label>
+                    <input
+                        type="text"
+                        name="momo_number"
+                        class="form-control"
+                        value="{{ settings.momo_number }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Account Name</label>
+                    <input
+                        type="text"
+                        name="account_name"
+                        class="form-control"
+                        value="{{ settings.account_name }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Payment Instructions</label>
+                    <textarea
+                        class="form-control"
+                        rows="5"
+                        name="payment_instruction">{{ settings.payment_instruction }}</textarea>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="online_payment_enabled"
+                        {% if settings.online_payment_enabled %}checked{% endif %}>
+
+                    <label class="form-check-label">
+                        Enable Online Payments
+                    </label>
+                </div>
+
+                <button class="btn btn-success">
+                    Save Settings
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

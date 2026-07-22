@@ -1,0 +1,156 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-briefcase-fill text-primary"></i>
+
+                Portfolio Management
+
+            </h2>
+
+            <p class="text-muted">
+
+                Manage all ESA portfolios.
+
+            </p>
+
+        </div>
+
+        <div>
+
+           <a href="javascript:history.back()"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+    Back
+
+</a>
+
+            <a href="{{ url_for('portfolios.add_portfolio') }}"
+               class="btn btn-primary">
+
+                <i class="bi bi-plus-circle"></i>
+
+                Add Portfolio
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Portfolio</th>
+                        <th>Description</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th width="180">Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for portfolio in portfolios %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>{{ portfolio.portfolio_name }}</td>
+
+                        <td>{{ portfolio.description }}</td>
+
+                        <td>{{ portfolio.display_order }}</td>
+
+                        <td>
+
+                            {% if portfolio.status == "Active" %}
+
+                                <span class="badge bg-success">
+
+                                    Active
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+
+                                    Inactive
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <a href="#"
+                               class="btn btn-warning btn-sm">
+
+                                <i class="bi bi-pencil"></i>
+
+                            </a>
+
+                            <a href="#"
+                               class="btn btn-danger btn-sm">
+
+                                <i class="bi bi-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="6"
+                            class="text-center py-5 text-muted">
+
+                            <i class="bi bi-briefcase display-5"></i>
+
+                            <br><br>
+
+                            No portfolios have been added yet.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

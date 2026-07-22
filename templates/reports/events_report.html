@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<a href="{{ url_for('dashboard.dashboard') }}"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+
+    Back to Dashboard
+
+</a>
+<div class="container-fluid mt-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                <i class="bi bi-calendar-event-fill"></i>
+                Events Report
+            </h2>
+
+            <p class="text-muted">
+                Complete report of all ESA events.
+            </p>
+
+        </div>
+
+        <div>
+
+            <button onclick="window.print()"
+                    class="btn btn-dark">
+
+                <i class="bi bi-printer"></i>
+
+                Print
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body text-center">
+
+                    <h6>Total Events</h6>
+
+                    <h2 class="text-warning">
+
+                        {{ total_events }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Events Table -->
+
+    <div class="card shadow border-0">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover table-bordered">
+
+                    <thead class="table-warning">
+
+                        <tr>
+
+                            <th>#</th>
+                            <th>Event Code</th>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Venue</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for event in events %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>{{ event.event_code }}</td>
+
+                            <td>{{ event.title }}</td>
+
+                            <td>{{ event.event_date.strftime("%d-%m-%Y") }}</td>
+
+                            <td>{{ event.venue }}</td>
+
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="5" class="text-center">
+
+                                No events found.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

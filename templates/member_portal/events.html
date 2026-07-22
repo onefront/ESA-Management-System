@@ -1,0 +1,130 @@
+{% extends "member_portal/layout.html" %}
+
+{% block title %}ESA Events{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            <i class="fas fa-calendar-alt text-primary"></i>
+            ESA Events
+        </h2>
+        <p class="text-muted">
+            Stay informed about upcoming ESA programmes and activities.
+        </p>
+    </div>
+
+    {% if events %}
+
+        <div class="row">
+
+           {% for event in events %}
+
+<div class="col-lg-6 mb-4">
+
+    <div class="card shadow border-0 h-100">
+
+        {% if event.banner %}
+        <img src="{{ url_for('static', filename='uploads/' ~ event.banner) }}"
+             class="card-img-top"
+             style="height:220px; object-fit:cover;">
+        {% endif %}
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between">
+
+                <h4 class="fw-bold">
+                    {{ event.title }}
+                </h4>
+
+                {% if event.status == "Upcoming" %}
+                    <span class="badge bg-primary">Upcoming</span>
+
+                {% elif event.status == "Ongoing" %}
+                    <span class="badge bg-success">Ongoing</span>
+
+                {% elif event.status == "Completed" %}
+                    <span class="badge bg-secondary">Completed</span>
+
+                {% elif event.status == "Cancelled" %}
+                    <span class="badge bg-danger">Cancelled</span>
+
+                {% else %}
+                    <span class="badge bg-dark">
+                        {{ event.status }}
+                    </span>
+                {% endif %}
+
+            </div>
+
+            <hr>
+
+            <p>
+                <i class="fas fa-map-marker-alt text-danger"></i>
+                <strong>Venue:</strong>
+                {{ event.venue }}
+            </p>
+
+            <p>
+                <i class="fas fa-calendar"></i>
+                <strong>Date:</strong>
+                {{ event.event_date.strftime('%A, %d %B %Y') }}
+            </p>
+
+            <p>
+                <i class="fas fa-clock"></i>
+                <strong>Time:</strong>
+                {{ event.event_time }}
+            </p>
+
+            <p class="text-muted">
+                {{ event.description }}
+            </p>
+
+        </div>
+
+        <div class="card-footer bg-white">
+
+            <a href="{{ url_for('events.event_profile', event_id=event.id) }}"
+               class="btn btn-primary w-100">
+
+                <i class="fas fa-eye"></i>
+                View Details
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+        </div>
+
+    {% else %}
+
+    <div class="card shadow-sm">
+
+        <div class="card-body text-center py-5">
+
+            <i class="fas fa-calendar-times fa-4x text-secondary mb-3"></i>
+
+            <h4>No Events Available</h4>
+
+            <p class="text-muted">
+                There are currently no upcoming events.
+            </p>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

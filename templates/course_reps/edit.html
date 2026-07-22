@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+<div class="card shadow border-0 rounded-4">
+
+<div class="card-header bg-warning text-dark">
+
+<h4>
+
+<i class="bi bi-pencil-square"></i>
+
+Edit Course Representative
+
+</h4>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Member
+
+</label>
+
+<input
+type="text"
+class="form-control"
+value="{{ rep.member.first_name }} {{ rep.member.last_name }}"
+readonly>
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Position
+
+</label>
+
+<select
+name="position"
+class="form-select"
+required>
+
+<option value="Course Rep"
+{% if rep.position == "Course Rep" %}selected{% endif %}>
+
+Course Representative
+
+</option>
+
+<option value="Assistant Course Rep"
+{% if rep.position == "Assistant Course Rep" %}selected{% endif %}>
+
+Assistant Course Representative
+
+</option>
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Status
+
+</label>
+
+<select
+name="status"
+class="form-select"
+required>
+
+<option value="Active"
+{% if rep.status == "Active" %}selected{% endif %}>
+
+Active
+
+</option>
+
+<option value="Inactive"
+{% if rep.status == "Inactive" %}selected{% endif %}>
+
+Inactive
+
+</option>
+
+</select>
+
+</div>
+
+<hr>
+
+<a href="{{ url_for('course_reps.course_reps') }}"
+class="btn btn-secondary">
+
+<i class="bi bi-arrow-left"></i>
+
+Back
+
+</a>
+
+<button
+class="btn btn-warning">
+
+<i class="bi bi-check-circle"></i>
+
+Update
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

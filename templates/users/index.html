@@ -1,0 +1,208 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+<div class="container-fluid mt-4">
+
+    <div class="page-header mb-4">
+
+        <a href="{{ url_for('dashboard.dashboard') }}"
+           class="btn btn-outline-secondary back-btn">
+
+            <i class="bi bi-arrow-left"></i>
+            Back
+
+        </a>
+
+        <div class="page-title mt-3">
+
+            <h1>
+                <i class="bi bi-people-fill"></i>
+                Member Management
+            </h1>
+
+            <p class="text-muted">
+                Manage all registered ESA members from one place.
+            </p>
+
+        </div>
+
+    </div>
+<div class="row mb-3">
+
+    <div class="col-md-8">
+
+       <div class="card shadow-sm border-0 mb-3">
+
+    <div class="card-body">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-8">
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-search"></i>
+                    </span>
+
+                    <input
+                        type="text"
+                        id="userSearch"
+                        class="form-control"
+                        placeholder="Search by Name, Username, Email or Role">
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4 text-end">
+
+                <span class="badge bg-dark fs-6">
+                    {{ users|length }} Users
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+    <div class="card shadow">
+        <div class="card-body">
+
+            <table class="table table-hover">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+    <th>Name</th>
+    <th>Username</th>
+    <th>Email</th>
+    <th>Role</th>
+    <th>Status</th>
+    <th class="text-center">Actions</th>
+
+</tr>
+
+                </thead>
+
+                <tbody>
+
+{% for user in users %}
+
+<tr>
+
+    <td>
+    <strong>{{ user.full_name }}</strong>
+</td>
+
+<td>
+    <span class="badge bg-primary">
+        {{ user.username }}
+    </span>
+</td>
+
+<td>{{ user.email or "-" }}</td>
+
+<td>
+    <span class="badge bg-secondary">
+        {{ user.role }}
+    </span>
+</td>
+
+    <td>
+
+        {% if user.is_active %}
+
+            <span class="badge bg-success">
+                Active
+            </span>
+
+        {% else %}
+
+            <span class="badge bg-danger">
+                Disabled
+            </span>
+
+        {% endif %}
+
+    </td>
+
+
+{% if user.email != "admin@usted.edu.gh" %}
+
+
+{% endif %}
+
+
+<td class="text-center">
+    <div class="d-flex justify-content-center gap-2">
+
+        <a href="{{ url_for('users.edit_user', user_id=user.id) }}"
+           class="btn btn-warning btn-sm"
+           title="Edit">
+            <i class="bi bi-pencil"></i>
+        </a>
+
+        <a href="{{ url_for('users.view_username', user_id=user.id) }}"
+           class="btn btn-primary btn-sm"
+           title="View Username">
+            <i class="bi bi-person-badge"></i>
+        </a>
+
+        <a href="{{ url_for('users.reset_password', user_id=user.id) }}"
+           class="btn btn-info btn-sm"
+           title="Reset Password">
+            <i class="bi bi-key"></i>
+        </a>
+
+        <a href="{{ url_for('users.delete_user', user_id=user.id) }}"
+           class="btn btn-danger btn-sm"
+           title="Delete">
+            <i class="bi bi-trash"></i>
+        </a>
+
+    </div>
+</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+ <script>
+
+document.getElementById("userSearch").addEventListener("keyup", function () {
+
+    let value = this.value.toLowerCase();
+
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(function (row) {
+
+        row.style.display =
+            row.innerText.toLowerCase().includes(value)
+            ? ""
+            : "none";
+
+    });
+
+});
+
+</script>
+
+
+{% endblock %}

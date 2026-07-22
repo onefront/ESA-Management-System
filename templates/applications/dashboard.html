@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-person-plus-fill text-primary"></i>
+
+                Pending Applications
+
+            </h2>
+
+            <p class="text-muted">
+
+                Review new student registration requests.
+
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('dashboard.dashboard') }}"
+           class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Date Applied</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for app in applications %}
+
+                <tr>
+
+                    <td>{{ app.student_id }}</td>
+
+                    <td>
+
+                        {{ app.first_name }}
+                        {{ app.last_name }}
+
+                    </td>
+
+                    <td>{{ app.email }}</td>
+
+                    <td>
+
+                        <span class="badge bg-warning">
+
+                            {{ app.status }}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        {{ app.date_applied.strftime("%d-%m-%Y") }}
+
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="btn btn-success btn-sm"
+                            disabled>
+
+                            Approve
+
+                        </button>
+
+                        <button
+                            class="btn btn-danger btn-sm"
+                            disabled>
+
+                            Reject
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+
+                    <td colspan="6" class="text-center text-muted">
+
+                        No pending applications.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

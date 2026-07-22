@@ -1,0 +1,385 @@
+{% extends "member_portal/layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <h2 class="fw-bold text-primary">
+
+                <i class="bi bi-people-fill"></i>
+
+                My Academic Class
+
+            </h2>
+
+            <hr>
+
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <strong>Academic Class</strong><br>
+
+                    {{ class_group.name }}
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <strong>Programme</strong><br>
+
+                    {{ member.programme }}
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <strong>Level</strong><br>
+
+                    {{ member.level }}
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <strong>Session</strong><br>
+
+                    {{ member.session }}
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <strong>Total Members</strong><br>
+
+                    {{ classmates|length }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Representatives -->
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm mb-4">
+
+                <div class="card-header bg-primary text-white">
+
+                    Course Representative
+
+                </div>
+<div class="card-body">
+
+    {% if course_rep %}
+
+    <div class="d-flex justify-content-between align-items-center">
+
+        <div class="d-flex">
+
+            <img src="{% if course_rep.passport %}
+                        {{ url_for('static', filename='uploads/' ~ course_rep.passport) }}
+                      {% else %}
+                        {{ url_for('static', filename='images/default-avatar.png') }}
+                      {% endif %}"
+                 class="rounded-circle me-3"
+                 width="70"
+                 height="70"
+                 style="object-fit:cover;"
+                 onerror="this.src='{{ url_for('static', filename='images/default-avatar.png') }}';">
+
+            <div>
+
+                <div class="d-flex align-items-center mb-2">
+
+    <h5 class="mb-0 me-2">
+        {{ course_rep.first_name }}
+        {{ course_rep.last_name }}
+    </h5>
+
+    <span class="badge bg-primary">
+        Course Rep
+    </span>
+
+</div>
+
+                <div class="text-muted">
+                    {{ course_rep.esa_id }}
+                </div>
+
+                <div>
+                    <i class="bi bi-telephone-fill text-primary"></i>
+                    {{ course_rep.phone }}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <a href="tel:{{ course_rep.phone }}"
+   class="btn btn-primary rep-btn me-2">
+    <i class="bi bi-telephone-fill"></i>
+</a>
+
+   <a href="https://wa.me/233{{ course_rep.phone[1:] }}"
+   target="_blank"
+   class="btn btn-success rep-btn">
+    <i class="bi bi-whatsapp"></i>
+</a>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <p class="mb-0">
+        No Course Representative Assigned
+    </p>
+
+    {% endif %}
+
+</div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card shadow-sm mb-4">
+
+                <div class="card-header bg-success text-white">
+
+                    Assistant Course Representative
+
+                </div>
+
+                <div class="card-body">
+
+    {% if assistant_rep %}
+
+    <div class="d-flex justify-content-between align-items-center">
+
+        <div class="d-flex">
+
+            <img src="{% if assistant_rep.passport %}
+                        {{ url_for('static', filename='uploads/' ~ assistant_rep.passport) }}
+                      {% else %}
+                        {{ url_for('static', filename='images/default-avatar.png') }}
+                      {% endif %}"
+                 class="rounded-circle me-3"
+                 width="70"
+                 height="70"
+                 style="object-fit:cover;"
+                 onerror="this.src='{{ url_for('static', filename='images/default-avatar.png') }}';">
+
+            <div>
+
+                <div class="d-flex align-items-center mb-2">
+
+    <h5 class="mb-0 me-2">
+        {{ assistant_rep.first_name }}
+        {{ assistant_rep.last_name }}
+    </h5>
+
+    <span class="badge bg-success">
+        Assistant Rep
+    </span>
+
+</div>
+
+                <div class="text-muted">
+                    {{ assistant_rep.esa_id }}
+                </div>
+
+                <div>
+                    <i class="bi bi-telephone-fill text-success"></i>
+                    {{ assistant_rep.phone }}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div>
+
+
+            <a href="tel:{{ assistant_rep.phone }}"
+   class="btn btn-primary rep-btn me-2">
+    <i class="bi bi-telephone-fill"></i>
+</a>
+
+
+<a href="https://wa.me/233{{ assistant_rep.phone[1:] }}"
+   target="_blank"
+   class="btn btn-success rep-btn">
+    <i class="bi bi-whatsapp"></i>
+</a>
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <p class="mb-0">
+        No Assistant Course Representative Assigned
+    </p>
+
+    {% endif %}
+
+</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Members Table -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-header">
+
+            <strong>Class Members</strong>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-hover">
+
+                <thead>
+    <tr>
+        <th class="text-center">#</th>
+        <th>Member</th>
+        <th class="text-center">Student ID</th>
+        <th class="text-center">Gender</th>
+        <th class="text-center">Actions</th>
+    </tr>
+</thead>
+                <tbody>
+
+{% for m in classmates %}
+
+<tr>
+
+    <!-- Number -->
+    <td class="text-center align-middle">
+        {{ loop.index }}
+    </td>
+
+    <!-- Member -->
+    <td>
+
+        <div class="d-flex align-items-center">
+
+            <img
+                src="{{ url_for('static', filename='uploads/' ~ (m.passport or 'default-avatar.png')) }}"
+                onerror="this.src='{{ url_for('static', filename='images/default-avatar.png') }}';"
+                class="rounded-circle me-3"
+                width="55"
+                height="55"
+                style="object-fit:cover;">
+
+            <div>
+
+                <strong>
+                    {{ m.first_name }} {{ m.last_name }}
+                </strong>
+
+                <br>
+
+  <small class="text-muted d-block">
+    {{ m.esa_id }}
+</small>
+
+{% if m.phone %}
+<small class="text-secondary d-block">
+    <i class="bi bi-telephone-fill"></i>
+    {{ m.phone }}
+</small>
+{% endif %}
+
+            </div>
+
+        </div>
+
+    </td>
+
+    <!-- Student ID -->
+    <td class="align-middle">
+        {{ m.student_id }}
+    </td>
+
+    <!-- Gender -->
+    <td class="align-middle">
+
+        {% if m.gender %}
+            <span class="badge bg-primary">
+                {{ m.gender }}
+            </span>
+        {% else %}
+            <span class="badge bg-secondary">
+                Not Set
+            </span>
+        {% endif %}
+
+    </td>
+
+    <!-- Actions -->
+    <td class="text-center align-middle">
+
+        {% if m.phone %}
+
+        <div class="d-flex justify-content-center gap-2">
+
+            <a href="tel:{{ m.phone }}"
+   class="btn btn-primary action-btn"
+   title="Call {{ m.first_name }}">
+    <i class="bi bi-telephone-fill"></i>
+</a>
+
+<a href="https://wa.me/233{{ m.phone[-9:] }}"
+   target="_blank"
+   class="btn btn-success action-btn"
+   title="WhatsApp {{ m.first_name }}">
+    <i class="bi bi-whatsapp"></i>
+</a>
+
+        </div>
+
+        {% else %}
+
+        <span class="text-muted">No Phone</span>
+
+        {% endif %}
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,312 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4 election-dashboard">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                <i class="bi bi-check2-square text-primary"></i>
+                ESA Election Management
+            </h2>
+
+            <p class="text-muted">
+                Manage elections, portfolios, candidates and voting from one place.
+            </p>
+
+        </div>
+
+        <a href="javascript:history.back()"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+    Back
+
+</a>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-calendar-event display-5 text-primary"></i>
+
+                    <h2 class="mt-2">{{ total_elections }}</h2>
+
+                    <small class="text-muted">
+                        Total Elections
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-check-circle display-5 text-success"></i>
+
+                    <h2>{{ active_elections }}</h2>
+
+                    <small class="text-muted">
+
+                        Active Elections
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-hourglass-split display-5 text-warning"></i>
+
+                    <h2>{{ pending_elections }}</h2>
+
+                    <small class="text-muted">
+
+                        Pending
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body text-center">
+
+                    <i class="bi bi-x-circle display-5 text-danger"></i>
+
+                    <h2>{{ closed_elections }}</h2>
+
+                    <small class="text-muted">
+
+                        Closed
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Election Modules -->
+
+    <div class="row g-4">
+
+    <!-- Elections -->
+    <div class="col-lg-4 col-md-6">
+        <a href="{{ url_for('elections.elections') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 text-center p-4">
+                <i class="bi bi-calendar-event display-4 text-primary"></i>
+                <h4 class="mt-3">Elections</h4>
+                <p class="text-muted mb-0">Create and manage elections.</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- Portfolios -->
+    <div class="col-lg-4 col-md-6">
+        <a href="{{ url_for('portfolios.portfolios') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 text-center p-4">
+                <i class="bi bi-briefcase-fill display-4 text-success"></i>
+                <h4 class="mt-3">Portfolios</h4>
+                <p class="text-muted mb-0">Manage election portfolios.</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- Candidates -->
+    <div class="col-lg-4 col-md-6">
+        <a href="{{ url_for('candidates.candidates') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 text-center p-4">
+                <i class="bi bi-person-badge-fill display-4 text-info"></i>
+                <h4 class="mt-3">Candidates</h4>
+                <p class="text-muted mb-0">Register election candidates.</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- Voting -->
+    <div class="col-lg-4 col-md-6">
+        <a href="{{ url_for('voting.dashboard') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 text-center p-4">
+                <i class="bi bi-check2-square display-4 text-warning"></i>
+                <h4 class="mt-3">Voting</h4>
+                <p class="text-muted mb-0">Open and manage voting.</p>
+            </div>
+        </a>
+    </div>
+
+  <!-- Results -->
+<div class="col-lg-4 col-md-6">
+    <a href="{{ url_for('results.dashboard') }}"
+       class="text-decoration-none">
+
+        <div class="card shadow-sm border-0 h-100 text-center p-4">
+
+            <i class="bi bi-bar-chart-fill display-4 text-danger"></i>
+
+            <h4 class="mt-3">
+                Results
+            </h4>
+
+            <p class="text-muted mb-0">
+                View election results.
+            </p>
+
+        </div>
+
+    </a>
+</div>
+
+    <!-- Settings -->
+    <div class="col-lg-4 col-md-6">
+        <a href="{{ url_for('settings.dashboard') }}"
+   class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 text-center p-4">
+                <i class="bi bi-gear-fill display-4 text-secondary"></i>
+                <h4 class="mt-3">Settings</h4>
+                <p class="text-muted mb-0">Election configuration.</p>
+            </div>
+        </a>
+    </div>
+        <!-- Election Control -->
+
+<div class="col-lg-4 col-md-6">
+
+    <a href="{{ url_for('control.dashboard') }}"
+       class="text-decoration-none">
+
+        <div class="card shadow-sm border-0 h-100 text-center p-4">
+
+            <i class="bi bi-sliders display-4 text-dark"></i>
+
+            <h4 class="mt-3">
+
+                Election Control
+
+            </h4>
+
+            <p class="text-muted mb-0">
+
+                Open, pause and close voting.
+
+            </p>
+
+        </div>
+
+    </a>
+
+</div>
+<div class="col-lg-4 col-md-6">
+
+    <a href="{{ url_for('analytics.dashboard') }}"
+       class="text-decoration-none">
+
+        <div class="card shadow-sm border-0 h-100 text-center p-4">
+
+            <i class="bi bi-graph-up-arrow display-4 text-primary"></i>
+
+            <h4 class="mt-3">
+
+                Analytics
+
+            </h4>
+
+            <p class="text-muted mb-0">
+
+                View live election statistics.
+
+            </p>
+
+        </div>
+
+    </a>
+
+</div>
+        <div class="col-lg-4 col-md-6">
+
+    <a href="{{ url_for('audit.dashboard') }}"
+       class="text-decoration-none">
+
+        <div class="card shadow-sm border-0 h-100 text-center p-4">
+
+            <i class="bi bi-clock-history display-4 text-dark"></i>
+
+            <h4 class="mt-3">
+
+                Audit Log
+
+            </h4>
+
+            <p class="text-muted mb-0">
+
+                View election activity history.
+
+            </p>
+
+        </div>
+     <div class="col-lg-4 col-md-6">
+
+<a href="{{ url_for('history.dashboard') }}"
+class="text-decoration-none">
+
+<div class="card shadow election-card text-center p-4">
+
+<i class="bi bi-calendar-week election-icon text-primary"></i>
+
+<h4 class="mt-3">
+
+Election History
+
+</h4>
+
+<p class="text-muted">
+
+Browse previous elections.
+
+</p>
+
+</div>
+
+</a>
+
+</div>
+    </a>
+
+</div>
+</div>
+</div>
+{% endblock %}

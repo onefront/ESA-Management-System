@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<a href="{{ url_for('dashboard.dashboard') }}"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+
+    Back to Dashboard
+
+</a>
+<div class="container-fluid mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>
+            <i class="bi bi-person-badge-fill"></i>
+            Executive Management
+        </h2>
+
+        <a href="{{ url_for('executives.add_executive') }}"
+           class="btn btn-primary">
+
+            <i class="bi bi-plus-circle"></i>
+            Add Executive
+
+        </a>
+
+    </div>
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+    <th>Photo</th>
+    <th>Executive ID</th>
+    <th>Name</th>
+    <th>Position</th>
+    <th>Phone</th>
+    <th>Actions</th>
+</tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for executive in executives %}
+<tr>
+
+    <td>
+
+        {% if executive.photo %}
+
+            <img src="{{ url_for('static',
+                filename='uploads/' + executive.photo) }}"
+                width="50"
+                height="50"
+                class="rounded-circle"
+                style="object-fit:cover;">
+
+        {% else %}
+
+            <img src="{{ url_for('static',
+                filename='images/default-avatar.png') }}"
+                width="50"
+                height="50"
+                class="rounded-circle">
+
+        {% endif %}
+
+    </td>
+
+    <td>{{ executive.executive_id }}</td>
+
+    <td>{{ executive.full_name }}</td>
+
+    <td>{{ executive.position }}</td>
+
+    <td>{{ executive.phone }}</td>
+
+    <td>
+
+        <a href="{{ url_for('executives.executive_profile',
+                    executive_id=executive.id) }}"
+   class="btn btn-sm btn-info">
+
+    View
+
+</a>
+
+        <a href="{{ url_for('executives.edit_executive',
+                    executive_id=executive.id) }}"
+   class="btn btn-sm btn-warning">
+
+    Edit
+
+</a>
+
+        <a href="{{ url_for('executives.delete_executive',
+                    executive_id=executive.id) }}"
+   class="btn btn-sm btn-danger">
+
+    Delete
+
+</a>
+
+    </td>
+
+</tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="6" class="text-center">
+
+                            No executives found.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

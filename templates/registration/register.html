@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h3>
+                        <i class="bi bi-person-plus-fill"></i>
+                        ESA Member Registration
+                    </h3>
+
+                </div>
+
+                <div class="card-body text-center">
+
+                    <h5 class="mb-3">
+                        Welcome to ESA CONNECT
+                    </h5>
+
+                    <p class="text-muted">
+
+                        Online self-registration will be available soon.
+
+                    </p>
+
+                    <hr>
+
+                    <a href="{{ url_for('dashboard.dashboard') }}"
+                       class="btn btn-secondary">
+
+                        Back
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

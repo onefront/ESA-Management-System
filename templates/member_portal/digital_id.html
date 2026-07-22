@@ -1,0 +1,194 @@
+{% extends "shared/id_layout.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="digital-card">
+
+        <!-- HEADER -->
+        <div class="card-header-area">
+
+            <img src="{{ url_for('static', filename='images/logo.png') }}"
+                 class="esa-logo"
+                 alt="ESA Logo">
+
+            <div class="header-text">
+                <h2>EXECUTIVE STUDENT ASSOCIATION</h2>
+                <p>Together We Build</p>
+            </div>
+
+        </div>
+
+        <!-- MEMBER NAME -->
+        <div class="member-title">
+
+            {{ member.first_name }} {{ member.last_name }}
+
+        </div>
+
+
+        <!-- ================= BODY ================= -->
+
+<div class="member-card-body">
+
+    <!-- LEFT SIDE -->
+
+    <div class="member-photo-section">
+
+        <img
+            src="{{ url_for('static',
+            filename='uploads/' + member.passport) }}"
+            class="member-photo">
+
+        {% if member.status == "Active" %}
+
+        <div class="member-status">
+
+            <i class="bi bi-patch-check-fill"></i>
+
+            ACTIVE MEMBER
+
+        </div>
+
+        {% else %}
+
+        <div class="member-status bg-danger">
+
+            {{ member.status }}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+
+    <div class="member-details">
+
+        <h2 class="member-fullname">
+
+            {{ member.first_name }} {{ member.last_name }}
+
+        </h2>
+
+        <div class="detail-row">
+
+            <span class="detail-title">ESA ID</span>
+
+            <span class="detail-value">{{ member.esa_id }}</span>
+
+        </div>
+
+        <div class="detail-row">
+
+            <span class="detail-title">Index Number</span>
+
+            <span class="detail-value">{{ member.student_id }}</span>
+
+        </div>
+
+        <div class="detail-row">
+
+            <span class="detail-title">Programme</span>
+
+            <span class="detail-value">{{ member.programme }}</span>
+
+        </div>
+
+        <div class="detail-row">
+
+            <span class="detail-title">Level</span>
+
+            <span class="detail-value">{{ member.level }}</span>
+
+        </div>
+
+        <div class="detail-row">
+
+            <span class="detail-title">Session</span>
+
+            <span class="detail-value">{{ member.session }}</span>
+
+        </div>
+
+        <div class="detail-row">
+
+            <span class="detail-title">Issued</span>
+
+            <span class="detail-value">
+
+                {{ member.date_registered.strftime("%d %b %Y") }}
+
+            </span>
+
+        </div>
+
+        <div class="detail-row">
+
+            <span class="detail-title">Expires</span>
+
+            <span class="detail-value">
+
+                {% if member.expiry_date %}
+
+                    {{ member.expiry_date.strftime("%d %b %Y") }}
+
+                {% else %}
+
+                    Lifetime
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+        <!-- FOOTER -->
+
+        <div class="card-footer-area">
+
+            <div>
+
+                <img
+                    src="{{ url_for('static',
+                    filename='qr_codes/' ~ member.esa_id ~ '.png') }}"
+                    class="qr">
+
+                <div class="mt-2 fw-bold">
+
+                    SCAN TO VERIFY
+
+                </div>
+
+            </div>
+
+            <div class="footer-right">
+
+                ESA CONNECT © 2026
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="text-center mt-4">
+
+        <a href="{{ url_for('member_portal.download_id') }}"
+           class="btn btn-primary btn-lg">
+
+            <i class="bi bi-download"></i>
+
+            Download PDF
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>Executive Profile</h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4 text-center">
+
+                    {% if executive.photo %}
+
+                        <img src="{{ url_for('static',
+                            filename='uploads/' + executive.photo) }}"
+                             class="img-thumbnail rounded-circle"
+                             width="220"
+                             height="220"
+                             style="object-fit:cover;">
+
+                    {% else %}
+
+                        <img src="{{ url_for('static',
+                            filename='images/default-avatar.png') }}"
+                             class="img-thumbnail rounded-circle"
+                             width="220">
+
+                    {% endif %}
+
+                </div>
+
+                <div class="col-md-8">
+
+                    <table class="table table-bordered">
+
+                        <tr>
+                            <th>Executive ID</th>
+                            <td>{{ executive.executive_id }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Full Name</th>
+                            <td>{{ executive.full_name }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Position</th>
+                            <td>{{ executive.position }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Phone</th>
+                            <td>{{ executive.phone }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ executive.email }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Academic Year</th>
+                            <td>{{ executive.year }}</td>
+                        </tr>
+
+                    </table>
+
+                    <a href="{{ url_for('executives.edit_executive',
+                    executive_id=executive.id) }}"
+   class="btn btn-warning">
+
+    <i class="bi bi-pencil-square"></i>
+    Edit
+
+</a>
+<a href="{{ url_for('executives.delete_executive',
+                    executive_id=executive.id) }}"
+   class="btn btn-danger">
+
+    <i class="bi bi-trash"></i>
+
+    Delete
+
+</a>
+<a href="{{ url_for('executives.executives') }}"
+   class="btn btn-secondary">
+
+    Back
+
+</a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

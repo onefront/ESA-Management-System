@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>{{ event.title }}</h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    {% if event.banner %}
+
+                        <img src="{{ url_for('static',
+                            filename='uploads/' + event.banner) }}"
+                             class="img-fluid rounded">
+
+                    {% else %}
+
+                        <img src="{{ url_for('static',
+                            filename='images/default-event.png') }}"
+                             class="img-fluid rounded">
+
+                    {% endif %}
+
+                </div>
+
+                <div class="col-md-8">
+
+                    <table class="table table-bordered">
+
+                        <tr>
+                            <th>Event Code</th>
+                            <td>{{ event.event_code }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Venue</th>
+                            <td>{{ event.venue }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Date</th>
+                            <td>{{ event.event_date }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Time</th>
+                            <td>{{ event.event_time }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Status</th>
+                            <td>{{ event.status }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ event.description }}</td>
+                        </tr>
+
+                    </table>
+                    <a href="{{ url_for('events.edit_event',
+                    event_id=event.id) }}"
+   class="btn btn-warning">
+
+    <i class="bi bi-pencil-square"></i>
+    Edit
+
+</a>
+                    <a href="{{ url_for('events.delete_event',
+                    event_id=event.id) }}"
+   class="btn btn-danger">
+
+    <i class="bi bi-trash"></i>
+
+    Delete
+
+</a>
+                    <a href="{{ url_for('events.events') }}"
+                       class="btn btn-secondary">
+
+                        Back
+
+                    </a>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

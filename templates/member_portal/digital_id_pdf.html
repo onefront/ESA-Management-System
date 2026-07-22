@@ -1,0 +1,207 @@
+{% extends "member_portal/layout.html" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="digital-card position-relative">
+
+        <!-- Header -->
+        <div class="digital-header">
+          <div class="official-badge">
+<style>
+
+body{
+
+    margin:0;
+
+    padding:20px;
+
+    background:white;
+
+}
+
+</style>
+    OFFICIAL MEMBER CARD
+
+</div>
+            <img src="{{ url_for('static', filename='images/logo.png') }}"
+                 alt="ESA Logo">
+
+            <div>
+
+                <h3>EXECUTIVE STUDENT ASSOCIATION</h3>
+
+                <small>Together We Build</small>
+
+            </div>
+
+        </div>
+
+        <!-- Body -->
+        <div class="digital-body">
+
+            <div class="row">
+
+                <!-- Passport -->
+
+                <div class="col-md-4 text-center">
+
+                    <img src="{{ url_for('static',
+                    filename='uploads/' + member.passport) }}"
+                         class="passport">
+
+                </div>
+
+                <!-- Details -->
+
+                <div class="col-md-8">
+
+                    <div class="member-name">
+
+                        {{ member.first_name }}
+                        {{ member.last_name }}
+
+                    </div>
+
+                    <br>
+
+                    <div class="member-info">
+
+                        <strong>ESA ID:</strong>
+
+                        {{ member.esa_id }}
+
+                    </div>
+
+                    <div class="member-info">
+
+                        <strong>Index Number:</strong>
+
+                        {{ member.student_id }}
+
+                    </div>
+
+                    <div class="member-info">
+
+                        <strong>Programme:</strong>
+
+                        {{ member.programme }}
+
+                    </div>
+
+                    <div class="member-info">
+
+                        <strong>Level:</strong>
+
+                        {{ member.level }}
+
+                    </div>
+
+                    <div class="member-info">
+
+                        <strong>Session:</strong>
+
+                        {{ member.session }}
+                      <div class="member-info">
+
+    <strong>Issued:</strong>
+
+    {{ member.date_registered.strftime("%d %b %Y") }}
+
+</div>
+
+<div class="member-info">
+
+    <strong>Expires:</strong>
+
+    {% if member.expiry_date %}
+
+        {{ member.expiry_date.strftime("%d %b %Y") }}
+
+    {% else %}
+
+        Lifetime
+
+    {% endif %}
+
+</div>
+                    </div>
+
+                    <br>
+
+                    {% if member.status == "Active" %}
+
+<span class="status">
+
+    ✅ ACTIVE MEMBER
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+    {{ member.status }}
+
+</span>
+
+{% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+<div class="row mt-5 align-items-center">
+
+    <div class="col-md-8">
+
+
+
+   <div class="digital-footer">
+
+    <img src="{{ url_for('static',
+    filename='qrcodes/' + qr_code) }}"
+         class="qr-code">
+
+    <small>
+
+        SCAN TO VERIFY
+
+    </small>
+
+</div>
+    </div>
+
+    <div class="col-md-4 text-end">
+
+
+
+    </div>
+
+</div>
+
+
+</div>
+        <!-- Footer -->
+
+        <div class="digital-footer">
+
+            <small>
+
+                ESA CONNECT © 2026
+
+            </small>
+
+        </div>
+
+    </div>
+<div class="text-center mt-4">
+
+
+
+</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h2 class="fw-bold text-primary mb-1">
+
+                        <i class="bi bi-person-plus-fill"></i>
+
+                        Register New ESA Member
+
+                    </h2>
+
+                    <p class="text-muted mb-0">
+
+                        Register a new Executive Student Association member.
+
+                    </p>
+
+                </div>
+
+                <a href="{{ url_for('members.members') }}"
+                   class="btn btn-outline-secondary">
+
+                    <i class="bi bi-arrow-left"></i>
+
+                    Back to Members
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+      <div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-primary text-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-camera-fill"></i>
+
+            Passport Photograph
+
+        </h5>
+
+    </div>
+
+    <div class="card-body text-center">
+
+        <img
+            id="preview"
+            src="{{ url_for('static', filename='images/default-avatar.png') }}"
+            class="rounded-circle border shadow"
+            width="170"
+            height="170"
+            style="object-fit:cover;">
+
+        <br><br>
+
+        <input
+            type="file"
+            class="form-control"
+            id="passport"
+            name="passport"
+            accept="image/*">
+
+        <small class="text-muted">
+
+            JPEG, PNG or JPG only.<br>
+
+            Recommended size: 300 × 300 pixels.
+
+        </small>
+
+    </div>
+
+</div>
+      <script>
+
+document.getElementById("passport").addEventListener("change", function(e){
+
+    const file = e.target.files[0];
+
+    if(file){
+
+        const reader = new FileReader();
+
+        reader.onload = function(event){
+
+            document.getElementById("preview").src = event.target.result;
+
+        };
+
+        reader.readAsDataURL(file);
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

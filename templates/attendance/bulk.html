@@ -1,0 +1,170 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>
+                <i class="bi bi-person-check-fill"></i>
+                Bulk Attendance
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <!-- Select Event -->
+            <form method="POST" class="row mb-4">
+
+                <div class="col-md-8">
+
+                    <label class="form-label">Select Event</label>
+
+                    <select name="event_id"
+                            class="form-select"
+                            required>
+
+                        <option value="">-- Select Event --</option>
+
+                        {% for event in events %}
+
+                        <option value="{{ event.id }}"
+                            {% if selected_event and selected_event|int == event.id %}
+                                selected
+                            {% endif %}>
+
+                            {{ event.title }} -
+                            {{ event.event_date }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-4 d-flex align-items-end">
+
+                    <button class="btn btn-primary w-100">
+
+                        <i class="bi bi-search"></i>
+
+                        Load Members
+
+                    </button>
+
+                </div>
+
+            </form>
+
+            {% if members %}
+
+            <hr>
+
+            <h5 class="mb-3">
+
+                Members for Attendance
+
+            </h5>
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>ESA ID</th>
+                        <th>Name</th>
+                        <th>Programme</th>
+                        <th>Level</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for member in members %}
+
+                <tr>
+
+                    <td>{{ member.esa_id }}</td>
+
+                    <td>
+
+                        {{ member.first_name }}
+                        {{ member.last_name }}
+
+                    </td>
+
+                    <td>{{ member.programme }}</td>
+
+                    <td>{{ member.level }}</td>
+
+                    <td>
+
+                        <div class="form-check form-check-inline">
+
+                            <input class="form-check-input"
+                                   type="radio"
+                                   disabled>
+
+                            <label class="form-check-label">
+
+                                Present
+
+                            </label>
+
+                        </div>
+
+                        <div class="form-check form-check-inline">
+
+                            <input class="form-check-input"
+                                   type="radio"
+                                   disabled>
+
+                            <label class="form-check-label">
+
+                                Absent
+
+                            </label>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <div class="text-end">
+
+                <button class="btn btn-success" disabled>
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Save Attendance (Next Step)
+
+                </button>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

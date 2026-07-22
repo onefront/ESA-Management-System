@@ -1,0 +1,181 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<a href="{{ url_for('dashboard.dashboard') }}"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+
+    Back to Dashboard
+
+</a>
+<div class="container-fluid">
+
+<div class="card shadow-lg border-0 rounded-4 mb-4">
+  <div class="card-body">
+    <div class="row align-items-center">
+
+      <div class="col-lg-3 text-center">
+        {% if member.passport %}
+        <img src="{{ url_for('static', filename='uploads/' + member.passport) }}"
+             class="rounded-circle shadow border"
+             width="220" height="220"
+             style="object-fit:cover;">
+        {% else %}
+        <img src="{{ url_for('static', filename='images/default-avatar.png') }}"
+             class="rounded-circle shadow border"
+             width="220" height="220">
+        {% endif %}
+      </div>
+
+      <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h2 class="fw-bold mb-1">{{ member.first_name }} {{ member.last_name }}</h2>
+            <h5 class="text-primary mb-3">{{ member.programme }}</h5>
+          </div>
+
+          {% if member.status == "Active" %}
+          <span class="badge bg-success fs-6">Active Member</span>
+          {% else %}
+          <span class="badge bg-danger fs-6">{{ member.status }}</span>
+          {% endif %}
+        </div>
+
+        <hr>
+
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>ESA ID:</strong> {{ member.esa_id }}</p>
+            <p><strong>Student ID:</strong> {{ member.student_id }}</p>
+            <p><strong>Phone:</strong> {{ member.phone }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <p><strong>Level:</strong> {{ member.level }}</p>
+            <p><strong>Session:</strong> {{ member.session }}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+
+<div class="col-md-3">
+<div class="card text-center shadow-sm">
+<div class="card-body">
+<h6>Total Paid</h6>
+<h3 class="text-success">GH₵ {{ "%.2f"|format(total_paid) }}</h3>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card text-center shadow-sm">
+<div class="card-body">
+<h6>Payments</h6>
+<h3>{{ payment_count }}</h3>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card text-center shadow-sm">
+<div class="card-body">
+<h6>Attendance</h6>
+<h3>{{ attendance_count }}</h3>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card text-center shadow-sm">
+<div class="card-body">
+<h6>Status</h6>
+<h3>{% if member.status=="Active" %}<span class="text-success">Active</span>{% else %}<span class="text-danger">{{ member.status }}</span>{% endif %}</h3>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="row g-4">
+
+<div class="col-lg-6">
+<div class="card shadow-sm h-100">
+<div class="card-header bg-primary text-white">Personal Information</div>
+<div class="card-body">
+<table class="table table-borderless mb-0">
+<tr><th>First Name</th><td>{{ member.first_name }}</td></tr>
+<tr><th>Last Name</th><td>{{ member.last_name }}</td></tr>
+<tr><th>Gender</th><td>{{ member.gender or "-" }}</td></tr>
+
+<tr><th>Phone</th><td>{{ member.phone }}</td></tr>
+
+<tr><th>Address</th><td>{{ member.address or "-" }}</td></tr>
+</table>
+</div>
+</div>
+</div>
+
+<div class="col-lg-6">
+<div class="card shadow-sm h-100">
+<div class="card-header bg-success text-white">Academic Information</div>
+<div class="card-body">
+<table class="table table-borderless mb-0">
+<tr><th>Faculty</th><td>{% if member.faculty %}{{ member.faculty.faculty_name }}{% else %}-{% endif %}</td></tr>
+<tr><th>Programme</th><td>{{ member.programme }}</td></tr>
+<tr><th>Department</th><td>{{ member.department or "-" }}</td></tr>
+<tr><th>Level</th><td>{{ member.level }}</td></tr>
+<tr><th>Session</th><td>{{ member.session }}</td></tr>
+<tr><th>Academic Year</th><td>{{ member.academic_year or "-" }}</td></tr>
+</table>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="col-12">
+<div class="card shadow-sm">
+<div class="card-header bg-dark text-white">Recent Payments</div>
+<div class="card-body">
+<table class="table table-hover">
+<thead><tr><th>Date</th><th>Amount</th><th>Method</th></tr></thead>
+<tbody>
+{% for payment in recent_payments %}
+<tr>
+<td>{{ payment.date_paid.strftime("%d %b %Y") }}</td>
+<td>GH₵ {{ "%.2f"|format(payment.amount) }}</td>
+<td>{{ payment.payment_method }}</td>
+</tr>
+{% else %}
+<tr><td colspan="3" class="text-center">No payments found.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="col-12 text-center mt-3">
+<a href="{{ url_for('members.edit_member', member_id=member.id) }}" class="btn btn-warning">Edit</a>
+<a href="{{ url_for('members.member_card', member_id=member.id) }}" class="btn btn-success">Membership Card</a>
+<a href="{{ url_for('payments.member_payments', member_id=member.id) }}" class="btn btn-info">Payments</a>
+<a href="{{ url_for('members.delete_member', member_id=member.id) }}" class="btn btn-danger">Delete</a>
+<a href="{{ url_for('members.members') }}" class="btn btn-secondary">Back</a>
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

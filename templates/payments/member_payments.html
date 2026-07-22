@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<a href="{{ url_for('dashboard.dashboard') }}"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+
+    Back to Dashboard
+
+</a>
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+            <h3>Member Payments</h3>
+        </div>
+
+        <div class="card-body">
+
+            <h4>{{ member.first_name }} {{ member.last_name }}</h4>
+
+            <p>
+                <strong>ESA ID:</strong> {{ member.esa_id }}
+            </p>
+
+            <a href="{{ url_for('payments.add_payment', member_id=member.id) }}"
+               class="btn btn-success mb-3">
+                Add Payment
+            </a>
+
+            <table class="table table-bordered table-hover">
+
+                <thead>
+
+                   <tr>
+    <th>Date</th>
+    <th>Payment Type</th>
+    <th>Amount</th>
+    <th>Method</th>
+    <th>Reference</th>
+    <th>Receipt</th>
+</tr>
+                </thead>
+
+ <tbody>
+
+{% for payment in payments %}
+
+<tr>
+
+    <td>{{ payment.date_paid.strftime("%d-%m-%Y") }}</td>
+
+    <td>{{ payment.payment_type }}</td>
+
+    <td>GH₵ {{ payment.amount }}</td>
+
+    <td>{{ payment.payment_method }}</td>
+
+    <td>{{ payment.reference }}</td>
+
+    <td>
+
+        <a href="{{ url_for('payments.payment_receipt',
+                            payment_id=payment.id) }}"
+           class="btn btn-sm btn-primary">
+
+            Receipt
+
+        </a>
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

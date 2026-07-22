@@ -1,0 +1,150 @@
+{% extends "layout.html" %}
+
+{% block title %}Edit Slide{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        ✏️ Edit Slide
+                    </h4>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST"
+                          enctype="multipart/form-data">
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Slide Title
+                            </label>
+
+                            <input type="text"
+                                   name="title"
+                                   class="form-control"
+                                   value="{{ slide.title }}"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Subtitle
+                            </label>
+
+                            <textarea
+                                name="subtitle"
+                                class="form-control"
+                                rows="3">{{ slide.subtitle }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Button Text
+                            </label>
+
+                            <input type="text"
+                                   name="button_text"
+                                   value="{{ slide.button_text }}"
+                                   class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Button Link
+                            </label>
+
+                            <input type="text"
+                                   name="button_link"
+                                   value="{{ slide.button_link }}"
+                                   class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Display Order
+                            </label>
+
+                            <input type="number"
+                                   name="display_order"
+                                   value="{{ slide.display_order }}"
+                                   class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Current Image
+                            </label>
+
+                            <br>
+
+                            <img src="{{ url_for('static', filename=slide.image) }}"
+                                 class="img-thumbnail"
+                                 style="max-height:180px;">
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Replace Image
+                            </label>
+
+                            <input type="file"
+                                   name="image"
+                                   class="form-control"
+                                   accept="image/*">
+
+                            <small class="text-muted">
+                                Leave empty to keep the current image.
+                            </small>
+
+                        </div>
+
+                        <div class="form-check mb-4">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="is_active"
+                                {% if slide.is_active %}checked{% endif %}>
+
+                            <label class="form-check-label">
+
+                                Active Slide
+
+                            </label>
+
+                        </div>
+
+                        <button class="btn btn-success">
+                            Update Slide
+                        </button>
+
+                        <a href="{{ url_for('slides.index') }}"
+                           class="btn btn-secondary">
+                            Cancel
+                        </a>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

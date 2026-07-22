@@ -1,0 +1,370 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<a href="{{ url_for('dashboard.dashboard') }}"
+   class="btn btn-outline-secondary back-btn">
+
+    <i class="bi bi-arrow-left"></i>
+
+    Back
+
+</a>
+
+    <!-- ========================= -->
+    <!-- Page Header -->
+    <!-- ========================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-people-fill text-primary"></i>
+
+                Member Management
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Manage all registered ESA members from one place.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+<!-- Statistics -->
+<!-- ========================= -->
+
+<div class="row g-3 mb-4">
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card stat-card">
+            <div class="card-body">
+                <small>Total Members</small>
+                <h2>{{ total_members }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card stat-card">
+            <div class="card-body">
+                <small>Active Members</small>
+                <h2>{{ active_members }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-md-6">
+        <div class="card stat-card">
+            <div class="card-body">
+                <small>Programmes</small>
+                <h2>{{ total_programmes }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-md-6">
+        <div class="card stat-card">
+            <div class="card-body">
+                <small>Weekend</small>
+                <h2>{{ weekend_members }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-2 col-md-6">
+        <div class="card stat-card">
+            <div class="card-body">
+                <small>Evening</small>
+                <h2>{{ evening_members }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <!-- ========================= -->
+    <!-- Toolbar -->
+    <!-- ========================= -->
+
+    <div class="card mb-4">
+
+        <div class="card-body">
+
+            <div class="d-flex flex-wrap gap-2">
+
+                <a href="{{ url_for('members.add_member') }}"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-person-plus-fill"></i>
+
+                    Add Member
+
+                </a>
+
+                <a href="{{ url_for('member_import.import_members') }}"
+                   class="btn btn-success">
+
+                    <i class="bi bi-upload"></i>
+
+                    Import Excel
+
+                </a>
+
+                <a href="{{ url_for('member_import.download_template') }}"
+                   class="btn btn-outline-success">
+
+                    <i class="bi bi-download"></i>
+
+                    Template
+
+                </a>
+
+                <button class="btn btn-outline-primary">
+
+                    <i class="bi bi-file-earmark-excel"></i>
+
+                    Export
+
+                </button>
+
+                <button class="btn btn-outline-danger">
+
+                    <i class="bi bi-file-earmark-pdf"></i>
+
+                    PDF
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+<!-- ========================= -->
+<!-- Search & Filters -->
+<!-- ========================= -->
+
+<div class="card mb-4">
+    <div class="card-body">
+
+        <form method="GET" action="{{ url_for('members.members') }}">
+
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Search by Name, Student ID, ESA ID or Phone"
+                        value="{{ search }}">
+                </div>
+
+                <div class="col-md-2">
+                    <select name="programme" class="form-select">
+                        <option value="">All Programmes</option>
+
+                        {% for p in programmes %}
+                        <option value="{{ p.programme_name }}"
+                            {% if programme == p.programme_name %}selected{% endif %}>
+                            {{ p.programme_name }}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <select name="level" class="form-select">
+                        <option value="">All Levels</option>
+                        <option value="100" {% if level=="100" %}selected{% endif %}>100</option>
+                        <option value="200" {% if level=="200" %}selected{% endif %}>200</option>
+                        <option value="300" {% if level=="300" %}selected{% endif %}>300</option>
+                        <option value="400" {% if level=="400" %}selected{% endif %}>400</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <select name="session" class="form-select">
+                        <option value="">All Sessions</option>
+                        <option value="Weekend" {% if session=="Weekend" %}selected{% endif %}>Weekend</option>
+                        <option value="Evening" {% if session=="Evening" %}selected{% endif %}>Evening</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+<div class="mb-3">
+
+    <h6>
+
+        Total Members Found :
+
+        <span class="badge bg-primary">
+
+            {{ members.total }}
+
+        </span>
+
+    </h6>
+
+</div>
+            <table class="table table-hover table-striped align-middle">
+
+                <thead>
+
+                    <tr>
+
+    <th>Photo</th>
+
+    <th>Student ID</th>
+
+    <th>Member Name</th>
+
+    <th>Programme</th>
+
+<th>Department</th>
+
+<th>Level</th>
+
+    <th>Status</th>
+
+    <th>Actions</th>
+
+</tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for member in members.items %}
+
+                    <tr>
+                        <td>
+
+{% if member.passport %}
+
+<img src="{{ url_for('static', filename='uploads/' + member.passport) }}"
+     width="60"
+     height="60"
+     class="rounded-circle border"
+     style="object-fit:cover;">
+
+{% else %}
+
+<img src="{{ url_for('static', filename='images/default-avatar.png') }}"
+     width="60"
+     height="60"
+     class="rounded-circle border"
+     style="object-fit:cover;">
+
+{% endif %}
+
+</td>
+
+                        <td>{{ member.student_id }}</td>
+
+                        <td>{{ member.first_name }} {{ member.last_name }}</td>
+
+                        <td>{{ member.programme }}</td>
+
+                        <td>{{ member.department or "-" }}</td>
+
+                           <td>{{ member.level }}</td>
+
+                        <td>
+
+                            {% if member.status == "Active" %}
+
+<span class="badge bg-success">
+    {{ member.status }}
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+    {{ member.status }}
+</span>
+
+{% endif %}
+
+                        </td>
+
+                        <td>
+<div class="btn-group" role="group">
+
+    <a href="{{ url_for('members.member_profile', member_id=member.id) }}"
+       class="btn btn-primary btn-sm"
+       title="View">
+        <i class="bi bi-eye"></i>
+    </a>
+
+    <a href="{{ url_for('members.edit_member', member_id=member.id) }}"
+       class="btn btn-warning btn-sm"
+       title="Edit">
+        <i class="bi bi-pencil"></i>
+    </a>
+
+    {% if member.user_id %}
+
+    <a href="{{ url_for('members.reset_member_password', member_id=member.id) }}"
+       class="btn btn-info btn-sm"
+       title="Reset Password">
+
+        <i class="bi bi-key"></i>
+
+    </a>
+
+    {% else %}
+
+    <a href="{{ url_for('members.reset_member_password', member_id=member.id) }}"
+   class="btn btn-info btn-sm"
+   title="Reset Password">
+
+    <i class="bi bi-key"></i>
+
+</a>
+
+    {% endif %}
+
+    <a href="{{ url_for('members.delete_member', member_id=member.id) }}"
+       class="btn btn-danger btn-sm"
+       title="Delete">
+        <i class="bi bi-trash"></i>
+    </a>
+
+</div>
+
+</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

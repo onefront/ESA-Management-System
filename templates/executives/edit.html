@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-warning text-dark">
+
+            <h3>
+                <i class="bi bi-pencil-square"></i>
+                Edit Executive
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label>Full Name</label>
+
+                    <input
+                        type="text"
+                        name="full_name"
+                        class="form-control"
+                        value="{{ executive.full_name }}"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Position</label>
+
+                    <input
+                        type="text"
+                        name="position"
+                        class="form-control"
+                        value="{{ executive.position }}"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Phone</label>
+
+                    <input
+                        type="text"
+                        name="phone"
+                        class="form-control"
+                        value="{{ executive.phone }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Email</label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        class="form-control"
+                        value="{{ executive.email }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Academic Year</label>
+
+                    <input
+                        type="text"
+                        name="year"
+                        class="form-control"
+                        value="{{ executive.year }}">
+
+                </div>
+
+                <button class="btn btn-success">
+
+                    <i class="bi bi-check-circle"></i>
+                    Update Executive
+
+                </button>
+
+                <a href="{{ url_for('executives.executive_profile',
+                                    executive_id=executive.id) }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

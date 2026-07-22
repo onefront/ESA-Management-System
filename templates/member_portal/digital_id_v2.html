@@ -1,0 +1,188 @@
+{% extends "shared/id_layout.html" %}
+
+{% block title %}ESA Digital ID{% endblock %}
+
+{% block content %}
+
+<div class="id-wrapper">
+
+    <div class="id-card">
+
+        <!-- Header -->
+        <div class="id-header">
+            <div class="row align-items-center">
+
+                <div class="col-md-2 text-center">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}"
+                         class="img-fluid"
+                         style="max-height:110px;"
+                         alt="ESA Logo">
+                </div>
+
+                <div class="col-md-10 text-center">
+
+    <h2 class="esa-title">
+        EXECUTIVE STUDENT ASSOCIATION
+    </h2>
+
+    <div class="esa-university">
+        University of Skills Training &
+        Entrepreneurial Development
+    </div>
+
+    <div class="id-subtitle">
+        MEMBER IDENTIFICATION CARD
+    </div>
+
+</div>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="id-body">
+
+            <div class="row">
+
+                <!-- Passport -->
+                <div class="col-lg-4 text-center">
+
+                    <div class="photo-box">
+
+                        {% if member.passport %}
+
+                        <img src="{{ url_for('static',
+                        filename='uploads/' ~ member.passport) }}">
+
+                        {% else %}
+
+                        <img src="{{ url_for('static',
+                        filename='images/default-user.png') }}">
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                <!-- Details -->
+                <div class="col-lg-5">
+
+                    <div class="member-name">
+
+                        {{ member.first_name }}
+                        {{ member.last_name }}
+
+                    </div>
+                            <div class="member-status">
+                                    ACTIVE MEMBER
+                                      </div>
+                    <table class="info-table">
+
+                        <tr>
+                            <td class="info-title">ESA ID</td>
+                            <td>{{ member.esa_id }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="info-title">Student ID</td>
+                            <td>{{ member.student_id }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="info-title">Programme</td>
+                            <td>{{ member.programme }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="info-title">Level</td>
+                            <td>{{ member.level }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="info-title">Academic Year</td>
+                            <td>{{ member.academic_year }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="info-title">Phone</td>
+                            <td>{{ member.phone }}</td>
+                        </tr>
+
+                        <tr>
+                           <td class="info-title">Email</td>
+                            <td>{{ member.email if member.email else "—" }}</td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+                <!-- QR -->
+                <div class="col-lg-3">
+
+                    <div class="qr-box">
+
+                        <img src="{{ url_for('static',
+                        filename='qr_codes/' ~ qr_code) }}"
+                             alt="QR Code">
+
+                        <p class="mt-3">
+
+                            Scan to verify
+                            Membership
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Buttons -->
+
+            <div class="action-buttons">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="window.print()">
+
+                    <i class="bi bi-printer"></i>
+
+                    Print Card
+
+                </button>
+
+                <a href="{{ url_for('member_portal.dashboard') }}"
+                   class="btn btn-secondary">
+
+                    <i class="bi bi-arrow-left"></i>
+
+                    Back
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="card-footer">
+
+    <strong>EXECUTIVE STUDENT ASSOCIATION (ESA)</strong><br>
+
+    <small>Together We Build</small><br>
+
+    <small>
+        University of Skills Training &
+        Entrepreneurial Development
+    </small>
+
+</div>
+
+    </div>
+
+</div>
+
+{% endblock %}

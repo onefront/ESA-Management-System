@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+
+
+<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+    <h3 class="mb-0">
+        <i class="bi bi-gear-fill"></i>
+        General System Settings
+    </h3>
+
+    <div>
+
+        <a href="{{ url_for('settings.dashboard') }}"
+           class="btn btn-secondary me-2">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back
+
+        </a>
+
+        <a href="{{ url_for('settings.edit_system') }}"
+           class="btn btn-light">
+
+            <i class="bi bi-pencil-square"></i>
+
+            Edit Settings
+
+        </a>
+
+    </div>
+
+</div>
+
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-striped">
+
+                <tr>
+                    <th width="250">System Name</th>
+                    <td>{{ settings.system_name }}</td>
+                </tr>
+
+                <tr>
+                    <th>Short Name</th>
+                    <td>{{ settings.short_name }}</td>
+                </tr>
+
+                <tr>
+                    <th>Slogan</th>
+                    <td>{{ settings.slogan }}</td>
+                </tr>
+
+                <tr>
+                    <th>University</th>
+                    <td>{{ settings.university_name }}</td>
+                </tr>
+
+                <tr>
+                    <th>Campus</th>
+                    <td>{{ settings.campus }}</td>
+                </tr>
+
+                <tr>
+                    <th>Membership Validity</th>
+                    <td>{{ settings.membership_validity }} Years</td>
+                </tr>
+                <tr>
+    <th>ESA Logo</th>
+
+    <td>
+
+        {% if settings.logo %}
+
+            <img
+                src="{{ url_for('static',
+                filename='uploads/system/' ~ settings.logo) }}"
+                height="80"
+                class="border rounded p-2">
+
+        {% else %}
+
+            <span class="text-danger">
+
+                No Logo Uploaded
+
+            </span>
+
+        {% endif %}
+
+    </td>
+
+</tr>
+
+<tr>
+
+    <th>CEO Signature</th>
+
+    <td>
+
+        {% if settings.ceo_signature %}
+
+            <img
+                src="{{ url_for('static',
+                filename='uploads/system/' ~ settings.ceo_signature) }}"
+                height="70">
+
+        {% else %}
+
+            <span class="text-danger">
+
+                No Signature Uploaded
+
+            </span>
+
+        {% endif %}
+
+    </td>
+
+</tr>
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

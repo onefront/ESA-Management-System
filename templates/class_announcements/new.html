@@ -1,0 +1,112 @@
+{% extends "member_portal/layout.html" %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-header bg-primary text-white">
+
+        <h4 class="mb-0">
+            📢 New Class Announcement
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <p class="text-muted">
+
+            Academic Class:
+
+            <strong>{{ class_group.name }}</strong>
+
+        </p>
+
+        <form method="POST">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Title
+                </label>
+
+               <input
+    type="text"
+    name="title"
+    class="form-control"
+    required>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-4 mb-3">
+
+        <label class="form-label">
+            Event Date
+        </label>
+
+        <input
+            type="date"
+            name="event_date"
+            class="form-control">
+
+    </div>
+
+    <div class="col-md-4 mb-3">
+
+        <label class="form-label">
+            Event Time
+        </label>
+
+        <input
+            type="time"
+            name="event_time"
+            class="form-control">
+
+    </div>
+
+    <div class="col-md-4 mb-3">
+
+        <label class="form-label">
+            Venue
+        </label>
+
+        <input
+            type="text"
+            name="venue"
+            class="form-control"
+            placeholder="e.g. Lecture Hall A">
+
+    </div>
+
+</div>
+
+<div class="mb-3">
+
+    <label class="form-label">
+        Announcement
+    </label>
+
+                <textarea
+                    name="message"
+                    rows="8"
+                    class="form-control"
+                    required></textarea>
+
+            </div>
+
+            <button
+                class="btn btn-primary">
+
+                Publish Announcement
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}xxxxxxxxxxxxxx

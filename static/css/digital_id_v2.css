@@ -1,0 +1,248 @@
+/* ===================================================
+   ESA DIGITAL ID CARD
+   Version: 2.0
+=================================================== */
+
+:root{
+    --esa-blue:#0d47a1;
+    --esa-light:#1976d2;
+    --esa-gold:#f9a825;
+    --esa-dark:#222;
+    --esa-grey:#6c757d;
+    --esa-bg:#f4f7fb;
+    --white:#ffffff;
+}
+
+body{
+    background:var(--esa-bg);
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.id-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:40px 15px;
+}
+
+.id-card{
+    width:860px;
+    max-width:100%;
+    background:#ffffff;
+    border-radius:22px;
+    overflow:hidden;
+    border:3px solid #0d47a1;
+    box-shadow:0 15px 40px rgba(0,0,0,.18);
+}
+
+.id-header{
+    background:linear-gradient(135deg,var(--esa-blue),var(--esa-light));
+    color:#fff;
+    padding:18px 25px;
+}
+
+.id-header h2{
+    margin:0;
+    font-size:28px;
+    font-weight:700;
+}
+
+.id-header p{
+    margin:5px 0 0;
+    font-size:15px;
+}
+.id-subtitle{
+    margin-top:6px;
+    font-size:13px;
+    font-weight:500;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#e8f1ff;
+}
+.id-body{
+    padding:20px 25px 5px;
+}
+
+.photo-box{
+    width:210px;
+    height:250px;
+    margin:auto;
+    border:5px solid #0d47a1;
+    border-radius:15px;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0 6px 15px rgba(0,0,0,.15);
+}
+
+.photo-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.photo-box{
+
+    width:220px;
+
+    height:260px;
+
+}
+
+.member-name{
+    color:#d4af37;
+    font-size:38px;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
+.info-table{
+    width:100%;
+}
+
+.info-table td{
+    padding:8px 0;
+    border-bottom:1px solid #ececec;
+}
+
+.info-title{
+    width:170px;
+    font-weight:bold;
+    color:#444;
+}
+
+.qr-box{
+
+    background:#fff;
+
+    border:2px solid #0d47a1;
+
+    border-radius:9px;
+
+    padding:6px;
+
+    text-align:center;
+
+}
+.qr-box img{
+    width:170px;
+}
+
+.signature{
+    margin-top:2px;
+    text-align:center;
+}
+
+.signature hr{
+    margin-bottom:6px;
+}
+
+.card-footer{
+
+    margin-top:20px;
+
+    padding:12px 20px;
+
+    text-align:center;
+
+    background:#f8f9fb;
+
+    border-top:1px solid #e4e7ec;
+
+    color:#234;
+
+}
+
+.action-buttons{
+    margin-top:25px;
+    text-align:center;
+}
+
+.action-buttons .btn{
+    margin:5px;
+}
+
+@media print{
+
+    body{
+        background:white;
+    }
+
+    .action-buttons{
+        display:none;
+    }
+
+    .id-wrapper{
+        padding:0;
+    }
+
+    .id-card{
+        width:100%;
+        box-shadow:none;
+        border:none;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .member-name{
+        text-align:center;
+        margin-top:20px;
+    }
+
+    .info-title{
+        width:120px;
+    }
+
+    .photo-box{
+        margin-bottom:20px;
+    }
+
+}
+.member-status{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 18px;
+    background:#198754;
+    color:#fff;
+    border-radius:40px;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:.5px;
+    box-shadow:0 4px 10px rgba(25,135,84,.35);
+    margin:12px auto 20px;
+}
+
+.member-status::before{
+    content:"";
+    width:10px;
+    height:10px;
+    background:#ffffff;
+    border-radius:50%;
+}
+
+.signature-image{
+    height:55px;
+    object-fit:contain;
+}
+
+.id-footer{
+    background:#f7f9fc;
+    padding:18px;
+    text-align:center;
+    font-size:14px;
+    color:#666;
+}
+.id-header{
+    position:relative;
+}
+
+.id-header .row{
+    align-items:center;
+}
+
+.id-header .col-md-10{
+    text-align:center;
+}

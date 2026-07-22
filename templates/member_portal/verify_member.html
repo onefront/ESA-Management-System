@@ -1,0 +1,165 @@
+{% extends "member_portal/layout.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-8">
+
+<div class="card shadow-lg border-0 rounded-4">
+
+<div class="card-header bg-success text-white text-center">
+
+<h2>
+
+<i class="bi bi-patch-check-fill"></i>
+
+VERIFIED ESA MEMBER
+
+</h2>
+
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-4 text-center">
+
+{% if member.passport %}
+
+<img src="{{ url_for('static',
+filename='uploads/' ~ member.passport) }}"
+class="rounded-circle border border-4 border-success shadow"
+width="220"
+height="220"
+style="object-fit:cover;">
+
+{% else %}
+
+<img src="{{ url_for('static',
+filename='images/default-avatar.png') }}"
+class="rounded-circle border border-4 border-success"
+width="220">
+
+{% endif %}
+
+</div>
+
+<div class="col-md-8">
+
+<h2 class="fw-bold text-success">
+
+{{ member.first_name }}
+{{ member.last_name }}
+
+</h2>
+
+<hr>
+
+<table class="table table-borderless">
+
+<tr>
+
+<th>ESA ID</th>
+
+<td>{{ member.esa_id }}</td>
+
+</tr>
+
+<tr>
+
+<th>Index Number</th>
+
+<td>{{ member.student_id }}</td>
+
+</tr>
+
+<tr>
+
+<th>Programme</th>
+
+<td>{{ member.programme }}</td>
+
+</tr>
+
+<tr>
+
+<th>Department</th>
+
+<td>{{ member.department }}</td>
+
+</tr>
+
+<tr>
+
+<th>Level</th>
+
+<td>{{ member.level }}</td>
+
+</tr>
+
+<tr>
+
+<th>Session</th>
+
+<td>{{ member.session }}</td>
+
+</tr>
+
+<tr>
+
+<th>Status</th>
+
+<td>
+
+<span class="badge bg-success fs-6">
+
+{{ member.status }}
+
+</span>
+
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+<hr>
+
+<div class="text-center">
+
+<h4 class="text-success">
+
+<i class="bi bi-shield-check"></i>
+
+Identity Successfully Verified
+
+</h4>
+
+<p class="text-muted">
+
+This digital ID has been verified by the
+Executive Student Association.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

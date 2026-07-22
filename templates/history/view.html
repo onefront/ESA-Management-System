@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>
+            {{ election.election_name }}
+        </h2>
+
+        <a href="{{ url_for('history.dashboard') }}"
+           class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+            Back
+
+        </a>
+
+    </div>
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            <h4>Status</h4>
+
+            <p>{{ election.status }}</p>
+
+            <h4>Start Date</h4>
+
+            <p>{{ election.start_date }}</p>
+
+            <h4>End Date</h4>
+
+            <p>{{ election.end_date }}</p>
+
+            <h4>Description</h4>
+
+            <p>
+
+                {{ election.description or "No description available." }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

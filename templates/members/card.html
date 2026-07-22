@@ -1,0 +1,394 @@
+{% extends "layout.html" %}
+{% block styles %}
+
+<style>
+
+@media print{
+
+    /* Hide dashboard */
+
+    .sidebar,
+    .topbar,
+    .navbar,
+    .btn,
+    .container > .text-end{
+
+        display:none !important;
+
+    }
+
+    body{
+
+        background:white !important;
+
+    }
+
+    .container{
+
+        margin:0;
+        padding:0;
+        width:100%;
+
+    }
+
+    .card{
+
+        border:none !important;
+        box-shadow:none !important;
+        width:100%;
+        max-width:900px;
+        margin:auto;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="text-end mb-3">
+
+      <a href="{{ url_for(
+'members.download_member_card_pdf',
+member_id=member.id) }}"
+class="btn btn-danger">
+
+    <i class="bi bi-file-earmark-pdf-fill"></i>
+
+    Download PDF
+
+</a>
+    </div>
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-9">
+
+            <div class="card shadow-lg border-0 rounded-5 overflow-hidden"
+                 style="
+                    max-width:900px;
+                    margin:auto;
+                    background:linear-gradient(135deg,#ffffff,#f5f9ff);
+                    border:3px solid #0d6efd;">
+
+                <!-- HEADER -->
+
+                <div class="text-white"
+                     style="
+                        background:linear-gradient(90deg,#0056d6,#0d6efd,#1976ff);
+                        padding:22px;">
+
+                    <div class="d-flex align-items-center">
+
+                        <img
+                            src="{{ url_for('static', filename='images/logo.png') }}"
+                            width="75"
+                            class="me-3">
+
+                        <div>
+
+                            <h2 class="fw-bold mb-0">
+
+                                EXECUTIVE STUDENT ASSOCIATION
+
+                            </h2>
+
+                            <div>
+
+                                Together We Build
+
+                            </div>
+
+                            <small class="d-block mt-1">
+
+                                UNIVERSITY OF SKILLS TRAINING AND ENTREPRENEURIAL DEVELOPMENT
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BODY -->
+
+                <div class="card-body p-4">
+
+                    <div class="row">
+
+                        <!-- PHOTO -->
+
+                        <div class="col-md-4 text-center">
+
+                            {% if member.passport %}
+
+                            <img
+                                src="{{ url_for('static',
+                                filename='uploads/' ~ member.passport) }}"
+                                width="220"
+                                height="220"
+                                class="rounded-circle border border-4 border-primary shadow"
+                                style="object-fit:cover;">
+
+                            {% else %}
+
+                            <img
+                                src="{{ url_for('static',
+                                filename='images/default-avatar.png') }}"
+                                width="220"
+                                height="220"
+                                class="rounded-circle border border-4 border-primary">
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- DETAILS -->
+
+                        <div class="col-md-8">
+
+                            <h1 class="fw-bold">
+
+                                {{ member.first_name }}
+                                {{ member.last_name }}
+
+                            </h1>
+
+                            <hr>
+
+                            <table class="table table-borderless">
+
+                                <tr>
+
+                                    <th width="180">
+
+                                        ESA ID
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.esa_id }}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+
+                                        Student ID
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.student_id }}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+
+                                        Programme
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.programme }}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+
+                                        Level
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.level }}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+
+                                        Session
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.session }}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+
+                                        Status
+
+                                    </th>
+
+                                    <td>
+
+                                        {% if member.status == "Active" %}
+
+                                        <span class="badge bg-success fs-6">
+
+                                            ACTIVE MEMBER
+
+                                        </span>
+
+                                        {% else %}
+
+                                        <span class="badge bg-danger fs-6">
+
+                                            {{ member.status }}
+
+                                        </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <div class="row align-items-end">
+
+                        <!-- QR -->
+
+                        <div class="col-md-3 text-center">
+
+                            <img
+                                src="{{ url_for(
+                                'static',
+                                filename='qr_codes/' ~ member.esa_id ~ '.png'
+                                ) }}"
+                                width="120">
+
+                            <br>
+
+                            <small class="text-muted">
+
+                                Scan to Verify
+
+                            </small>
+
+                        </div>
+
+                        <!-- DATES -->
+
+                        <div class="col-md-4">
+
+                            <p>
+
+                                <strong>Issued:</strong>
+
+                                15 July 2026
+
+                            </p>
+
+                            <p>
+
+                                <strong>Expires:</strong>
+
+                                15 July 2028
+
+                            </p>
+
+                        </div>
+
+                        <!-- CEO -->
+
+                        <div class="col-md-5 text-center">
+
+                            <img
+                                src="{{ url_for('static',
+                                filename='images/ceo_signature.png') }}"
+                                style="height:70px;">
+
+                            <hr class="mt-1 mb-1">
+
+                            <strong>
+
+                                Owusu Issah
+
+                            </strong>
+
+                            <br>
+
+                            <small>
+
+                                Chief Executive Officer
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <div class="text-center text-muted">
+
+                        <h5 class="mb-1">
+
+                            Executive Student Association
+
+                        </h5>
+
+                        <div>
+
+                            Together We Build
+
+                        </div>
+
+                        <small>
+
+                            © 2026 All Rights Reserved
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

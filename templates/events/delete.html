@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-danger text-white">
+
+            <h3>
+                <i class="bi bi-trash"></i>
+                Delete Event
+            </h3>
+
+        </div>
+
+        <div class="card-body text-center">
+
+            <h4>
+
+                Are you sure you want to delete
+
+                <br><br>
+
+                <strong>{{ event.title }}</strong>?
+
+            </h4>
+
+            <form method="POST" class="mt-4">
+
+                <button class="btn btn-danger">
+
+                    <i class="bi bi-trash"></i>
+
+                    Delete Event
+
+                </button>
+
+                <a href="{{ url_for('events.event_profile',
+                                    event_id=event.id) }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

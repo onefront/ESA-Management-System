@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<a href="{{ url_for('dashboard.dashboard') }}"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+
+    Back to Dashboard
+
+</a>
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>Members by Programme</h2>
+
+        <a href="{{ url_for('members.members') }}" class="btn btn-secondary">
+            Back to Members
+        </a>
+
+    </div>
+
+    {% for item in data %}
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between">
+
+            <strong>{{ item.programme }}</strong>
+
+            <span class="badge bg-light text-dark">
+                {{ item.total }} Members
+            </span>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+                        <th>Level</th>
+                        <th>Total Members</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for level in item.levels %}
+
+                    <tr>
+
+                        <td>Level {{ level.level }}</td>
+
+                        <td>
+
+<a href="{{ url_for('members.programme_level_members',
+                    programme=item.programme,
+                    level=level.level) }}"
+   class="badge bg-success text-decoration-none">
+
+    {{ level.count }}
+
+</a>
+
+</td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

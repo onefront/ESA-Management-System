@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<a href="{{ url_for('dashboard.dashboard') }}"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+
+    Back to Dashboard
+
+</a>
+<div class="container-fluid mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2>
+        <i class="bi bi-person-check-fill"></i>
+        Attendance Management
+    </h2>
+
+    <div>
+
+        <a href="{{ url_for('attendance.add_attendance') }}"
+           class="btn btn-primary me-2">
+            <i class="bi bi-plus-circle"></i>
+            Add Attendance
+        </a>
+
+        <a href="{{ url_for('attendance.attendance_by_event') }}"
+           class="btn btn-success">
+            <i class="bi bi-list-check"></i>
+            Bulk Attendance
+        </a>
+
+    </div>
+
+</div>
+
+</div>
+        <a href="{{ url_for('attendance.add_attendance') }}"
+           class="btn btn-primary">
+
+            <i class="bi bi-plus-circle"></i>
+            Mark Attendance
+
+        </a>
+
+    </div>
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Attendance Code</th>
+                        <th>Member</th>
+                        <th>Event</th>
+                        <th>Status</th>
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for record in attendance_records %}
+
+                    <tr>
+
+                        <td>{{ record.attendance_code }}</td>
+
+                        <td>
+                            {{ record.member.first_name }}
+                            {{ record.member.last_name }}
+                        </td>
+
+                        <td>{{ record.event.title }}</td>
+
+                        <td>
+
+                            {% if record.status == "Present" %}
+
+                                <span class="badge bg-success">
+                                    Present
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+                                    Absent
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {{ record.attendance_date.strftime("%d-%m-%Y") }}
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center">
+
+                            No attendance records found.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

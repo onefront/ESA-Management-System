@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% if current_user.role == "Member" %}
+    <a href="{{ url_for('member_portal.dashboard') }}">Dashboard</a>
+{% else %}
+    <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+{% endif %}
+<div class="container-fluid mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>
+            <i class="bi bi-calendar-event"></i>
+            Events Management
+        </h2>
+
+        <a href="{{ url_for('events.add_event') }}"
+           class="btn btn-primary">
+
+            <i class="bi bi-plus-circle"></i>
+            Add Event
+
+        </a>
+
+    </div>
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Banner</th>
+                        <th>Event Code</th>
+                        <th>Title</th>
+                        <th>Venue</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for event in events %}
+
+                    <tr>
+
+                        <td>
+
+                            {% if event.banner %}
+
+                                <img src="{{ url_for('static',
+                                    filename='uploads/' + event.banner) }}"
+                                    width="70"
+                                    class="rounded">
+
+                            {% else %}
+
+                                <img src="{{ url_for('static',
+                                    filename='images/default-event.png') }}"
+                                    width="70"
+                                    class="rounded">
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>{{ event.event_code }}</td>
+
+                        <td>{{ event.title }}</td>
+
+                        <td>{{ event.venue }}</td>
+
+                        <td>{{ event.event_date }}</td>
+
+                        <td>{{ event.event_time }}</td>
+
+                        <td>
+
+                            <span class="badge bg-success">
+
+                                {{ event.status }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <a href="{{ url_for('events.event_profile',
+                    event_id=event.id) }}"
+   class="btn btn-info btn-sm">
+
+    View
+
+</a>
+{% if current_user.role in ["Administrator", "General Secretary"] %}
+                            <a href="#" class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+
+                            <a href="{{ url_for('events.delete_event',
+                    event_id=event.id) }}"
+   class="btn btn-danger btn-sm">
+
+    Delete
+
+</a>
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="8" class="text-center">
+
+                            No events found.
+
+                        </td>
+                   {% endif %}
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

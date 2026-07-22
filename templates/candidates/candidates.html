@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-person-badge-fill text-primary"></i>
+
+                Candidate Management
+
+            </h2>
+
+            <p class="text-muted">
+
+                Register and manage ESA election candidates.
+
+            </p>
+
+        </div>
+
+        <div>
+
+            <a href="javascript:history.back()"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+    Back
+
+</a>
+
+            <a href="{{ url_for('candidates.add_candidate') }}"
+               class="btn btn-primary">
+
+                <i class="bi bi-plus-circle"></i>
+
+                Register Candidate
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Election</th>
+                        <th>Portfolio</th>
+                        <th>Candidate</th>
+                        <th>Status</th>
+                        <th width="180">Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for candidate in candidates %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>{{ candidate.election.election_name }}</td>
+
+                        <td>{{ candidate.portfolio.portfolio_name }}</td>
+
+                        <td>
+                            {{ candidate.member.first_name }}
+                            {{ candidate.member.last_name }}
+                        </td>
+
+                        <td>
+
+                            {% if candidate.status == "Active" %}
+
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    Inactive
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <a href="#"
+                               class="btn btn-warning btn-sm">
+
+                                <i class="bi bi-pencil"></i>
+
+                            </a>
+
+                            <a href="#"
+                               class="btn btn-danger btn-sm">
+
+                                <i class="bi bi-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="6"
+                            class="text-center py-5 text-muted">
+
+                            <i class="bi bi-person-badge display-4"></i>
+
+                            <br><br>
+
+                            No candidates have been registered yet.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

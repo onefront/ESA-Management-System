@@ -1,0 +1,136 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<a href="{{ url_for('dashboard.dashboard') }}"
+   class="btn btn-secondary">
+
+    <i class="bi bi-arrow-left"></i>
+
+    Back to Dashboard
+
+</a>
+<div class="container-fluid mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                <i class="bi bi-people-fill"></i>
+                Members Report
+            </h2>
+
+            <small class="text-muted">
+                Complete list of registered ESA members.
+            </small>
+
+        </div>
+
+        <div>
+
+            <div>
+
+    <a href="{{ url_for('reports.export_members_excel') }}"
+       class="btn btn-success">
+
+        <i class="bi bi-file-earmark-excel"></i>
+
+        Export Excel
+
+    </a>
+
+    <button onclick="window.print()"
+            class="btn btn-dark">
+
+        <i class="bi bi-printer"></i>
+
+        Print
+
+    </button>
+
+</div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow border-0">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover table-bordered align-middle">
+
+                    <thead class="table-primary">
+
+                        <tr>
+
+                            <th>#</th>
+                            <th>ESA ID</th>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Programme</th>
+                            <th>Level</th>
+                            <th>Session</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for member in members %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>{{ member.esa_id }}</td>
+
+                            <td>{{ member.student_id }}</td>
+
+                            <td>
+
+                                {{ member.first_name }}
+
+                                {{ member.last_name }}
+
+                            </td>
+
+                            <td>{{ member.programme }}</td>
+
+                            <td>{{ member.level }}</td>
+
+                            <td>{{ member.session }}</td>
+
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="7"
+                                class="text-center">
+
+                                No members found.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

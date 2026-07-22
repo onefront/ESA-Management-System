@@ -1,0 +1,164 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-sliders text-primary"></i>
+
+                Election Control Center
+
+            </h2>
+
+            <p class="text-muted">
+
+                Control the entire election from one page.
+
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('elections.dashboard') }}"
+           class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <h4 class="mb-4">
+
+                Voting Status
+
+            </h4>
+
+            <h2>
+
+                {{ settings.voting_status }}
+
+            </h2>
+
+            <hr>
+
+ <a href="{{ url_for('control.open_voting') }}"
+   class="btn btn-success confirm-action"
+   data-title="Open Voting?"
+   data-text="Students will immediately be allowed to vote."
+   data-confirm="Yes, Open Voting">
+
+    <i class="bi bi-play-circle"></i>
+
+    Open Voting
+
+</a>
+
+<a href="{{ url_for('control.pause_voting') }}"
+   class="btn btn-warning confirm-action"
+   data-title="Pause Voting?"
+   data-text="Students will temporarily be unable to vote."
+   data-confirm="Yes, Pause">
+
+    <i class="bi bi-pause-circle"></i>
+
+    Pause Voting
+
+</a>
+<a href="{{ url_for('control.close_voting') }}"
+   class="btn btn-danger confirm-action"
+   data-title="Close Voting?"
+   data-text="Voting will end immediately."
+   data-confirm="Yes, Close">
+
+    <i class="bi bi-stop-circle"></i>
+
+    Close Voting
+
+</a>
+
+            </div>
+<hr>
+
+<h5 class="mt-4">
+
+    Results Control
+
+</h5>
+
+<div class="d-flex flex-wrap gap-3">
+
+    <a href="{{ url_for('control.show_results') }}"
+       class="btn btn-primary">
+
+        👁 Show Results
+
+    </a>
+
+    <a href="{{ url_for('control.hide_results') }}"
+       class="btn btn-secondary">
+
+        🙈 Hide Results
+
+    </a>
+
+</div>
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+document.querySelectorAll(".confirm-action").forEach(button => {
+
+    button.addEventListener("click", function(e){
+
+        e.preventDefault();
+
+        let url = this.href;
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: this.dataset.title,
+
+            text: this.dataset.text,
+
+            showCancelButton: true,
+
+            confirmButtonText: this.dataset.confirm,
+
+            cancelButtonText: "Cancel",
+
+            confirmButtonColor: "#198754"
+
+        }).then((result)=>{
+
+            if(result.isConfirmed){
+
+                window.location = url;
+
+            }
+
+        });
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

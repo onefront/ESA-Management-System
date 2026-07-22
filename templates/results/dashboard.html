@@ -1,0 +1,297 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-bar-chart-fill text-success"></i>
+
+                Election Results
+
+            </h2>
+
+            <p class="text-muted">
+
+                Live election results.
+
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('elections.dashboard') }}"
+           class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+    <div class="card shadow-sm">
+
+      <div class="row g-4">
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center">
+
+                <h5>Active Election</h5>
+
+                <h4>
+
+                    {% if active_election %}
+
+                        {{ active_election.election_name }}
+
+                    {% else %}
+
+                        None
+
+                    {% endif %}
+
+                </h4>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center">
+
+                <h5>Total Votes</h5>
+
+                <h2>{{ total_votes }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center">
+
+                <h5>Voting Status</h5>
+
+                <h4>{{ settings.voting_status }}</h4>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center">
+
+                <h5>Results Visible</h5>
+
+                <h4>
+
+                    {% if settings.results_visible %}
+
+                        Yes
+
+                    {% else %}
+
+                        No
+
+                    {% endif %}
+
+                </h4>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+          <hr class="my-5">
+
+{% for section in results %}
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-header bg-primary text-white">
+
+        <h4 class="mb-0">
+
+            {{ section.portfolio.portfolio_name }}
+
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-hover">
+
+            <thead>
+
+                <tr>
+
+                    <th>Candidate</th>
+
+                    <th>Votes</th>
+
+                    <th>Percentage</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+
+
+{% if section.results %}
+
+    {% for item in section.results %}
+
+    <tr
+    {% if item.winner %}
+        class="table-success"
+    {% elif item.tie %}
+        class="table-warning"
+    {% endif %}
+    >
+
+        <td>
+
+            <div class="d-flex align-items-center">
+
+                {% if item.candidate.member.passport %}
+
+                    <img src="{{ url_for('static',
+                    filename='uploads/' ~ item.candidate.member.passport) }}"
+                    width="60"
+                    height="60"
+                    class="rounded-circle border me-3"
+                    style="object-fit:cover;">
+
+                {% else %}
+
+                    <img src="{{ url_for('static',
+                    filename='images/default-avatar.png') }}"
+                    width="60"
+                    height="60"
+                    class="rounded-circle border me-3">
+
+                {% endif %}
+
+                <div>
+
+                    {% if item.winner %}
+
+                        <span class="badge bg-success mb-1">
+                            🏆 Winner
+                        </span>
+
+                    {% elif item.tie %}
+
+                        <span class="badge bg-warning text-dark mb-1">
+                            🤝 Tie
+                        </span>
+
+                    {% endif %}
+
+                    <br>
+
+                    <strong>
+
+                        {{ item.candidate.member.first_name }}
+                        {{ item.candidate.member.last_name }}
+
+                    </strong>
+
+                    <br>
+
+                    <small class="text-muted">
+
+                        {{ item.candidate.slogan }}
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </td>
+
+        <td class="text-center">
+
+            <strong>{{ item.votes }}</strong>
+
+        </td>
+
+        <td width="40%">
+
+            <div class="progress">
+
+                <div class="progress-bar bg-success"
+                     style="width:{{ item.percentage }}%;">
+
+                    {{ item.percentage }}%
+
+                </div>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+{% else %}
+
+<tr>
+
+    <td colspan="3" class="text-center text-muted">
+
+        No candidates registered for this portfolio.
+
+    </td>
+
+</tr>
+
+{% endif %}
+</tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endfor %}
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

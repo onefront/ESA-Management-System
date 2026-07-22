@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+<div class="card shadow border-0 rounded-4">
+
+<div class="card-header bg-primary text-white">
+
+<h4>
+
+<i class="bi bi-person-badge"></i>
+
+Course Representative Profile
+
+</h4>
+
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-3 text-center">
+
+{% if rep.member.passport %}
+
+<img src="{{ url_for('static',
+filename='uploads/' ~ rep.member.passport) }}"
+class="img-fluid rounded-circle border"
+width="180">
+
+{% else %}
+
+<img src="{{ url_for('static',
+filename='images/default-avatar.png') }}"
+class="img-fluid rounded-circle border"
+width="180">
+
+{% endif %}
+
+</div>
+
+<div class="col-md-9">
+
+<table class="table table-bordered">
+
+<tr>
+<th>Name</th>
+<td>{{ rep.member.first_name }} {{ rep.member.last_name }}</td>
+</tr>
+
+<tr>
+<th>Student ID</th>
+<td>{{ rep.member.student_id }}</td>
+</tr>
+
+<tr>
+<th>Programme</th>
+<td>{{ rep.member.programme }}</td>
+</tr>
+
+<tr>
+<th>Level</th>
+<td>{{ rep.member.level }}</td>
+</tr>
+
+<tr>
+<th>Session</th>
+<td>{{ rep.member.session }}</td>
+</tr>
+
+<tr>
+<th>Phone</th>
+<td>{{ rep.member.phone }}</td>
+</tr>
+
+<tr>
+<th>Position</th>
+<td>{{ rep.position }}</td>
+</tr>
+
+<tr>
+<th>Status</th>
+<td>{{ rep.status }}</td>
+</tr>
+
+<tr>
+<th>Appointed Date</th>
+<td>{{ rep.appointed_date.strftime("%d %B %Y") }}</td>
+</tr>
+
+</table>
+
+<a href="{{ url_for('course_reps.course_reps') }}"
+class="btn btn-secondary">
+
+<i class="bi bi-arrow-left"></i>
+
+Back
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

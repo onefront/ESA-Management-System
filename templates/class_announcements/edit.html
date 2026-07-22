@@ -1,0 +1,115 @@
+{% extends "member_portal/layout.html" %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-header bg-primary text-white">
+
+        <h4 class="mb-0">
+            Edit Announcement
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <p class="text-muted">
+
+            Academic Class:
+
+            <strong>{{ class_group.name }}</strong>
+
+        </p>
+
+        <form method="POST">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Title
+                </label>
+
+      <input
+    type="text"
+    name="title"
+    class="form-control"
+    value="{{ announcement.title }}"
+    required>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-4 mb-3">
+
+        <label class="form-label">
+            Event Date
+        </label>
+
+        <input
+    type="date"
+    name="event_date"
+    class="form-control"
+    value="{{ announcement.event_date }}">
+
+    </div>
+
+    <div class="col-md-4 mb-3">
+
+        <label class="form-label">
+            Event Time
+        </label>
+
+        <input
+    type="time"
+    name="event_time"
+    class="form-control"
+    value="{{ announcement.event_time }}">
+
+    </div>
+
+    <div class="col-md-4 mb-3">
+
+        <label class="form-label">
+            Venue
+        </label>
+
+        <input
+    type="text"
+    name="venue"
+    class="form-control"
+    value="{{ announcement.venue or '' }}">
+
+    </div>
+
+</div>
+
+<div class="mb-3">
+
+    <label class="form-label">
+        Announcement
+    </label>
+
+                <<textarea
+    name="message"
+    rows="8"
+    class="form-control"
+    required>{{ announcement.message }}</textarea>
+
+            </div>
+
+            <button
+                class="btn btn-primary">
+
+              Update Announcement
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}xxxxxxxxxxxxxx

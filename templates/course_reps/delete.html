@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-header bg-danger text-white">
+
+            <h4 class="mb-0">
+
+                Remove Course Representative
+
+            </h4>
+
+        </div>
+
+        <div class="card-body text-center">
+
+            <h5>
+
+                Are you sure you want to remove
+
+                <strong>
+
+                    {{ rep.member.first_name }}
+                    {{ rep.member.last_name }}
+
+                </strong>
+
+                as Course Representative?
+
+            </h5>
+
+            <p class="text-muted">
+
+                The member's login role will automatically change back to
+                <strong>Member</strong>.
+
+            </p>
+
+            <form method="POST">
+
+                <a href="{{ url_for('course_reps.course_reps') }}"
+                   class="btn btn-secondary">
+
+                    <i class="bi bi-arrow-left"></i>
+
+                    Cancel
+
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-danger">
+
+                    <i class="bi bi-trash"></i>
+
+                    Remove Representative
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

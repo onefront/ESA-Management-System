@@ -1,0 +1,177 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>Add Executive</h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" enctype="multipart/form-data">
+
+
+               <div class="mb-4">
+
+    <label class="form-label fw-bold">
+
+        Search Member
+
+    </label>
+
+    <input
+        type="text"
+        id="member-search"
+        class="form-control"
+        placeholder="Search by Name, Student ID or ESA ID">
+
+    <div id="member-results"
+         class="list-group mt-2">
+    </div>
+
+</div>
+
+<div id="selected-member"
+     class="card shadow-sm border-0 mb-4 d-none">
+
+    <div class="card-body">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-3 text-center">
+
+                <img
+                    id="member-photo"
+                    src=""
+                    class="img-thumbnail rounded"
+                    style="max-height:150px;">
+
+            </div>
+
+            <div class="col-md-9">
+
+                <h5 id="member-name"></h5>
+
+                <p><strong>Student ID:</strong>
+                    <span id="member-student-id"></span>
+                </p>
+
+                <p><strong>Programme:</strong>
+                    <span id="member-programme"></span>
+                </p>
+
+                <p><strong>Phone:</strong>
+                    <span id="member-phone"></span>
+                </p>
+
+                <p><strong>Email:</strong>
+                    <span id="member-email"></span>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<input
+    type="hidden"
+    name="member_id"
+    id="member_id">
+                <div class="mb-3">
+
+                    <label>Position</label>
+
+                    <input type="text"
+                           name="position"
+                           class="form-control"
+                           required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Academic Year</label>
+
+                    <input type="text"
+                           name="year"
+                           class="form-control"
+                           value="2026/2027">
+
+                </div>
+
+                <button class="btn btn-success">
+
+                    Save Executive
+
+                </button>
+
+                <a href="{{ url_for('executives.executives') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+const searchInput = document.getElementById("member-search");
+const resultsBox = document.getElementById("member-results");
+
+searchInput.addEventListener("keyup", function () {
+
+    const keyword = this.value.trim();
+
+    if (keyword.length < 2) {
+        resultsBox.innerHTML = "";
+        return;
+    }
+
+    fetch(`/search-member?q=${encodeURIComponent(keyword)}`)
+        .then(response => response.json())
+        .then(data => {
+
+            resultsBox.innerHTML = "";
+
+            data.forEach(member => {
+
+                resultsBox.innerHTML += `
+                    <a href="#"
+                       class="list-group-item list-group-item-action member-item"
+
+                       data-id="${member.id}"
+                       data-name="${member.name}"
+                       data-student="${member.student_id}"
+                       data-phone="${member.phone || ''}"
+                       data-email="${member.email || ''}"
+                       data-programme="${member.programme || ''}"
+                       data-photo="${member.photo || ''}">
+
+                        <strong>${member.name}</strong><br>
+
+                        <small>${member.student_id}</small>
+
+                    </a>
+                `;
+            });
+
+        });
+
+});
+</script>
+{% endblock %}

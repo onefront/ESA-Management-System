@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4>Complete Your Profile</h4>
+
+            <small>
+                Please complete the remaining information before using the ESA Portal.
+            </small>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label>Date of Birth</label>
+                        <input type="date"
+                               name="date_of_birth"
+                               class="form-control">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>Passport Photo</label>
+                        <input type="file"
+                               name="passport"
+                               class="form-control">
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label>Residential Address</label>
+                        <textarea
+                            name="address"
+                            class="form-control"
+                            rows="3"></textarea>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <h5>Guardian Information (Optional)</h5>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label>Guardian Name</label>
+                        <input type="text"
+                               name="guardian_name"
+                               class="form-control">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>Guardian Phone</label>
+                        <input type="text"
+                               name="guardian_phone"
+                               class="form-control">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>Relationship</label>
+                        <input type="text"
+                               name="relationship"
+                               class="form-control">
+                    </div>
+
+                </div>
+
+                <button
+                    class="btn btn-success">
+
+                    Save Profile
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-warning text-dark">
+
+            <a href="{{ url_for('events.edit_event',
+                    event_id=event.id) }}"
+   class="btn btn-warning btn-sm">
+
+    Edit
+
+</a>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label>Event Title</label>
+
+                    <input
+                        type="text"
+                        name="title"
+                        class="form-control"
+                        value="{{ event.title }}"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Venue</label>
+
+                    <input
+                        type="text"
+                        name="venue"
+                        class="form-control"
+                        value="{{ event.venue }}"
+                        required>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Event Date</label>
+
+                        <input
+                            type="date"
+                            name="event_date"
+                            class="form-control"
+                            value="{{ event.event_date }}"
+                            required>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Event Time</label>
+
+                        <input
+                            type="time"
+                            name="event_time"
+                            class="form-control"
+                            value="{{ event.event_time }}"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Description</label>
+
+                    <textarea
+                        name="description"
+                        class="form-control"
+                        rows="4">{{ event.description }}</textarea>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Status</label>
+
+                    <select
+                        name="status"
+                        class="form-select">
+
+                        <option value="Upcoming"
+                            {% if event.status == "Upcoming" %}selected{% endif %}>
+                            Upcoming
+                        </option>
+
+                        <option value="Ongoing"
+                            {% if event.status == "Ongoing" %}selected{% endif %}>
+                            Ongoing
+                        </option>
+
+                        <option value="Completed"
+                            {% if event.status == "Completed" %}selected{% endif %}>
+                            Completed
+                        </option>
+
+                        <option value="Cancelled"
+                            {% if event.status == "Cancelled" %}selected{% endif %}>
+                            Cancelled
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button class="btn btn-success">
+                    <i class="bi bi-check-circle"></i>
+                    Update Event
+                </button>
+
+                <a href="{{ url_for('events.event_profile',
+                                    event_id=event.id) }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
