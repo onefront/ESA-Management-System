@@ -47,7 +47,7 @@ def my_class():
 
     if not current_user.member_profile:
         flash("Member profile not found.", "warning")
-        return redirect(url_for("dashboard.index"))
+        return redirect(url_for("dashboard.dashboard"))
 
     member = current_user.member_profile
 
@@ -56,7 +56,7 @@ def my_class():
             "You have not yet been assigned to a Class Group.",
             "warning"
         )
-        return redirect(url_for("dashboard.index"))
+        return redirect(url_for("dashboard.dashboard"))
 
     return redirect(
         url_for(

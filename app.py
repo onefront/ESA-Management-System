@@ -69,6 +69,13 @@ from models.notification import Notification
 
 # Create Flask App
 app = Flask(__name__)
+app.config.from_object(Config)
+
+# Initialize extensions
+db.init_app(app)
+login_manager.init_app(app)
+
+migrate = Migrate(app, db)
 
 
 
@@ -114,8 +121,7 @@ app.config.from_object(Config)
 
 
 
-db.init_app(app)
-migrate = Migrate(app, db)
+
 from routes.class_notices import class_notices_bp
 from routes.backup import backup_bp
 from routes.messages import messages_bp
@@ -317,7 +323,7 @@ def force_password_change():
     return redirect(url_for("auth.change_password"))
 
 
-login_manager.init_app(app)
+
 @login_manager.user_loader
 def load_user(user_id):
         return User.query.get(int(user_id))
