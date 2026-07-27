@@ -1,0 +1,166 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header">
+
+            <h3>
+
+                <i class="bi bi-chat-dots"></i>
+
+                Messages
+
+            </h3>
+
+        </div>
+            <div class="card-body">
+        <div class="input-group mb-4">
+
+    <span class="input-group-text">
+
+        <i class="bi bi-search"></i>
+
+    </span>
+
+    <input
+        type="text"
+        id="searchContact"
+        class="form-control"
+        placeholder="Search by name, programme or role...">
+
+</div>
+    </div>
+            <div class="list-group">
+
+{% for user in users %}
+<a href="{{ url_for('messages.start_chat', user_id=user.id) }}"
+   class="list-group-item list-group-item-action py-3">
+
+    <div class="d-flex align-items-center justify-content-between">
+
+        <div class="d-flex align-items-center">
+
+            {% if user.member_profile and user.member_profile.passport %}
+
+                <img src="{{ url_for('static',
+                        filename='uploads/' + user.member_profile.passport) }}"
+                     class="rounded-circle border me-3"
+                     width="60"
+                     height="60"
+                     style="object-fit:cover;">
+
+            {% else %}
+
+                <img src="{{ url_for('static',
+                        filename='images/default-avatar.png') }}"
+                     class="rounded-circle border me-3"
+                     width="60"
+                     height="60"
+                     style="object-fit:cover;">
+
+            {% endif %}
+
+            <div>
+
+                <h6 class="mb-1">
+
+                    {{ user.full_name }}
+
+                </h6>
+
+                {% if user.role == "Administrator" %}
+
+                    <span class="badge bg-danger">
+                        Administrator
+                    </span>
+
+                {% elif user.role == "CEO" %}
+
+                    <span class="badge bg-primary">
+                        CEO
+                    </span>
+
+                {% elif user.role == "General Secretary" %}
+
+                    <span class="badge bg-success">
+                        General Secretary
+                    </span>
+
+                {% elif user.role == "Course Rep" %}
+
+                    <span class="badge bg-warning text-dark">
+                        Course Rep
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-secondary">
+                        {{ user.role }}
+                    </span>
+
+                {% endif %}
+
+                {% if user.member_profile %}
+
+                    <div class="small text-muted mt-1">
+
+                        {{ user.member_profile.programme }}
+
+                        •
+
+                        Level {{ user.member_profile.level }}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <i class="bi bi-chevron-right fs-5 text-muted"></i>
+
+    </div>
+
+</a>
+
+{% else %}
+
+<div class="alert alert-warning">
+
+    No users found.
+
+</div>
+
+{% endfor %}
+
+</div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+document.getElementById("searchContact").addEventListener("keyup", function () {
+
+    let value = this.value.toLowerCase();
+
+    document.querySelectorAll(".list-group-item").forEach(function(item){
+
+        item.style.display =
+            item.innerText.toLowerCase().includes(value)
+            ? ""
+            : "none";
+
+    });
+
+});
+
+</script>
+{% endblock %}

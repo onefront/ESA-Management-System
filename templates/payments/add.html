@@ -20,29 +20,96 @@
 
                 <div class="mb-3">
                     <label class="form-label">Payment Type</label>
-                    <select class="form-select" name="payment_type" required>
-                        <option value="">Select Payment Type</option>
-                        <option>Registration Fee</option>
-                        <option>Annual Dues</option>
-                        <option>Excursion Fee</option>
-                        <option>Welfare Contribution</option>
-                    </select>
+
+
+                 <select
+    class="form-select"
+    name="payment_type"
+    id="paymentType"
+    onchange="setDefaultAmount()"
+    required>
+
+    <option value="">Select Payment Type</option>
+
+    <option value="Registration Fee">Registration Fee</option>
+
+    <option value="Annual Dues">Annual Dues</option>
+
+    <option value="ESA Cloth">ESA Cloth</option>
+
+    <option value="Excursion Fee">Excursion Fee</option>
+
+    <option value="Event Fee">Event Fee</option>
+
+    <option value="Welfare Contribution">Welfare Contribution</option>
+
+    <option value="Donation">Donation</option>
+
+    <option value="Other">Other</option>
+
+</select>
+
+
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Amount (GH₵)</label>
-                    <input type="number"
-                           step="0.01"
-                           class="form-control"
-                           name="amount"
-                           required>
-                </div>
+
+    <label class="form-label">
+        Amount (GH₵)
+    </label>
+
+    <select
+        name="amount"
+        id="amount"
+        class="form-select"
+        onchange="toggleCustomAmount()"
+        required
+    >
+
+        <option value="">Select Amount</option>
+
+        {% for amount in range(50,1050,50) %}
+            <option value="{{ amount }}">
+                GH₵ {{ amount }}
+            </option>
+        {% endfor %}
+
+        <option value="other">
+            Other Amount...
+        </option>
+
+    </select>
+
+</div>
+
+<div
+    class="mb-3"
+    id="customAmountDiv"
+    style="display:none;"
+>
+
+    <label class="form-label">
+        Custom Amount
+    </label>
+
+    <input
+        type="number"
+        class="form-control"
+        id="customAmount"
+        min="1"
+        step="0.01"
+        placeholder="Enter custom amount"
+    >
+
+</div>
 
                 <div class="mb-3">
                     <label class="form-label">Payment Method</label>
                     <select class="form-select" name="payment_method">
                         <option>Cash</option>
-                        <option>Mobile Money</option>
+                        <option>MTN MoMo</option>
+                        <option>Telecel Cash</option>
+                        <option>AirtelTigo Cash</option>
                         <option>Bank Transfer</option>
                     </select>
                 </div>
@@ -72,5 +139,92 @@
     </div>
 
 </div>
+
+
+<script>
+
+function toggleCustomAmount(){
+
+    let amountSelect =
+        document.getElementById("amount");
+
+    let customDiv =
+        document.getElementById("customAmountDiv");
+
+    let customInput =
+        document.getElementById("customAmount");
+
+    if(amountSelect.value==="other"){
+
+        customDiv.style.display="block";
+
+        customInput.name="amount";
+
+        amountSelect.removeAttribute("name");
+
+    }
+
+    else{
+
+        customDiv.style.display="none";
+
+        amountSelect.name="amount";
+
+        customInput.removeAttribute("name");
+
+        customInput.value="";
+
+    }
+
+}
+
+function setDefaultAmount(){
+
+    let paymentType =
+        document.getElementById("paymentType").value;
+
+    let amount =
+        document.getElementById("amount");
+
+   switch(paymentType){
+
+    case "Registration Fee":
+        amount.value="200";
+        break;
+
+    case "Annual Dues":
+        amount.value="50";
+        break;
+
+    case "ESA Cloth":
+        amount.value="100";
+        break;
+
+    case "Excursion Fee":
+        amount.value="300";
+        break;
+
+    case "Event Fee":
+        amount.value="";
+        break;
+
+    case "Welfare Contribution":
+        amount.value="";
+        break;
+
+    case "Donation":
+        amount.value="";
+        break;
+
+    default:
+        amount.value="";
+}
+
+
+    toggleCustomAmount();
+
+}
+
+</script>
 
 {% endblock %}

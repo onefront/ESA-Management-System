@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 from models.member import Member
 from models.class_group import ClassGroup
 from models.course_rep import CourseRep
 from utils.auth import admin_required
+from models.class_notice import ClassNotice
 from flask import request, flash, redirect, url_for
 class_groups_bp = Blueprint(
     "class_groups",
@@ -35,6 +36,36 @@ from flask import request, redirect, url_for, flash
 from models.programme import Programme
 from extensions import db
 from models.payment import Payment
+
+
+
+
+
+@class_groups_bp.route("/my-class")
+@login_required
+def my_class():
+
+    if not current_user.member_profile:
+        flash("Member profile not found.", "warning")
+        return redirect(url_for("dashboard.index"))
+
+    member = current_user.member_profile
+
+    if not member.class_group_id:
+        flash(
+            "You have not yet been assigned to a Class Group.",
+            "warning"
+        )
+        return redirect(url_for("dashboard.index"))
+
+    return redirect(
+        url_for(
+            "class_groups.view",
+            id=member.class_group_id
+        )
+    )
+
+
 @class_groups_bp.route("/view/<int:id>")
 @login_required
 def view(id):
@@ -69,16 +100,57 @@ def view(id):
         position="Assistant Course Rep"
     ).first()
 
+    member = current_user.member_profile
+
+    is_admin = (
+            current_user.role == "Administrator"
+    )
+
+    is_course_rep = False
+
+    if member:
+
+        # Main Course Representative
+        if course_rep and course_rep.member_id == member.id:
+            is_course_rep = True
+
+        # Assistant Course Representative
+        elif assistant_rep and assistant_rep.member_id == member.id:
+            is_course_rep = True
+
+    # Select the correct template
+    template = (
+        "class_groups/view.html"
+        if is_admin
+        else "member_portal/class_view.html"
+    )
+    notices = (
+        ClassNotice.query
+        .filter_by(
+            class_group_id=group.id,
+            status="Active"
+        )
+        .order_by(ClassNotice.created_at.desc())
+        .all()
+    )
     return render_template(
-        "class_groups/view.html",
+        template,
         group=group,
         total_members=total_members,
         male_members=male_members,
         female_members=female_members,
         course_rep_count=course_rep_count,
         course_rep=course_rep,
-        assistant_rep=assistant_rep
+        assistant_rep=assistant_rep,
+        notices=notices,
+
+        can_add_members=is_admin,
+        can_assign_reps=is_admin,
+        can_send_notice=(is_admin or is_course_rep)
     )
+
+
+
 @class_groups_bp.route("/<int:id>/members")
 @login_required
 def members(id):

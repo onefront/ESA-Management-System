@@ -32,26 +32,33 @@
 
                         <label class="form-label">Member</label>
 
+
                         <select
-                            name="member_id"
-                            class="form-select"
-                            required>
+    name="payment_type"
+    class="form-select"
+    required>
 
-                            <option value="">-- Select Member --</option>
+    <option value="">Select Payment Type</option>
 
-                            {% for member in members %}
+    <option value="Registration Fee">Registration Fee</option>
 
-                            <option value="{{ member.id }}">
+    <option value="Annual Dues">Annual Dues</option>
 
-                                {{ member.esa_id }} -
-                                {{ member.first_name }}
-                                {{ member.last_name }}
+    <option value="ESA Cloth">ESA Cloth</option>
 
-                            </option>
+    <option value="Excursion Fee">Excursion Fee</option>
 
-                            {% endfor %}
+    <option value="Event Fee">Event Fee</option>
 
-                        </select>
+    <option value="Welfare Contribution">Welfare Contribution</option>
+
+    <option value="Donation">Donation</option>
+
+    <option value="Other">Other</option>
+
+</select>
+
+
 
                     </div>
 

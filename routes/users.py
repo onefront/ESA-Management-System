@@ -42,6 +42,16 @@ def users():
 def add_user():
 
     if request.method == "POST":
+        existing_user = User.query.filter_by(
+            email=request.form["email"]
+        ).first()
+
+        if existing_user:
+            flash(
+                "A user with this email already exists.",
+                "danger"
+            )
+            return redirect(url_for("users.add_user"))
 
         user = User(
             full_name=request.form["full_name"],

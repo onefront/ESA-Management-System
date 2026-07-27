@@ -381,3 +381,24 @@
     background:#dbeafe;
 
 }
+
+<style>
+.candidate-card{
+    border-radius:15px;
+    transition:all .25s ease;
+}
+
+.candidate-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 .75rem 1.5rem rgba(0,0,0,.12)!important;
+}
+
+.candidate-card img{
+    border-radius:15px;
+}
+
+.vote-btn{
+    border-radius:30px;
+    font-weight:600;
+}
+</style>

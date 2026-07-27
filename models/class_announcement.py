@@ -24,6 +24,22 @@ class ClassAnnouncement(db.Model):
 
     message = db.Column(db.Text, nullable=False)
 
+    # Optional attachment
+    attachment = db.Column(
+        db.String(255),
+        nullable=True
+    )
+
+    attachment_name = db.Column(
+        db.String(255),
+        nullable=True
+    )
+
+    attachment_type = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
     event_date = db.Column(
         db.Date,
         nullable=True

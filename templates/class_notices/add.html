@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block title %}Create Class Notice{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-megaphone-fill"></i>
+                Create Class Notice
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="alert alert-info">
+                <strong>Class:</strong> {{ group.name }}
+            </div>
+
+            <form method="POST">
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Notice Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="title"
+                        class="form-control"
+                        required
+                        maxlength="200">
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Notice Message
+                    </label>
+
+                    <textarea
+                        name="message"
+                        rows="8"
+                        class="form-control"
+                        required></textarea>
+
+                </div>
+
+                <button
+                    class="btn btn-primary">
+
+                    <i class="bi bi-send-fill"></i>
+                    Post Notice
+
+                </button>
+
+                <a href="{{ url_for('class_groups.view', id=group.id) }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

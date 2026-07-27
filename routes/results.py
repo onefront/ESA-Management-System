@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from flask_login import login_required
-
+from services.election_service import get_portfolio_results
 from utils.auth import roles_required
 
 results_bp = Blueprint(
@@ -47,111 +47,7 @@ def dashboard():
         total_votes = Vote.query.filter_by(
             election_id=settings.active_election_id
         ).count()
-
-        portfolios = Portfolio.query.order_by(
-            Portfolio.display_order
-        ).all()
-
-        for portfolio in portfolios:
-
-            candidates = Candidate.query.filter_by(
-                election_id=settings.active_election_id,
-                portfolio_id=portfolio.id,
-                status="Active"
-            ).all()
-
-            portfolio_results = []
-            portfolio_total = 0
-
-            for candidate in candidates:
-                votes = Vote.query.filter_by(
-                    candidate_id=candidate.id
-                ).count()
-
-                portfolio_total += votes
-
-                portfolio_results.append({
-                    "candidate": candidate,
-                    "votes": votes
-                })
-
-            # Sort AFTER all candidates have been added
-            portfolio_results.sort(
-                key=lambda x: x["votes"],
-                reverse=True
-            )
-
-
-            # Determine winner or tie
-            highest_votes = 0
-
-            if portfolio_results:
-                highest_votes = portfolio_results[0]["votes"]
-
-            winner_count = sum(
-                1 for item in portfolio_results
-                if item["votes"] == highest_votes
-            )
-
-            for item in portfolio_results:
-                item["winner"] = (
-                        active_election
-                        and active_election.status == "Closed"
-                        and item["votes"] == highest_votes
-                        and winner_count == 1
-                )
-
-                item["tie"] = (
-                        active_election
-                        and active_election.status == "Closed"
-                        and item["votes"] == highest_votes
-                        and winner_count > 1
-                )
-            # -
-            # ----------------------------------
-            # Determine winner or tie
-            # -----------------------------------
-
-            highest_votes = 0
-
-            if portfolio_results:
-                highest_votes = portfolio_results[0]["votes"]
-
-            winner_count = sum(
-                1
-                for item in portfolio_results
-                if item["votes"] == highest_votes
-            )
-
-            for item in portfolio_results:
-                item["winner"] = (
-                        active_election
-                        and active_election.status == "Closed"
-                        and item["votes"] == highest_votes
-                        and winner_count == 1
-                )
-
-                item["tie"] = (
-                        active_election
-                        and active_election.status == "Closed"
-                        and item["votes"] == highest_votes
-                        and winner_count > 1
-                )
-            for item in portfolio_results:
-
-                if portfolio_total > 0:
-                    item["percentage"] = round(
-                        item["votes"] * 100 / portfolio_total,
-                        1
-                    )
-                else:
-                    item["percentage"] = 0
-
-            results.append({
-                "portfolio": portfolio,
-                "results": portfolio_results
-            })
-
+        results = get_portfolio_results(active_election)
     return render_template(
         "results/dashboard.html",
         settings=settings,

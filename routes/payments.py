@@ -3,12 +3,16 @@ from flask import (
     render_template,
     request,
     redirect,
-    url_for
+    url_for,
+    flash
 )
-
+from flask_login import login_required
+from utils.auth import admin_required
 from extensions import db
 from models.member import Member
 from models.payment import Payment
+from flask_login import login_required
+
 
 payments_bp = Blueprint("payments", __name__)
 
@@ -16,6 +20,8 @@ payments_bp = Blueprint("payments", __name__)
 # Payments Dashboard
 # ==========================================
 @payments_bp.route("/payments")
+@login_required
+@admin_required
 def payments():
 
     search = request.args.get("search", "")
@@ -50,6 +56,8 @@ def payments():
 # Add Payment (Dashboard)
 # ==========================================
 @payments_bp.route("/payments/add", methods=["GET", "POST"])
+@login_required
+@admin_required
 def add_payment_dashboard():
 
     members = Member.query.order_by(
@@ -69,14 +77,27 @@ def add_payment_dashboard():
 
         )
 
-        db.session.add(payment)
-        db.session.flush()
+        try:
 
-        payment.reference = (
-            f"ESA-REC-{payment.date_paid.year}-{payment.id:06d}"
-        )
+            db.session.add(payment)
+            db.session.flush()
 
-        db.session.commit()
+            payment.reference = (
+                f"ESA-REC-{payment.date_paid.year}-{payment.id:06d}"
+            )
+
+            db.session.commit()
+
+        except Exception:
+
+            db.session.rollback()
+
+            flash(
+                "An unexpected error occurred while saving the payment.",
+                "danger"
+            )
+
+            return redirect(request.url)
 
         return redirect(url_for("payments.payments"))
 
@@ -89,6 +110,8 @@ def add_payment_dashboard():
 # Member Payments
 # ==========================================
 @payments_bp.route("/members/<int:member_id>/payments")
+@login_required
+@admin_required
 def member_payments(member_id):
 
     member = Member.query.get_or_404(member_id)
@@ -113,26 +136,77 @@ def member_payments(member_id):
     "/members/<int:member_id>/payments/add",
     methods=["GET", "POST"]
 )
+@login_required
+@admin_required
 def add_payment(member_id):
 
     member = Member.query.get_or_404(member_id)
 
     if request.method == "POST":
-        payment = Payment(
+        try:
+            amount = float(request.form["amount"])
+        except ValueError:
+
+            flash(
+                "Invalid payment amount.",
+                "danger"
+            )
+
+            return redirect(request.url)
+
+        if amount <= 0:
+            flash(
+                "Payment amount must be greater than zero.",
+                "danger"
+            )
+            return redirect(request.url)
+
+        existing_payment = Payment.query.filter_by(
             member_id=member.id,
             payment_type=request.form["payment_type"],
-            amount=float(request.form["amount"]),
+            amount=amount
+        ).first()
+
+        if existing_payment:
+            flash(
+                "A payment with the same type and amount already exists for this member.",
+                "warning"
+            )
+            return redirect(request.url)
+
+        payment = Payment(
+
+            member_id=member.id,
+
+            payment_type=request.form["payment_type"],
+
+            amount=amount,
+
             payment_method=request.form["payment_method"]
+
         )
 
-        db.session.add(payment)
-        db.session.flush()
+        try:
 
-        payment.reference = (
-            f"ESA-REC-{payment.date_paid.year}-{payment.id:06d}"
-        )
+            db.session.add(payment)
+            db.session.flush()
 
-        db.session.commit()
+            payment.reference = (
+                f"ESA-REC-{payment.date_paid.year}-{payment.id:06d}"
+            )
+
+            db.session.commit()
+
+        except Exception:
+
+            db.session.rollback()
+
+            flash(
+                "An unexpected error occurred while saving the payment.",
+                "danger"
+            )
+
+            return redirect(request.url)
 
         return redirect(
             url_for(
@@ -155,6 +229,8 @@ def add_payment(member_id):
     "/payments/<int:payment_id>/edit",
     methods=["GET", "POST"]
 )
+@login_required
+@admin_required
 def edit_payment(payment_id):
 
     payment = Payment.query.get_or_404(payment_id)
@@ -164,7 +240,7 @@ def edit_payment(payment_id):
         payment.payment_type = request.form["payment_type"]
         payment.amount = request.form["amount"]
         payment.payment_method = request.form["payment_method"]
-        payment.reference = request.form["reference"]
+
 
         db.session.commit()
 
@@ -181,6 +257,8 @@ def edit_payment(payment_id):
     "/payments/<int:payment_id>/delete",
     methods=["GET", "POST"]
 )
+@login_required
+@admin_required
 def delete_payment(payment_id):
 
     payment = Payment.query.get_or_404(payment_id)
@@ -201,6 +279,8 @@ def delete_payment(payment_id):
     # Payment Receipt
     # ==========================================
 @payments_bp.route("/payments/<int:payment_id>/receipt")
+@login_required
+@admin_required
 def payment_receipt(payment_id):
         payment = Payment.query.get_or_404(payment_id)
 
@@ -208,7 +288,11 @@ def payment_receipt(payment_id):
             "payments/receipt.html",
             payment=payment
         )
+
+
 @payments_bp.route("/payments/reports")
+@login_required
+@admin_required
 def reports():
 
     total_revenue = db.session.query(

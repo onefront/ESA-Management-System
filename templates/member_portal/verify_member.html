@@ -1,164 +1,113 @@
-{% extends "member_portal/layout.html" %}
+{% extends "member_portal/layout2.html" %}
+
+{% block title %}Member Verification{% endblock %}
 
 {% block content %}
 
 <div class="container py-5">
 
-<div class="row justify-content-center">
+    <div class="row justify-content-center">
 
-<div class="col-lg-8">
+        <div class="col-lg-7">
 
-<div class="card shadow-lg border-0 rounded-4">
+            <div class="card shadow-lg border-0 rounded-4">
 
-<div class="card-header bg-success text-white text-center">
+                <div class="card-header bg-success text-white text-center py-4">
 
-<h2>
+                    <h2>
+                        <i class="bi bi-patch-check-fill"></i>
+                        VERIFIED MEMBER
+                    </h2>
 
-<i class="bi bi-patch-check-fill"></i>
+                </div>
 
-VERIFIED ESA MEMBER
+                <div class="card-body p-5">
 
-</h2>
+                    <div class="text-center">
 
-</div>
+                        <img src="{{ url_for('static',
+                        filename='uploads/' + (member.passport or 'default.png')) }}"
+                        class="rounded-circle shadow"
+                        width="180">
 
-<div class="card-body">
+                        <h2 class="mt-4">
 
-<div class="row">
+                            {{ member.full_name }}
 
-<div class="col-md-4 text-center">
+                        </h2>
 
-{% if member.passport %}
+                        <span class="badge bg-success">
 
-<img src="{{ url_for('static',
-filename='uploads/' ~ member.passport) }}"
-class="rounded-circle border border-4 border-success shadow"
-width="220"
-height="220"
-style="object-fit:cover;">
+                            ACTIVE MEMBER
 
-{% else %}
+                        </span>
 
-<img src="{{ url_for('static',
-filename='images/default-avatar.png') }}"
-class="rounded-circle border border-4 border-success"
-width="220">
+                    </div>
 
-{% endif %}
+                    <hr class="my-4">
 
-</div>
+                    <table class="table">
 
-<div class="col-md-8">
+                        <tr>
+                            <th>ESA ID</th>
+                            <td>{{ member.esa_id }}</td>
+                        </tr>
 
-<h2 class="fw-bold text-success">
+                        <tr>
+                            <th>Student ID</th>
+                            <td>{{ member.student_id }}</td>
+                        </tr>
 
-{{ member.first_name }}
-{{ member.last_name }}
+                        <tr>
+                            <th>Programme</th>
+                            <td>{{ member.programme }}</td>
+                        </tr>
 
-</h2>
+                        <tr>
+                            <th>Level</th>
+                            <td>{{ member.level }}</td>
+                        </tr>
 
-<hr>
+                        <tr>
+                            <th>Session</th>
+                            <td>{{ member.session }}</td>
+                        </tr>
 
-<table class="table table-borderless">
+                        <tr>
+                            <th>Status</th>
+                            <td>
 
-<tr>
+                                <span class="badge bg-success">
 
-<th>ESA ID</th>
+                                    VERIFIED
 
-<td>{{ member.esa_id }}</td>
+                                </span>
 
-</tr>
+                            </td>
 
-<tr>
+                        </tr>
 
-<th>Index Number</th>
+                    </table>
 
-<td>{{ member.student_id }}</td>
+                </div>
 
-</tr>
+                <div class="card-footer text-center">
 
-<tr>
+                    Verified by
 
-<th>Programme</th>
+                    <strong>
 
-<td>{{ member.programme }}</td>
+                        Executive Student Association
 
-</tr>
+                    </strong>
 
-<tr>
+                </div>
 
-<th>Department</th>
+            </div>
 
-<td>{{ member.department }}</td>
+        </div>
 
-</tr>
-
-<tr>
-
-<th>Level</th>
-
-<td>{{ member.level }}</td>
-
-</tr>
-
-<tr>
-
-<th>Session</th>
-
-<td>{{ member.session }}</td>
-
-</tr>
-
-<tr>
-
-<th>Status</th>
-
-<td>
-
-<span class="badge bg-success fs-6">
-
-{{ member.status }}
-
-</span>
-
-</td>
-
-</tr>
-
-</table>
-
-</div>
-
-</div>
-
-<hr>
-
-<div class="text-center">
-
-<h4 class="text-success">
-
-<i class="bi bi-shield-check"></i>
-
-Identity Successfully Verified
-
-</h4>
-
-<p class="text-muted">
-
-This digital ID has been verified by the
-Executive Student Association.
-
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 

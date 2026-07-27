@@ -96,7 +96,7 @@
 
         <div class="card-body">
 
-            <div class="d-flex flex-wrap gap-2">
+            <div class="d-flex flex-wrap gap-2 members-toolbar">
 
                 <a href="{{ url_for('members.add_member') }}"
                    class="btn btn-primary">
@@ -225,7 +225,9 @@
     </h6>
 
 </div>
-            <table class="table table-hover table-striped align-middle">
+            <div class="table-responsive">
+
+    <table class="table table-hover table-striped align-middle">
 
                 <thead>
 
@@ -359,7 +361,9 @@
 
                 </tbody>
 
-            </table>
+           </table>
+
+</div>
 
         </div>
 

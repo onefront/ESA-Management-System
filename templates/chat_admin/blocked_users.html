@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header">
+            <h4>Blocked Users</h4>
+        </div>
+
+        <div class="card-body">
+
+            {% if blocked_users %}
+
+            <table class="table table-bordered table-hover">
+
+                <thead>
+
+                <tr>
+                    <th>User</th>
+                    <th>Blocked By</th>
+                    <th>Reason</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for block in blocked_users %}
+
+                <tr>
+
+                    <td>{{ block.user.full_name }}</td>
+
+                    <td>{{ block.administrator.full_name }}</td>
+
+                    <td>{{ block.reason or "-" }}</td>
+
+                    <td>
+                        {{ block.blocked_at.strftime("%d %b %Y %I:%M %p") }}
+                    </td>
+
+                    <td>
+
+                        <a href="{{ url_for('chat_block.index') }}"
+                       class="btn btn-primary">
+                          Manage
+                          </a>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="alert alert-info">
+                No blocked users found.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

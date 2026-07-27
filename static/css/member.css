@@ -1,0 +1,132 @@
+/* ==========================================
+   ESA MANAGEMENT SYSTEM
+   MEMBER PAGE RESPONSIVE STYLES
+========================================== */
+
+/* Toolbar */
+
+.members-toolbar .btn{
+    min-height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-weight:500;
+}
+
+/* Statistics Cards */
+
+.stat-card{
+    height:100%;
+}
+
+/* Member Photos */
+
+.table img{
+    object-fit:cover;
+}
+
+/* Mobile */
+
+@media (max-width:991px){
+
+    .members-toolbar{
+        display:grid !important;
+        grid-template-columns:1fr;
+        gap:10px;
+    }
+
+    .members-toolbar .btn{
+        width:100%;
+    }
+
+    .stat-card{
+        margin-bottom:10px;
+    }
+
+}
+
+/* ==========================================
+   SEARCH & FILTERS
+========================================== */
+
+@media (max-width: 991px){
+
+    .card .form-control,
+    .card .form-select,
+    .card .btn{
+
+        min-height:52px;
+        font-size:16px;
+
+    }
+
+    .card .row.g-3 > div{
+
+        margin-bottom:8px;
+
+    }
+
+}
+/* ==========================================
+   MEMBER ACTION BUTTONS
+========================================== */
+
+.btn-group{
+    display:flex;
+    flex-wrap:nowrap;
+}
+
+.btn-group .btn{
+    min-width:40px;
+    min-height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+@media (max-width:991px){
+
+    .btn-group{
+
+        width:100%;
+
+    }
+
+    .btn-group .btn{
+
+        flex:1;
+        min-height:46px;
+
+    }
+
+}
+/* ==========================================
+   PAYMENT ACTION BUTTONS
+========================================== */
+
+.table td .btn-group{
+    display:flex;
+    flex-wrap:nowrap;
+}
+
+.table td .btn-group .btn{
+    min-width:40px;
+    min-height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+@media (max-width:991px){
+
+    .table td .btn-group{
+        width:100%;
+    }
+
+    .table td .btn-group .btn{
+        flex:1;
+        min-height:46px;
+    }
+
+}

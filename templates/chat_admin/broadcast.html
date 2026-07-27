@@ -1,0 +1,163 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <h2 class="mb-4">
+        <i class="bi bi-megaphone"></i>
+        Broadcast Messages
+    </h2>
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+          <form method="POST">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Broadcast Title
+                    </label>
+
+                    <input
+    type="text"
+    class="form-control"
+    name="title"
+    placeholder="Enter broadcast title">
+                </div>
+
+                <div class="mb-3">
+                <div class="mb-3">
+
+    <label class="form-label">
+
+        Broadcast Type
+
+    </label>
+
+    <select
+        class="form-select"
+        name="broadcast_type">
+
+        <option value="announcement">
+            📢 Announcement
+        </option>
+
+        <option value="notice">
+            ⚠️ Important Notice
+        </option>
+
+        <option value="event">
+            🎉 Event
+        </option>
+
+        <option value="emergency">
+            🚨 Emergency
+        </option>
+
+    </select>
+
+</div>
+                    <label class="form-label">
+                        Message
+                    </label>
+
+                    <textarea
+    class="form-control"
+    rows="8"
+    name="message"
+    placeholder="Type your broadcast message here..."></textarea>
+
+                </div>
+
+                <button
+    type="submit"
+    class="btn btn-success">
+
+                    <i class="bi bi-send"></i>
+
+                    Send Broadcast
+
+                </button>
+
+            </form>
+<hr class="my-5">
+
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h5 class="mb-0">Broadcast History</h5>
+    </div>
+
+    <div class="card-body">
+
+        {% if broadcasts %}
+
+        <table class="table table-bordered table-hover align-middle">
+
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date Created</th>
+                    <th>Created By</th>
+                    <th width="120">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for conversation in broadcasts %}
+
+                <tr>
+
+                    <td>{{ conversation.title }}</td>
+
+                    <td>
+                        {{ conversation.created_at.strftime("%d %b %Y %I:%M %p") }}
+                    </td>
+
+                    <td>{{ conversation.creator.full_name }}</td>
+
+                    <td>
+
+                       <form
+    method="POST"
+    action="{{ url_for('chat_admin.delete_broadcast', conversation_id=conversation.id) }}"
+    onsubmit="return confirm('Are you sure you want to delete this broadcast? This action cannot be undone.');">
+
+    <button
+        type="submit"
+        class="btn btn-danger btn-sm">
+        <i class="fas fa-trash"></i> Delete
+    </button>
+
+</form>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="alert alert-info mb-0">
+            No broadcasts have been created yet.
+        </div>
+
+        {% endif %}
+
+    </div>
+</div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

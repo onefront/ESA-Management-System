@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="mb-4">
+        🔔 Notifications
+    </h3>
+
+    {% if notifications %}
+
+        <div class="list-group">
+
+            {% for notification in notifications %}
+
+                <a
+                    href="{{ url_for('notifications.read', id=notification.id) }}"
+                    class="list-group-item list-group-item-action {% if not notification.is_read %}list-group-item-primary{% endif %}">
+
+                    <strong>{{ notification.title }}</strong>
+
+                    <br>
+
+                    {{ notification.message }}
+
+                    <br>
+
+                    <small class="text-muted">
+
+                        {{ notification.created_at.strftime("%d %b %Y %I:%M %p") }}
+
+                    </small>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-info">
+            No notifications available.
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

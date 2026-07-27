@@ -1,0 +1,46 @@
+{% if notifications %}
+
+    {% for notification in notifications %}
+
+    <a class="dropdown-item py-2"
+       href="{{ url_for('notifications.read', id=notification.id) }}">
+
+        <strong>{{ notification.title }}</strong>
+
+        <br>
+
+        <small class="text-muted">
+            {{ notification.message[:40] }}
+            {% if notification.message|length > 40 %}...{% endif %}
+        </small>
+
+        <br>
+
+        <small class="text-secondary">
+            {{ notification.created_at.strftime("%d %b %I:%M %p") }}
+        </small>
+
+    </a>
+
+    {% if not loop.last %}
+    <div class="dropdown-divider"></div>
+    {% endif %}
+
+    {% endfor %}
+
+{% else %}
+
+<div class="dropdown-item text-center text-muted">
+    No notifications
+</div>
+
+{% endif %}
+
+<div class="dropdown-divider"></div>
+
+<a class="dropdown-item text-center fw-bold"
+   href="{{ url_for('notifications.index') }}">
+
+    View All Notifications
+
+</a>

@@ -1,6 +1,6 @@
 import os
 from flask import request, redirect, url_for
-from flask_login import current_user
+
 from flask import (
     Flask,
     render_template,
@@ -8,20 +8,17 @@ from flask import (
     url_for
 )
 from flask_migrate import Migrate
-from models.slider import Slider
+
 from models.slider import Slider
 from flask_login import current_user
-from models.course_rep import CourseRep
+
 from models.executive import Executive
 from config import Config
 from routes.events import events_bp
-from extensions import db
 from routes.member_import import member_import_bp
 from models.event import Event
 from extensions import db, login_manager
-from models.user import User
 from routes.programmes import programmes_bp
-from routes.departments import departments_bp
 from routes.attendance import attendance_bp
 from routes.candidates import candidates_bp
 from routes.reports import reports_bp
@@ -29,9 +26,15 @@ from routes.lecturers import lecturers_bp
 from routes.auth import auth_bp
 from routes.class_groups import class_groups_bp
 from routes.payment_settings import payment_settings_bp
+from routes.chat_admin import chat_admin_bp
+from routes.notifications import notifications_bp
+
+
+
 
 
 # Import models
+from models.class_notice import ClassNotice
 from models.payment_settings import PaymentSettings
 from models.class_group import ClassGroup
 from models.course_rep import CourseRep
@@ -41,7 +44,6 @@ from models.faculty import Faculty
 from models.member_application import MemberApplication
 from models.member import Member
 from models.programme import Programme
-from models.faculty import Faculty
 from models.payment import Payment
 from models.election import Election
 from models.election_settings import ElectionSettings
@@ -52,14 +54,47 @@ from models.vote import Vote
 from models.audit_log import AuditLog
 from models.class_announcement import ClassAnnouncement
 from models.announcement import Announcement
+from models.conversation import Conversation
+from models.conversation_member import ConversationMember
+from models.message import Message
+from models.message_read import MessageRead
+from models.attachment import Attachment
+from models.chat_setting import ChatSetting
+from models.chat_block import ChatBlock
+from models.notice import Notice
+from models.message import Message
+from models.user import User
+from models.notification import Notification
 
 
 # Create Flask App
 app = Flask(__name__)
-print("=" * 60)
-print("Template Folder:", app.template_folder)
-print("Root Path:", app.root_path)
-print("=" * 60)
+
+
+
+@app.context_processor
+def inject_notifications():
+
+    unread_count = 0
+
+    if current_user.is_authenticated:
+
+        unread_count = (
+            Notification.query
+            .filter_by(
+                user_id=current_user.id,
+                is_read=False
+            )
+            .count()
+        )
+
+    return dict(
+        unread_notifications=unread_count
+    )
+# print("=" * 60)
+# print("Template Folder:", app.template_folder)
+# print("Root Path:", app.root_path)
+# print("=" * 60)
 
 #
 # print("=" * 80)
@@ -81,10 +116,9 @@ app.config.from_object(Config)
 
 db.init_app(app)
 migrate = Migrate(app, db)
-
-
-
-
+from routes.class_notices import class_notices_bp
+from routes.backup import backup_bp
+from routes.messages import messages_bp
 from routes.sliders import sliders_bp
 from routes.member_indexes import member_indexes_bp
 from routes.course_reps import course_reps_bp
@@ -99,12 +133,8 @@ from routes.analytics import analytics_bp
 from routes.members import members_bp
 from routes.payments import payments_bp
 from routes.executives import executives_bp
-from routes.events import events_bp
 from routes.departments import departments_bp
-from routes.attendance import attendance_bp
-from routes.member_import import member_import_bp
 from routes.reports import reports_bp
-from routes.auth import auth_bp
 from routes.voting import voting_bp
 from routes.results import results_bp
 from routes.election_control import control_bp
@@ -114,18 +144,25 @@ from routes.elections import elections_bp
 from routes.portfolios import portfolios_bp
 from routes.candidates import candidates_bp
 from routes.settings import settings_bp
-from routes.settings import settings_bp
 from routes.election_settings import settings_bp as election_settings_bp
 from routes.academic_class import academic_class_bp
 from routes.member_payments import member_payments_bp
 from routes.class_announcements import class_announcements_bp
 from routes.payment_approval import payment_approval_bp
 from routes.slides import slides_bp
+from routes.chat_block import chat_block_bp
+
+
+
 
 
 # Register blueprints
-
-
+app.register_blueprint(notifications_bp)
+app.register_blueprint(class_notices_bp)
+app.register_blueprint(backup_bp)
+app.register_blueprint(chat_block_bp)
+app.register_blueprint(chat_admin_bp)
+app.register_blueprint(messages_bp)
 app.register_blueprint(slides_bp)
 app.register_blueprint(sliders_bp)
 app.register_blueprint(member_payments_bp)
@@ -167,8 +204,8 @@ app.register_blueprint(class_groups_bp)
 
 
 
-print("\n========== REGISTERED ROUTES ==========")
-print(app.url_map)
+# python app.py
+# print(app.url_map)
 
 
 
@@ -216,22 +253,24 @@ def inject_permissions():
 
     def can_view_lecturer_directory():
 
-        print("=" * 60)
-        print("Checking Lecturer Directory Permission")
+        # print("=" * 60)
+        # print("Checking Lecturer Directory Permission")
 
         if current_user.is_authenticated:
-            print("User:", current_user.username)
-            print("Role:", current_user.role)
+            pass
+             # print("User:", current_user.username)
+            # print("Role:", current_user.role)
 
         member = get_member()
-        print("Member:", member)
+        # print("Member:", member)
 
         rep = get_course_rep()
-        print("Course Rep:", rep)
+        # print("Course Rep:", rep)
 
         if rep:
-            print("Position:", rep.position)
-            print("Status:", rep.status)
+            pass
+            # print("Position:", rep.position)
+            # print("Status:", rep.status)
 
         result = (
             is_admin()
@@ -239,9 +278,9 @@ def inject_permissions():
             or is_course_rep()
             or is_assistant_course_rep()
         )
-
-        print("Permission:", result)
-        print("=" * 60)
+        #
+        # print("Permission:", result)
+        # print("=" * 60)
 
         return result
 

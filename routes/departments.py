@@ -113,3 +113,24 @@ def delete_department(id):
     flash("Department deleted successfully.", "success")
 
     return redirect(url_for("departments.departments"))
+
+from flask import jsonify
+
+
+@departments_bp.route("/get_departments/<int:programme_id>")
+@login_required
+def get_departments(programme_id):
+
+    departments = Department.query.filter_by(
+        programme_id=programme_id
+    ).order_by(
+        Department.department_name
+    ).all()
+
+    return jsonify([
+        {
+            "id": d.id,
+            "name": d.department_name
+        }
+        for d in departments
+    ])

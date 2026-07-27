@@ -1,3 +1,5 @@
+import os
+import re
 from flask import (
     Blueprint,
     render_template,
@@ -11,7 +13,7 @@ from flask import send_file
 from flask_login import login_required
 from openpyxl import load_workbook
 from werkzeug.utils import secure_filename
-import os
+
 from extensions import db
 from models.member_index import MemberIndex
 from utils.auth import admin_required
@@ -167,6 +169,39 @@ def delete(index_id):
         index=index
     )
 
+
+# ==========================================
+# Bulk Delete Student Indexes
+# ==========================================
+@member_indexes_bp.route("/bulk-delete", methods=["POST"])
+@login_required
+@admin_required
+def bulk_delete():
+
+    selected_ids = request.form.getlist("selected_ids")
+
+    if not selected_ids:
+        flash("No Student IDs selected.", "warning")
+        return redirect(url_for("member_indexes.index"))
+
+    indexes = MemberIndex.query.filter(
+        MemberIndex.id.in_(selected_ids)
+    ).all()
+
+    for index in indexes:
+        db.session.delete(index)
+
+    db.session.commit()
+
+    flash(
+        f"{len(indexes)} Student ID(s) deleted successfully.",
+        "success"
+    )
+
+    return redirect(url_for("member_indexes.index"))
+
+
+
 @member_indexes_bp.route("/import", methods=["GET", "POST"])
 @login_required
 @admin_required
@@ -207,21 +242,27 @@ def import_indexes():
 
             total_rows += 1
 
-            student_id = row[0]
+            student_id = None
 
+            # Search every column for a valid 10-digit Student Index Number
+            for value in row:
+
+                if value is None:
+                    continue
+
+                value = str(value).strip()
+                value = value.replace(" ", "")
+
+                # Only accept exactly 10 digits
+                if re.fullmatch(r"\d{10}", value):
+                    student_id = value
+                    break
+
+            # No valid Student Index Number found
             if student_id is None:
-
                 empty_rows += 1
                 continue
-
-            student_id = str(student_id).strip().upper()
-
-            if student_id == "":
-
-                empty_rows += 1
-                continue
-
-            # Duplicate inside Excel
+                # Duplicate inside Excel
             if student_id in seen:
 
                 excel_duplicates += 1

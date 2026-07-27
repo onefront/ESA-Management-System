@@ -9,7 +9,8 @@ from flask import (
 from flask_login import login_required
 
 from extensions import db
-
+from models.vote import Vote
+from models.member_index import MemberIndex
 from models.election_settings import ElectionSettings
 from models.audit_log import AuditLog
 from flask_login import current_user
@@ -35,6 +36,7 @@ def dashboard():
         "control/dashboard.html",
         settings=settings
     )
+
 @control_bp.route("/open")
 @login_required
 @roles_required("Administrator", "General Secretary")
@@ -116,6 +118,45 @@ def close_voting():
     return redirect(
         url_for("control.dashboard")
     )
+
+
+
+
+
+@control_bp.route("/reset")
+@login_required
+@roles_required("Administrator")
+def reset_election():
+
+    Vote.query.delete()
+
+    MemberIndex.query.update(
+        {
+            MemberIndex.used: False,
+            MemberIndex.used_at: None,
+            MemberIndex.used_by: None
+        },
+        synchronize_session=False
+    )
+
+    log = AuditLog(
+        user=current_user.full_name if hasattr(current_user, "full_name") else current_user.username,
+        action="Reset Election"
+    )
+
+    db.session.add(log)
+    db.session.commit()
+
+    flash(
+        "Election has been reset successfully.",
+        "success"
+    )
+
+    return redirect(
+        url_for("control.dashboard")
+    )
+
+
 
 
 @control_bp.route("/show-results")

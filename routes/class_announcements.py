@@ -1,3 +1,4 @@
+import os
 from flask import (
     Blueprint,
     render_template,
@@ -11,7 +12,9 @@ from flask_login import (
     login_required,
     current_user
 )
-
+from uuid import uuid4
+from werkzeug.utils import secure_filename
+from flask import current_app
 from extensions import db
 from datetime import datetime
 from models.member import Member
@@ -69,6 +72,55 @@ def new():
     if request.method == "POST":
         from datetime import datetime
 
+        # Upload attachment
+        attachment = request.files.get("attachment")
+
+        filename = None
+        attachment_name = None
+        attachment_type = None
+
+        if attachment and attachment.filename:
+
+            allowed_extensions = {
+                "pdf",
+                "doc",
+                "docx",
+                "xls",
+                "xlsx",
+                "ppt",
+                "pptx"
+            }
+
+            extension = attachment.filename.rsplit(".", 1)[1].lower()
+
+            if extension not in allowed_extensions:
+                flash(
+                    "Only PDF, Word, Excel and PowerPoint files are allowed.",
+                    "danger"
+                )
+
+                return redirect(request.url)
+
+            upload_folder = os.path.join(
+                current_app.config["UPLOAD_FOLDER"],
+                "class_announcements"
+            )
+
+            os.makedirs(upload_folder, exist_ok=True)
+
+            from uuid import uuid4
+
+            extension = attachment.filename.rsplit(".", 1)[1].lower()
+
+            filename = f"{uuid4().hex}.{extension}"
+
+            attachment.save(
+                os.path.join(upload_folder, filename)
+            )
+
+            attachment_name = attachment.filename
+            attachment_type = attachment.content_type
+
         announcement = ClassAnnouncement(
             class_group_id=class_group.id,
             created_by=member.id,
@@ -84,7 +136,11 @@ def new():
                 if request.form.get("event_time")
                 else None
             ),
-            venue=request.form.get("venue") or None
+            venue=request.form.get("venue") or None,
+
+            attachment=f"class_announcements/{filename}" if filename else None,
+            attachment_name=attachment_name,
+            attachment_type=attachment_type
         )
 
         db.session.add(announcement)

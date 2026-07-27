@@ -7,7 +7,8 @@ from flask import (
 )
 
 from extensions import db
-
+from flask_login import login_required
+from utils.auth import admin_required
 from models.attendance import Attendance
 from models.member import Member
 from models.event import Event
@@ -19,6 +20,8 @@ attendance_bp = Blueprint("attendance", __name__)
 # Attendance List
 # ==========================================
 @attendance_bp.route("/attendance")
+@login_required
+@admin_required
 def attendance():
 
     attendance_records = Attendance.query.order_by(
@@ -36,6 +39,8 @@ def attendance():
 # ==========================================
 @attendance_bp.route("/attendance/add",
                      methods=["GET", "POST"])
+@login_required
+@admin_required
 def add_attendance():
 
     members = Member.query.order_by(
@@ -84,6 +89,8 @@ def add_attendance():
 # Bulk Attendance
 # ==========================================
 @attendance_bp.route("/attendance/event", methods=["GET", "POST"])
+@login_required
+@admin_required
 def attendance_by_event():
 
     events = Event.query.order_by(
@@ -92,6 +99,51 @@ def attendance_by_event():
 
     if request.method == "POST":
 
+        # Save attendance
+        if request.form.get("save_attendance") == "1":
+
+            event_id = request.form.get("event_id")
+
+            members = Member.query.order_by(
+                Member.first_name
+            ).all()
+
+            for member in members:
+
+                status = request.form.get(f"attendance_{member.id}")
+
+                if not status:
+                    continue
+
+                # Prevent duplicate attendance
+                existing = Attendance.query.filter_by(
+                    member_id=member.id,
+                    event_id=event_id
+                ).first()
+
+                if existing:
+                    continue
+
+                last = Attendance.query.order_by(
+                    Attendance.id.desc()
+                ).first()
+
+                next_id = 1 if last is None else last.id + 1
+
+                attendance = Attendance(
+                    attendance_code=f"ATT-{next_id:04d}",
+                    member_id=member.id,
+                    event_id=event_id,
+                    status=status
+                )
+
+                db.session.add(attendance)
+
+            db.session.commit()
+
+            return redirect(url_for("attendance.attendance"))
+
+        # Load members for selected event
         event_id = request.form["event_id"]
 
         members = Member.query.order_by(

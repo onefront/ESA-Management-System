@@ -24,7 +24,7 @@
       href="{{ url_for('static', filename='css/dashboard.css') }}">
 
 <link rel="stylesheet"
-      href="{{ url_for('static', filename='css/members.css') }}">
+      href="{{ url_for('static', filename='css/member.css') }}">
 
 <link rel="stylesheet"
       href="{{ url_for('static', filename='css/tables.css') }}">
@@ -34,14 +34,18 @@
 <link rel="stylesheet"
       href="{{ url_for('static',
       filename='css/election.css') }}">
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/messages.css') }}">
 </head>
 
 <body>
 
 <div class="d-flex">
 
+    <div id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
 
        <div class="logo-area">
 
@@ -252,7 +256,28 @@
 </li>
 
 {% endif %}
+<li class="menu-title">
+    CHAT
+</li>
 
+<li class="{% if request.endpoint and request.endpoint.startswith('messages') %}active{% endif %}">
+    <a href="{{ url_for('messages.inbox') }}">
+        <i class="bi bi-chat-dots"></i>
+        ESA VIBES
+    </a>
+</li>
+
+{% if current_user.role in ["Administrator", "General Secretary"] %}
+
+<li style="margin-left:20px;"
+    class="{% if request.endpoint and request.endpoint.startswith('chat_admin') %}active{% endif %}">
+    <a href="{{ url_for('chat_admin.dashboard') }}">
+        <i class="bi bi-gear"></i>
+        Chat Management
+    </a>
+</li>
+
+{% endif %}
 
 {% if current_user.role in ["Administrator", "General Secretary"] %}
 
@@ -331,25 +356,34 @@
     </aside>
 
     <!-- Main Content -->
-<main class="content">
+<main class="content" id="mainContent">
 
     <!-- Top Navigation -->
 
 <nav class="top-navbar">
 
     <!-- Left -->
-    <div class="navbar-left">
-        <h5 class="mb-0 fw-bold">
-            ESA Management System
-        </h5>
-    </div>
+   <div class="navbar-left d-flex align-items-center">
 
+    <button
+        id="menuToggle"
+        class="btn btn-outline-primary me-3 d-lg-none">
+
+        <i class="bi bi-list fs-4"></i>
+
+    </button>
+
+    <h5 class="mb-0 fw-bold">
+        ESA Management System
+    </h5>
+
+</div>
     <!-- Center -->
-    <div class="navbar-center">
-        <h6 class="university-name">
-            UNIVERSITY OF SKILLS TRAINING AND ENTREPRENEURIAL DEVELOPMENT
-        </h6>
-    </div>
+    <div class="navbar-center d-none d-lg-block">
+    <h6 class="university-name">
+        UNIVERSITY OF SKILLS TRAINING AND ENTREPRENEURIAL DEVELOPMENT
+    </h6>
+</div>
 
     <!-- Right -->
     <div class="d-flex align-items-center gap-3">
@@ -381,17 +415,17 @@
 
     <div>
 
-        <div class="fw-semibold">
+        <div class="user-details d-none d-md-block">
 
-            {{ current_user.full_name }}
+    <div class="fw-semibold">
+        {{ current_user.full_name }}
+    </div>
 
-        </div>
+    <small class="text-muted">
+        Role: {{ current_user.role }}
+    </small>
 
-        <small class="text-muted">
-
-            Role: {{ current_user.role }}
-
-        </small>
+</div>
 
     </div>
 
@@ -501,5 +535,33 @@ if (ctx) {
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+   const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("sidebarOverlay");
+
+   menuToggle.addEventListener("click", function () {
+
+    sidebar.classList.toggle("show-sidebar");
+    overlay.classList.toggle("show-overlay");
+
+});
+
+overlay.addEventListener("click", function () {
+
+    sidebar.classList.remove("show-sidebar");
+    overlay.classList.remove("show-overlay");
+
+});
+
+});
+
+</script>
+
+</body>
 </body>
 </html>

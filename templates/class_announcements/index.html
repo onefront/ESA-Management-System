@@ -64,9 +64,55 @@
 
                 <p class="mb-3">
 
-                    {{ announcement.message }}
+    {{ announcement.message }}
 
-                </p>
+</p>
+
+{% if announcement.attachment %}
+
+<div class="alert alert-light border rounded-3">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+        <div>
+
+            <i class="bi bi-paperclip text-primary"></i>
+
+            <strong>
+                {{ announcement.attachment_name }}
+            </strong>
+
+        </div>
+
+        <div class="mt-2 mt-md-0">
+
+            <a
+                href="{{ url_for('static', filename='uploads/' ~ announcement.attachment) }}"
+                target="_blank"
+                class="btn btn-sm btn-outline-primary">
+
+                <i class="bi bi-eye"></i>
+                View
+
+            </a>
+
+            <a
+                href="{{ url_for('static', filename='uploads/' ~ announcement.attachment) }}"
+                download
+                class="btn btn-sm btn-outline-success">
+
+                <i class="bi bi-download"></i>
+                Download
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
 
                 <div class="d-flex justify-content-between align-items-center mt-3">
 

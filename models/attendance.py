@@ -38,4 +38,10 @@ class Attendance(db.Model):
         )
     )
 
-    event = db.relationship("Event", backref="attendance")
+    event = db.relationship(
+        "Event",
+        backref=db.backref(
+            "attendance",
+            cascade="all, delete-orphan"
+        )
+    )

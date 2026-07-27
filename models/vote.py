@@ -6,11 +6,12 @@ from extensions import db
 class Vote(db.Model):
 
     __tablename__ = "votes"
+
     __table_args__ = (
         db.UniqueConstraint(
             "election_id",
             "portfolio_id",
-            "member_id",
+            "member_index_id",
             name="unique_member_vote"
         ),
     )
@@ -35,9 +36,9 @@ class Vote(db.Model):
         nullable=False
     )
 
-    member_id = db.Column(
+    member_index_id = db.Column(
         db.Integer,
-        db.ForeignKey("members.id"),
+        db.ForeignKey("member_indexes.id"),
         nullable=False
     )
 
@@ -52,7 +53,7 @@ class Vote(db.Model):
 
     candidate = db.relationship("Candidate")
 
-    member = db.relationship("Member")
+    member_index = db.relationship("MemberIndex")
 
     def __repr__(self):
         return f"<Vote {self.id}>"

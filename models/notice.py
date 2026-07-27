@@ -21,6 +21,28 @@ class Notice(db.Model):
         nullable=False
     )
 
+    # Optional flyer/image
+    image = db.Column(
+        db.String(255),
+        nullable=True
+    )
+
+    # Optional document attachment
+    attachment = db.Column(
+        db.String(255),
+        nullable=True
+    )
+
+    attachment_name = db.Column(
+        db.String(255),
+        nullable=True
+    )
+
+    attachment_type = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
     category = db.Column(
         db.String(50),
         default="General"

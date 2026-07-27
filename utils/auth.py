@@ -9,12 +9,12 @@ def roles_required(*roles):
 
         @wraps(func)
         def wrapper(*args, **kwargs):
-
-            print("=" * 60)
-            print("Current User Type:", type(current_user))
-            print("Current User Class:", current_user.__class__)
-            print("Current User Dict:", getattr(current_user, "__dict__", {}))
-            print("Has role:", hasattr(current_user, "role"))
+            #
+            # print("=" * 60)
+            # print("Current User Type:", type(current_user))
+            # print("Current User Class:", current_user.__class__)
+            # print("Current User Dict:", getattr(current_user, "__dict__", {}))
+            # print("Has role:", hasattr(current_user, "role"))
 
             if not current_user.is_authenticated:
                 abort(401)
@@ -37,38 +37,38 @@ def lecturer_directory_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        print("=" * 60)
-        print("USER:", current_user.username)
-        print("ROLE:", current_user.role)
+        # print("=" * 60)
+        # print("USER:", current_user.username)
+        # print("ROLE:", current_user.role)
 
         if not current_user.is_authenticated:
-            print("NOT AUTHENTICATED")
+            # print("NOT AUTHENTICATED")
             abort(401)
 
         if current_user.role in [
             "Administrator",
             "General Secretary"
         ]:
-            print("ADMIN ACCESS")
+            # print("ADMIN ACCESS")
             return func(*args, **kwargs)
 
         if current_user.role == "Member":
 
             member = getattr(current_user, "member_profile", None)
 
-            print("MEMBER:", member)
+            # print("MEMBER:", member)
 
             if member is None:
-                print("NO MEMBER PROFILE")
+                # print("NO MEMBER PROFILE")
                 abort(403)
 
-            print("MEMBER ID:", member.id)
+            # print("MEMBER ID:", member.id)
 
             rep = CourseRep.query.filter_by(
                 member_id=member.id
             ).first()
 
-            print("COURSE REP:", rep)
+            # print("COURSE REP:", rep)
 
             if rep:
                 print("POSITION:", rep.position)
@@ -80,7 +80,7 @@ def lecturer_directory_required(func):
                 print("ACCESS GRANTED")
                 return func(*args, **kwargs)
 
-        print("ACCESS DENIED")
+        # print("ACCESS DENIED")
         abort(403)
 
     return wrapper

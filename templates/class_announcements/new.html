@@ -22,7 +22,7 @@
 
         </p>
 
-        <form method="POST">
+       <form method="POST" enctype="multipart/form-data">
 
             <div class="mb-3">
 
@@ -96,12 +96,35 @@
 
             </div>
 
-            <button
-                class="btn btn-primary">
+            <div class="mb-3">
 
-                Publish Announcement
+    <label class="form-label">
+        Attachment (Optional)
+    </label>
 
-            </button>
+    <input
+        type="file"
+        name="attachment"
+        class="form-control"
+        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+
+    <small class="text-muted">
+
+        Supported:
+        PDF, Word, Excel and PowerPoint
+
+    </small>
+
+</div>
+
+<button
+    class="btn btn-primary">
+
+    <i class="bi bi-megaphone-fill"></i>
+
+    Publish Announcement
+
+</button>
 
         </form>
 

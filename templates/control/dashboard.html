@@ -87,8 +87,24 @@
     Close Voting
 
 </a>
+        </div>
 
-            </div>
+
+    <a href="{{ url_for('control.reset_election') }}"
+   class="btn btn-dark confirm-action"
+   data-title="Reset Election?"
+   data-text="This will delete ALL votes and allow every uploaded index number to vote again. This action cannot be undone."
+   data-confirm="Yes, Reset Election">
+
+    <i class="bi bi-arrow-clockwise"></i>
+
+    Reset Election
+
+</a>
+
+
+
+
 <hr>
 
 <h5 class="mt-4">
@@ -143,7 +159,10 @@ document.querySelectorAll(".confirm-action").forEach(button => {
 
             cancelButtonText: "Cancel",
 
-            confirmButtonColor: "#198754"
+          confirmButtonColor:
+this.href.includes("/reset")
+? "#dc3545"
+: "#198754"
 
         }).then((result)=>{
 

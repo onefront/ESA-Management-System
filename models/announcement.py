@@ -21,6 +21,28 @@ class Announcement(db.Model):
         nullable=False
     )
 
+    # Image (optional)
+    image = db.Column(
+        db.String(255),
+        nullable=True
+    )
+
+    # Document (optional)
+    attachment = db.Column(
+        db.String(255),
+        nullable=True
+    )
+
+    attachment_name = db.Column(
+        db.String(255),
+        nullable=True
+    )
+
+    attachment_type = db.Column(
+        db.String(100),
+        nullable=True
+    )
+
     is_pinned = db.Column(
         db.Boolean,
         default=False

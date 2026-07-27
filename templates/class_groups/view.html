@@ -21,38 +21,7 @@
         </a>
 
     </div>
-<!--    <div class="card border-0 shadow-sm mb-4">-->
 
-<!--    <div class="card-body d-flex flex-wrap gap-2">-->
-
-<!--        <a href="#" class="btn btn-primary">-->
-<!--            <i class="bi bi-person-plus-fill"></i>-->
-<!--            Add Member-->
-<!--        </a>-->
-
-<!--        <a href="#" class="btn btn-success">-->
-<!--            <i class="bi bi-people-fill"></i>-->
-<!--            View Members-->
-<!--        </a>-->
-
-<!--        <a href="#" class="btn btn-warning">-->
-<!--            <i class="bi bi-person-workspace"></i>-->
-<!--            Assign Reps-->
-<!--        </a>-->
-
-<!--        <a href="#" class="btn btn-info text-white">-->
-<!--            <i class="bi bi-megaphone-fill"></i>-->
-<!--            Send Notice-->
-<!--        </a>-->
-
-<!--        <a href="#" class="btn btn-secondary">-->
-<!--            <i class="bi bi-printer-fill"></i>-->
-<!--            Print Class List-->
-<!--        </a>-->
-
-<!--    </div>-->
-
-<!--</div>-->
      <div class="row g-4 mb-4">
 
     <div class="col-md-3">
@@ -195,11 +164,13 @@
 
             <div class="card-body d-grid gap-2">
 
-                <a href="{{ url_for('members.add_member', class_group_id=group.id) }}"
+{% if can_add_members %}
+<a href="{{ url_for('members.add_member', class_group_id=group.id) }}"
    class="btn btn-primary">
-                    <i class="bi bi-person-plus-fill"></i>
-                    Add Member
-                </a>
+    <i class="bi bi-person-plus-fill"></i>
+    Add Member
+</a>
+{% endif %}
 
              <a href="{{ url_for('class_groups.members', id=group.id) }}"
    class="btn btn-success">
@@ -207,15 +178,21 @@
                     View Members
                 </a>
 
-                <a href="#" class="btn btn-warning">
-                    <i class="bi bi-person-workspace"></i>
-                    Assign Representatives
-                </a>
+ {% if can_assign_reps %}
+<a href="#" class="btn btn-warning">
+    <i class="bi bi-person-workspace"></i>
+    Assign Representatives
+</a>
+{% endif %}
 
-                <a href="#" class="btn btn-info text-white">
-                    <i class="bi bi-megaphone-fill"></i>
-                    Send Notice
-                </a>
+<a href="{{ url_for('class_notices.create', class_group_id=group.id) }}"
+   class="btn btn-warning">
+
+    <i class="bi bi-megaphone-fill"></i>
+
+    Send Notice
+
+</a>
 
                 <a href="#" class="btn btn-secondary">
                     <i class="bi bi-printer-fill"></i>
@@ -225,6 +202,59 @@
             </div>
 
         </div>
+
+    </div>
+
+</div>
+        <div class="card mt-4 shadow-sm">
+
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            <i class="bi bi-megaphone-fill"></i>
+            Class Notice Board
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        {% if notices %}
+
+            {% for notice in notices %}
+
+                <div class="border rounded p-3 mb-3">
+
+                    <h5>{{ notice.title }}</h5>
+
+                    <small class="text-muted">
+                      <small class="text-muted">
+
+    Posted by:
+    {{ notice.created_by.username }}
+
+    <br>
+
+    {{ notice.created_at.strftime("%d %b %Y %I:%M %p") }}
+
+</small>
+                    </small>
+
+                    <hr>
+
+                    <p style="white-space: pre-line;">
+                        {{ notice.message }}
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="alert alert-info mb-0">
+                No class notices available.
+            </div>
+
+        {% endif %}
 
     </div>
 

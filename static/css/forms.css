@@ -1,0 +1,46 @@
+/* ==========================================
+   ESA MANAGEMENT SYSTEM
+   UNIVERSAL FORM STYLES
+========================================== */
+
+.form-control,
+.form-select{
+    min-height:48px;
+    border-radius:10px;
+}
+
+textarea.form-control{
+    min-height:120px;
+}
+
+.form-label{
+    font-weight:600;
+}
+
+.btn{
+    border-radius:10px;
+}
+
+@media (max-width:991px){
+
+    .form-control,
+    .form-select{
+
+        min-height:54px;
+        font-size:16px;
+
+    }
+
+    .btn{
+
+        min-height:52px;
+
+    }
+
+    .card{
+
+        border-radius:14px;
+
+    }
+
+}

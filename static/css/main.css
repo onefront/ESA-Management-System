@@ -383,3 +383,120 @@ body{
     text-align:center;
 
 }
+.list-group-item{
+
+    transition:0.2s;
+
+}
+
+.list-group-item:hover{
+
+    background:#f8f9fa;
+
+    transform:translateX(3px);
+
+}
+
+.rounded-circle{
+
+    border:2px solid #dee2e6;
+
+}
+.messages-menu{
+    color:#FFD700 !important;
+    font-weight:700 !important;
+    font-size:20px;
+}
+
+.messages-menu i{
+    color:#FFD700 !important;
+    font-size:24px;
+}
+
+.messages-menu:hover{
+    color:#FFD700 !important;
+}
+/* ==========================================
+   MOBILE RESPONSIVE LAYOUT
+========================================== */
+
+@media (max-width: 991px) {
+
+  .sidebar{
+    position:fixed;
+    top:0;
+    left:-100%;
+    width:min(280px,78vw);
+    height:100vh;
+    z-index:1050;
+    transition:left .3s ease;
+}
+
+    .sidebar.show-sidebar{
+        left:0;
+    }
+
+    .content{
+        margin-left:0 !important;
+        width:100%;
+    }
+
+    .top-navbar{
+        padding:12px 15px;
+    }
+
+    .navbar-center{
+        display:none;
+    }
+
+}
+
+/* Mobile sidebar overlay */
+
+#sidebarOverlay{
+    display:none;
+}
+
+@media (max-width:991px){
+
+    #sidebarOverlay{
+        display:block;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.45);
+        opacity:0;
+        visibility:hidden;
+        transition:.3s;
+        z-index:1040;
+    }
+
+    #sidebarOverlay.show-overlay{
+        opacity:1;
+        visibility:visible;
+    }
+
+}
+
+/* =====================================
+   MOBILE QUICK ACTIONS
+===================================== */
+
+.quick-actions .btn{
+    min-height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:600;
+    border-radius:12px;
+}
+
+@media (max-width:991px){
+
+    .quick-actions .btn{
+
+        font-size:16px;
+        min-height:56px;
+
+    }
+
+}

@@ -36,45 +36,44 @@
        <div class="card shadow-sm border-0 mb-3">
 
     <div class="card-body">
+<div class="row g-3 align-items-center">
 
-        <div class="row align-items-center">
+    <div class="col-12 col-lg-8">
 
-            <div class="col-lg-8">
+        <div class="input-group">
 
-                <div class="input-group">
+            <span class="input-group-text">
+                <i class="bi bi-search"></i>
+            </span>
 
-                    <span class="input-group-text">
-                        <i class="bi bi-search"></i>
-                    </span>
-
-                    <input
-                        type="text"
-                        id="userSearch"
-                        class="form-control"
-                        placeholder="Search by Name, Username, Email or Role">
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-4 text-end">
-
-                <span class="badge bg-dark fs-6">
-                    {{ users|length }} Users
-                </span>
-
-            </div>
+            <input
+                type="text"
+                id="userSearch"
+                class="form-control"
+                placeholder="Search by Name, Username, Email or Role">
 
         </div>
 
     </div>
 
+    <div class="col-12 col-lg-4 text-lg-end">
+
+        <span class="badge bg-dark fs-6">
+            {{ users|length }} Users
+        </span>
+
+    </div>
+
 </div>
-    <div class="card shadow">
-        <div class="card-body">
+    </div>
 
-            <table class="table table-hover">
+</div>
+   <div class="card shadow">
+    <div class="card-body">
 
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
                 <thead class="table-dark">
 
                     <tr>
@@ -84,6 +83,7 @@
     <th>Email</th>
     <th>Role</th>
     <th>Status</th>
+   <th>Chat</th>
     <th class="text-center">Actions</th>
 
 </tr>
@@ -132,15 +132,36 @@
 
     </td>
 
+<td>
 
+    {% if user.chat_block %}
+
+        <a href="{{ url_for('chat_block.unblock_user', user_id=user.id) }}"
+           class="btn btn-success btn-sm">
+            <i class="bi bi-unlock"></i>
+            Unblock
+        </a>
+
+    {% else %}
+
+        <a href="{{ url_for('chat_block.block_user', user_id=user.id) }}"
+           class="btn btn-danger btn-sm">
+            <i class="bi bi-slash-circle"></i>
+            Block
+        </a>
+
+    {% endif %}
+
+</td>
 {% if user.email != "admin@usted.edu.gh" %}
 
 
 {% endif %}
 
 
-<td class="text-center">
-    <div class="d-flex justify-content-center gap-2">
+<td>
+
+    <div class="btn-group w-100" role="group">
 
         <a href="{{ url_for('users.edit_user', user_id=user.id) }}"
            class="btn btn-warning btn-sm"
@@ -167,6 +188,7 @@
         </a>
 
     </div>
+
 </td>
 </tr>
 
@@ -175,9 +197,11 @@
 </tbody>
 
 
-            </table>
+           </table>
 
         </div>
+
+    </div>
 
     </div>
 

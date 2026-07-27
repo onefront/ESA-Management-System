@@ -67,7 +67,7 @@
             </table>
 
             <form method="POST"
-                  action="{{ url_for('voting.submit_vote', member_id=member_id) }}">
+      action="{{ url_for('voting.submit_vote') }}">
 
                 {% for item in selections %}
 

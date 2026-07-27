@@ -1,0 +1,122 @@
+{% extends "member_portal/layout.html" %}
+
+{% block title %}{{ notice.title }}{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+
+                <h2 class="fw-bold mb-2">
+                    {{ notice.title }}
+                </h2>
+
+                <div>
+
+                    <span class="badge bg-primary">
+                        {{ notice.category }}
+                    </span>
+
+                    {% if notice.is_pinned %}
+                    <span class="badge bg-danger">
+                        📌 Pinned
+                    </span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <p class="text-muted">
+
+                <i class="bi bi-calendar-event"></i>
+
+                Posted on {{ notice.created_at.strftime("%d %B %Y") }}
+
+            </p>
+
+            {% if notice.image %}
+
+            <div class="text-center mb-4">
+
+                <img
+                    src="{{ url_for('static', filename='uploads/' ~ notice.image) }}"
+                    class="img-fluid rounded shadow"
+                    style="max-height:800px; object-fit:contain; background:#f8f9fa;">
+
+            </div>
+
+            {% endif %}
+
+            <div class="mb-4">
+
+                {{ notice.message|replace('\n','<br>')|safe }}
+
+            </div>
+
+            {% if notice.attachment %}
+
+            <hr>
+
+            <h5>
+
+                <i class="bi bi-paperclip"></i>
+
+                Attachment
+
+            </h5>
+
+            <p>
+
+                {{ notice.attachment_name }}
+
+            </p>
+
+            <a
+                href="{{ url_for('static', filename='uploads/' ~ notice.attachment) }}"
+                target="_blank"
+                class="btn btn-primary">
+
+                <i class="bi bi-eye"></i>
+
+                View
+
+            </a>
+
+            <a
+                href="{{ url_for('static', filename='uploads/' ~ notice.attachment) }}"
+                download
+                class="btn btn-success">
+
+                <i class="bi bi-download"></i>
+
+                Download
+
+            </a>
+
+            {% endif %}
+
+            <hr>
+
+            <a
+                href="{{ url_for('member_portal.notifications') }}"
+                class="btn btn-secondary">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Back to Announcements
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

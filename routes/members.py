@@ -12,17 +12,18 @@ from flask import (
 from flask_login import login_required, current_user
 from utils.audit import log_activity
 from dateutil.relativedelta import relativedelta
-
+from models.course_rep import CourseRep
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor
 from io import BytesIO
-
+from models.member_index import MemberIndex
 from models.user import User
 from models.vote import Vote
 from models.candidate import Candidate
 from models.payment import Payment
 from models.attendance import Attendance
+from models.class_announcement import ClassAnnouncement
 from sqlalchemy import func, or_
 from werkzeug.utils import secure_filename
 from utils.auth import roles_required
@@ -274,24 +275,43 @@ def add_member():
         if email == "":
             email = None
 
-        # Create the login account
-        user = User(
-            full_name=f"{request.form['first_name']} {request.form['last_name']}",
-            username=username,
-            email=email,
-            role="Member",
-            must_change_password=True
-        )
-        user.set_password(password)
+        if email:
+            existing_email = User.query.filter_by(
+                email=email
+            ).first()
 
-        db.session.add(user)
+            if existing_email:
+                flash(
+                    "A user account with this email already exists.",
+                    "danger"
+                )
+                return redirect(url_for("members.add_member"))
+            # Create the login account
+            user = User(
+                full_name=f"{request.form['first_name']} {request.form['last_name']}",
+                username=username,
+                email=email,
+                role="Member",
+                must_change_password=True
+            )
 
-        # Save user first so it gets an ID
-        db.session.flush()
+            user.set_password(password)
 
-        # Link Member to User
+            db.session.add(user)
+
+            # Save user first so it gets an ID
+            db.session.flush()
+
+            # Link Member to User
+            member.user_id = user.id
+            # Link Member to User
         member.user_id = user.id
+
+        db.session.add(member)
+
         db.session.commit()
+
+
         log_activity(
             module="Members",
             action="Added Member",
@@ -334,10 +354,12 @@ def recent_members():
         "members/recent_members.html",
         recent_members=recent_members
     )
-# ==========================================
+# ==========================================F
 # Add Member
 # ==========================================
 @members_bp.route("/members/programmes")
+@login_required
+@roles_required("Administrator", "General Secretary")
 def members_by_programme():
 
     programmes = Programme.query.order_by(
@@ -380,6 +402,8 @@ def members_by_programme():
 # Members by Programme and Level
 # ==========================================
 @members_bp.route("/members/programme/<programme>/<level>")
+@login_required
+@roles_required("Administrator", "General Secretary")
 def programme_level_members(programme, level):
 
     members = Member.query.filter_by(
@@ -405,7 +429,7 @@ def programme_level_members(programme, level):
 def member_profile(member_id):
 
     member = Member.query.get_or_404(member_id)
-
+    user = member.user
     # Payment Statistics
     total_paid = db.session.query(
         db.func.sum(Payment.amount)
@@ -536,20 +560,63 @@ def delete_member(member_id):
     member = Member.query.get_or_404(member_id)
 
     if request.method == "POST":
+        # Prevent an administrator from deleting their own account
 
         try:
 
-            # Delete all votes by this member
-            Vote.query.filter_by(
-                member_id=member.id
-            ).delete()
+            # Get the linked user account
+            user = member.user
 
-            # Delete all candidate records for this member
+            # Prevent an administrator from deleting their own account
+            from flask_login import current_user
+
+            if user and user.id == current_user.id:
+                flash(
+                    "You cannot delete your own account while you are logged in.",
+                    "danger"
+                )
+                return redirect(url_for("members.members"))
+
+            # Delete candidate records
             Candidate.query.filter_by(
                 member_id=member.id
             ).delete()
 
-            # Delete the member
+            # Delete announcements
+            ClassAnnouncement.query.filter_by(
+                created_by=member.id
+            ).delete()
+
+            # Remove member from any class group leadership role
+            ClassGroup.query.filter_by(
+                course_rep_id=member.id
+            ).update(
+                {"course_rep_id": None},
+                synchronize_session=False
+            )
+
+            ClassGroup.query.filter_by(
+                assistant_course_rep_id=member.id
+            ).update(
+                {"assistant_course_rep_id": None},
+                synchronize_session=False
+            )
+
+
+
+            # Delete approved voting index
+            MemberIndex.query.filter_by(
+                student_id=member.student_id
+            ).delete()
+            # Delete course representative record
+            CourseRep.query.filter_by(
+                member_id=member.id
+            ).delete()
+            # Delete login account
+            if user:
+                db.session.delete(user)
+
+            # Delete member
             db.session.delete(member)
 
             db.session.commit()
@@ -567,6 +634,7 @@ def delete_member(member_id):
                 f"Unable to delete member: {str(e)}",
                 "danger"
             )
+
 
         return redirect(
             url_for("members.members")
@@ -699,7 +767,8 @@ def reset_member_password(member_id):
 
 
 @members_bp.route("/get_programmes/<int:faculty_id>")
-
+@login_required
+@roles_required("Administrator", "General Secretary")
 def get_programmes(faculty_id):
 
     programmes = Programme.query.filter_by(
@@ -716,7 +785,8 @@ def get_programmes(faculty_id):
         for p in programmes
     ])
 @members_bp.route("/get_departments/<int:programme_id>")
-
+@login_required
+@roles_required("Administrator", "General Secretary")
 def get_departments(programme_id):
 
     departments = Department.query.filter_by(

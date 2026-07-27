@@ -1,191 +1,338 @@
-{% extends "shared/id_layout.html" %}
+{% extends "member_portal/layout2.html" %}
+
+{% block title %}Digital ID{% endblock %}
+
 {% block content %}
 
-<div class="container py-5">
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/digital_id.css') }}">
 
-    <div class="digital-card">
+<div class="container-fluid py-4">
+<div class="mb-3">
 
-        <!-- HEADER -->
-        <div class="card-header-area">
+    <a href="{{ url_for('member_portal.dashboard') }}"
+       class="btn btn-outline-primary rounded-pill">
 
-            <img src="{{ url_for('static', filename='images/logo.png') }}"
-                 class="esa-logo"
-                 alt="ESA Logo">
+        <i class="bi bi-arrow-left"></i>
 
-            <div class="header-text">
-                <h2>EXECUTIVE STUDENT ASSOCIATION</h2>
-                <p>Together We Build</p>
-            </div>
+        Back to Dashboard
 
-        </div>
-
-        <!-- MEMBER NAME -->
-        <div class="member-title">
-
-            {{ member.first_name }} {{ member.last_name }}
-
-        </div>
-
-
-        <!-- ================= BODY ================= -->
-
-<div class="member-card-body">
-
-    <!-- LEFT SIDE -->
-
-    <div class="member-photo-section">
-
-        <img
-            src="{{ url_for('static',
-            filename='uploads/' + member.passport) }}"
-            class="member-photo">
-
-        {% if member.status == "Active" %}
-
-        <div class="member-status">
-
-            <i class="bi bi-patch-check-fill"></i>
-
-            ACTIVE MEMBER
-
-        </div>
-
-        {% else %}
-
-        <div class="member-status bg-danger">
-
-            {{ member.status }}
-
-        </div>
-
-        {% endif %}
-
-    </div>
-
-    <!-- RIGHT SIDE -->
-
-    <div class="member-details">
-
-        <h2 class="member-fullname">
-
-            {{ member.first_name }} {{ member.last_name }}
-
-        </h2>
-
-        <div class="detail-row">
-
-            <span class="detail-title">ESA ID</span>
-
-            <span class="detail-value">{{ member.esa_id }}</span>
-
-        </div>
-
-        <div class="detail-row">
-
-            <span class="detail-title">Index Number</span>
-
-            <span class="detail-value">{{ member.student_id }}</span>
-
-        </div>
-
-        <div class="detail-row">
-
-            <span class="detail-title">Programme</span>
-
-            <span class="detail-value">{{ member.programme }}</span>
-
-        </div>
-
-        <div class="detail-row">
-
-            <span class="detail-title">Level</span>
-
-            <span class="detail-value">{{ member.level }}</span>
-
-        </div>
-
-        <div class="detail-row">
-
-            <span class="detail-title">Session</span>
-
-            <span class="detail-value">{{ member.session }}</span>
-
-        </div>
-
-        <div class="detail-row">
-
-            <span class="detail-title">Issued</span>
-
-            <span class="detail-value">
-
-                {{ member.date_registered.strftime("%d %b %Y") }}
-
-            </span>
-
-        </div>
-
-        <div class="detail-row">
-
-            <span class="detail-title">Expires</span>
-
-            <span class="detail-value">
-
-                {% if member.expiry_date %}
-
-                    {{ member.expiry_date.strftime("%d %b %Y") }}
-
-                {% else %}
-
-                    Lifetime
-
-                {% endif %}
-
-            </span>
-
-        </div>
-
-    </div>
+    </a>
 
 </div>
-        <!-- FOOTER -->
+    <div class="digital-id-card shadow-lg">
 
-        <div class="card-footer-area">
+        <div class="id-header">
 
-            <div>
+            <div class="row align-items-center">
 
-                <img
-                    src="{{ url_for('static',
-                    filename='qr_codes/' ~ member.esa_id ~ '.png') }}"
-                    class="qr">
+                <div class="col-lg-2 col-md-2 text-center">
 
-                <div class="mt-2 fw-bold">
+                   <img src="{{ url_for('static', filename='images/logo.png') }}"
+     class="id-logo img-fluid"
+     alt="ESA Logo"
+     style="width:90px; height:90px; object-fit:contain;">
 
-                    SCAN TO VERIFY
+                </div>
+
+                <div class="col-lg-8 col-md-8 text-center">
+
+                    <h2 class="fw-bold mb-1">
+                        EXECUTIVE STUDENT ASSOCIATION
+                    </h2>
+
+                    <p class="slogan mb-0">
+                        Together We Build
+                    </p>
+
+                </div>
+
+                <div class="col-lg-2 col-md-2 text-center">
+
+                    <span class="badge bg-success verified-badge">
+
+                        <i class="bi bi-patch-check-fill"></i>
+
+                        VERIFIED
+
+                    </span>
 
                 </div>
 
             </div>
 
-            <div class="footer-right">
+            <div class="gold-line"></div>
 
-                ESA CONNECT © 2026
+        </div>
+
+        <div class="id-body">
+
+            <div class="row g-4 align-items-center">
+
+                <div class="col-lg-3">
+
+                    <div class="profile-panel text-center">
+
+                        <img src="{{ url_for('static',
+                        filename='uploads/' + (member.passport or 'default.png')) }}"
+                        class="member-photo"
+                        alt="Passport">
+
+                        <h3 class="member-name mt-3">
+
+                            {{ member.full_name }}
+
+                        </h3>
+
+                        <span class="status-badge">
+
+                            <i class="bi bi-patch-check-fill"></i>
+
+                            Active Member
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="details-card">
+
+                        <table class="table table-borderless info-table">
+
+                            <tbody>
+
+                                <tr>
+
+                                    <th>
+
+                                        <i class="bi bi-person-vcard-fill"></i>
+
+                                        ESA ID
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.esa_id }}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+
+                                        <i class="bi bi-credit-card-2-front-fill"></i>
+
+                                        Student ID
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.student_id }}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+
+                                        <i class="bi bi-book-fill"></i>
+
+                                        Programme
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.programme }}
+
+                                    </td>
+
+                                </tr>
+
+                                {% if member.department %}
+
+                                <tr>
+
+                                    <th>
+
+                                        <i class="bi bi-building-fill"></i>
+
+                                        Department
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.department }}
+
+                                    </td>
+
+                                </tr>
+
+                                {% endif %}
+
+                                <tr>
+
+                                    <th>
+
+                                        <i class="bi bi-layers-fill"></i>
+
+                                        Level
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.level }}
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>
+
+                                        <i class="bi bi-calendar-week-fill"></i>
+
+                                        Session
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.session }}
+
+                                    </td>
+
+                                </tr>
+                                                            <tr>
+
+                                    <th>
+
+                                        <i class="bi bi-telephone-fill"></i>
+
+                                        Phone
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.phone }}
+
+                                    </td>
+
+                                </tr>
+
+                                {% if member.email %}
+
+                                <tr>
+
+                                    <th>
+
+                                        <i class="bi bi-envelope-fill"></i>
+
+                                        Email
+
+                                    </th>
+
+                                    <td>
+
+                                        {{ member.email }}
+
+                                    </td>
+
+                                </tr>
+
+                                {% endif %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3">
+
+                    <div class="qr-card">
+
+                        <div class="text-center">
+
+                            <img src="{{ url_for('static',
+                            filename='qr_codes/' ~ qr_code) }}"
+                            class="img-fluid qr-image"
+                            alt="QR Code">
+
+                        </div>
+
+                        <hr>
+
+                        <h5 class="fw-bold text-center">
+
+                            Scan to Verify
+
+                        </h5>
+
+                        <p class="text-center text-muted">
+
+                            ESA Digital Verification
+
+                        </p>
+
+                        <div class="text-center">
+
+                            <span class="badge bg-primary">
+
+                                VERIFIED MEMBER
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+        <div class="id-footer">
 
-    <div class="text-center mt-4">
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-        <a href="{{ url_for('member_portal.download_id') }}"
-           class="btn btn-primary btn-lg">
+                <button class="btn btn-primary btn-lg"
+                        onclick="window.print()">
 
-            <i class="bi bi-download"></i>
+                    <i class="bi bi-printer-fill"></i>
 
-            Download PDF
+                    Print ID
 
-        </a>
+                </button>
+
+                <a href="{{ url_for('member_portal.download_id') }}"
+                   class="btn btn-success btn-lg">
+
+                    <i class="bi bi-download"></i>
+
+                    Download PDF
+
+                </a>
+
+            </div>
+
+        </div>
 
     </div>
 

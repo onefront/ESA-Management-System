@@ -1,0 +1,38 @@
+/* ==========================================
+   ESA MANAGEMENT SYSTEM
+   RESPONSIVE TABLE STYLES
+========================================== */
+
+.table-responsive{
+    border-radius:12px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+.table{
+    width:100%;
+    min-width:900px;
+    border-collapse:collapse;
+}
+
+.table th{
+    white-space:nowrap;
+    font-weight:600;
+}
+
+.table td{
+    vertical-align:middle;
+}
+
+.table th,
+.table td{
+    padding:12px 14px;
+}
+
+@media (max-width:991px){
+
+    .table{
+        font-size:14px;
+    }
+
+}

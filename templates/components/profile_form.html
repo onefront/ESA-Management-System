@@ -374,7 +374,7 @@ programme.addEventListener("change", function(){
         return;
     }
 
-    fetch("/get_departments/" + this.value)
+    fetch("/departments/get_departments/" + this.value)
 
     .then(response => response.json())
 

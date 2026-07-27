@@ -122,26 +122,25 @@ Sign In
 </button>
 
 </form>
-
 <hr>
 
-<div class="text-center">
+<div class="d-grid gap-2">
 
-<p>
+    <a href="{{ url_for('voting.student_login') }}"
+       class="btn btn-danger">
 
-Don't have an account?
+        🗳 Vote Now
 
-</p>
+    </a>
 
-<a href="{{ url_for('auth.register') }}"
-class="btn btn-success">
+    <a href="{{ url_for('auth.register') }}"
+       class="btn btn-success">
 
-Create ESA Account
+        Create ESA Account
 
-</a>
+    </a>
 
 </div>
-
 </div>
 
 </div>

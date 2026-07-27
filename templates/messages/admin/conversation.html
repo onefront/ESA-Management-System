@@ -1,0 +1,222 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="card shadow-sm border-0">
+
+        <!-- Header -->
+        <div class="card-header bg-white d-flex align-items-center">
+
+            {% if other_user.member_profile and other_user.member_profile.passport %}
+
+                <img src="{{ url_for('static', filename='uploads/' + other_user.member_profile.passport) }}"
+                     class="rounded-circle me-3"
+                     width="55"
+                     height="55"
+                     style="object-fit:cover;">
+
+            {% else %}
+
+                <img src="{{ url_for('static', filename='images/default-avatar.png') }}"
+                     class="rounded-circle me-3"
+                     width="55"
+                     height="55">
+
+            {% endif %}
+
+            <div>
+
+                <h5 class="mb-0">{{ other_user.full_name }}</h5>
+
+                <small class="text-muted">
+
+                    {{ other_user.role }}
+
+                </small>
+
+            </div>
+
+        </div>
+
+        <!-- Chat Body -->
+
+        <div id="chatBody" class="chat-body">
+
+            <div id="messagesContainer">
+
+                {% include "messages/_messages.html" %}
+
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+
+        <div class="card-footer bg-white">
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <input
+                    type="hidden"
+                    id="reply_to_id"
+                    name="reply_to_id">
+
+                <div id="replyPreview"
+                     class="alert alert-info mb-2"
+                     style="display:none;">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <strong>Replying to</strong>
+
+                            <div id="replyText"></div>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            onclick="cancelReply()"></button>
+
+                    </div>
+
+                </div>
+
+                <div class="input-group">
+
+                    <input
+                        type="file"
+                        class="form-control"
+                        name="attachment"
+                        style="max-width:220px;">
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="message"
+                        placeholder="Type your message..."
+                        autocomplete="off">
+
+                    <button
+                        class="btn btn-primary"
+                        type="submit">
+
+                        <i class="bi bi-send"></i>
+
+                        Send
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function scrollChat() {
+    let chat = document.getElementById("chatBody");
+    chat.scrollTop = chat.scrollHeight;
+}
+
+window.onload = scrollChat;
+
+let lastMessageCount = {{ messages|length }};
+
+setInterval(function(){
+
+    fetch("{{ url_for('messages.conversation_messages', conversation_id=conversation.id) }}")
+
+    .then(r=>r.json())
+
+    .then(data=>{
+
+        if(data.length>lastMessageCount){
+
+            fetch(window.location.href)
+
+            .then(r=>r.text())
+
+            .then(html=>{
+
+                const parser=new DOMParser();
+
+                const doc=parser.parseFromString(html,"text/html");
+
+                document.getElementById("messagesContainer").innerHTML=
+
+                doc.getElementById("messagesContainer").innerHTML;
+
+                scrollChat();
+
+                lastMessageCount=data.length;
+
+            });
+
+        }
+
+    });
+
+},3000);
+
+function setReply(id,text){
+
+    document.getElementById("reply_to_id").value=id;
+
+    document.getElementById("replyText").innerText=text;
+
+    document.getElementById("replyPreview").style.display="block";
+
+}
+
+function cancelReply(){
+
+    document.getElementById("reply_to_id").value="";
+
+    document.getElementById("replyPreview").style.display="none";
+
+}
+
+// ==========================================
+// Edit Message
+// ==========================================
+function editMessage(messageId, currentText) {
+
+    const newText = prompt("Edit your message:", currentText);
+
+    if (newText === null) {
+        return;
+    }
+
+    if (newText.trim() === "") {
+        alert("Message cannot be empty.");
+        return;
+    }
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/messages/edit/" + messageId;
+
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "message";
+    input.value = newText;
+
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
+</script>
+
+{% endblock %}

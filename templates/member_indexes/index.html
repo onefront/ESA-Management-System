@@ -124,16 +124,43 @@
 </div>
     </div>
 
-      <div class="table-responsive">
+    <form method="POST"
+      action="{{ url_for('member_indexes.bulk_delete') }}"
+      onsubmit="return confirm('Delete all selected Student IDs?');">
+
+        <div class="mb-3 text-end">
+
+    <button
+        type="submit"
+        class="btn btn-danger"
+        id="bulkDeleteBtn"
+        disabled>
+
+        <i class="bi bi-trash"></i>
+        Delete Selected
+
+    </button>
+
+</div>
+
+<div class="table-responsive">
 
 
 <table class="table table-hover align-middle mb-0">
 
             <thead class="table-dark">
 
-                <tr>
 
-    <th>#</th>
+
+          <tr>
+
+          <th width="40">
+    <input
+        type="checkbox"
+        id="selectAll">
+       </th>
+
+         <th>#</th>
     <th>Student ID</th>
     <th>Status</th>
     <th>Date Added</th>
@@ -147,6 +174,14 @@
     {% for index in indexes %}
 
     <tr data-status="{{ 'used' if index.used else 'available' }}">
+
+    <td>
+        <input
+            type="checkbox"
+            class="rowCheckbox"
+            name="selected_ids"
+            value="{{ index.id }}">
+    </td>
 
         <td>{{ loop.index }}</td>
 
@@ -194,7 +229,7 @@
 
     <tr>
 
-        <td colspan="5" class="text-center text-muted">
+        <td colspan="6" class="text-center text-muted">
 
             No approved student IDs found.
 
@@ -211,14 +246,17 @@
     </div>
 
 </div>
-
+    </form>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    const searchInput = document.getElementById("indexSearch");
+   const searchInput = document.getElementById("indexSearch");
+const rows = document.querySelectorAll("#indexTable tr");
 
-    const rows = document.querySelectorAll("#indexTable tr");
+const selectAll = document.getElementById("selectAll");
+const rowCheckboxes = document.querySelectorAll(".rowCheckbox");
+const bulkDeleteBtn = document.getElementById("bulkDeleteBtn");
 
     let currentFilter = "all";
 
@@ -273,7 +311,45 @@ document.addEventListener("DOMContentLoaded", function () {
             filterTable();
 
         });
+// Enable / Disable Bulk Delete Button
+function updateBulkDeleteButton() {
 
+    let checked = document.querySelectorAll(".rowCheckbox:checked").length;
+
+    bulkDeleteBtn.disabled = checked === 0;
+}
+
+// Select All
+if (selectAll) {
+
+    selectAll.addEventListener("change", function () {
+
+        rowCheckboxes.forEach(function (checkbox) {
+            checkbox.checked = selectAll.checked;
+        });
+
+        updateBulkDeleteButton();
+
+    });
+
+}
+
+// Individual Checkbox
+rowCheckboxes.forEach(function (checkbox) {
+
+    checkbox.addEventListener("change", function () {
+
+        updateBulkDeleteButton();
+
+        selectAll.checked =
+            document.querySelectorAll(".rowCheckbox:checked").length ===
+            rowCheckboxes.length;
+
+    });
+
+});
+
+updateBulkDeleteButton();
 });
 </script>
 {% endblock %}

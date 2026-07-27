@@ -1,10 +1,204 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout.html" %}
 
-</body>
-</html>
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+
+                New Notice
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+           <form method="POST" enctype="multipart/form-data">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Title
+
+                    </label>
+
+       <input
+    type="text"
+    name="title"
+    class="form-control"
+    value="{{ notice.title }}"
+    required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Category
+
+                    </label>
+
+                    <select
+                        name="category"
+                        class="form-select">
+
+                        <option>General</option>
+                        <option>Academic</option>
+                        <option>Events</option>
+                        <option>Finance</option>
+                        <option>Elections</option>
+                        <option>Emergency</option>
+
+                    </select>
+
+
+
+
+
+
+
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Message
+
+                    </label>
+
+    <textarea
+    name="message"
+    class="form-control"
+    required>{{ notice.message }}</textarea>
+
+                </div>
+
+               <div class="mb-3">
+
+    <label class="form-label">
+
+        Notice Flyer (Optional)
+
+    </label>
+
+    <input
+        type="file"
+        name="image"
+        class="form-control"
+        accept=".jpg,.jpeg,.png,.gif,.webp">
+
+    <small class="text-muted">
+
+        Upload a flyer or image for this notice.
+
+    </small>
+
+</div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+
+                            Status
+
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select">
+
+                            <option value="Published"
+{% if notice.status =="Published" %}selected{% endif %}>
+Published
+</option>
+
+<option value="Draft"
+{% if notice.status =="Draft" %}selected{% endif %}>
+Draft
+</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-6 d-flex align-items-end">
+
+                        <div class="form-check">
+
+                            <input
+    class="form-check-input"
+    type="checkbox"
+    name="is_pinned"
+    {% if notice.is_pinned %}checked{% endif %}>
+
+                            <label class="form-check-label">
+
+                                Pin this notice
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+    <label class="form-label">
+
+        Attachment (Optional)
+
+    </label>
+
+    <input
+        type="file"
+        name="attachment"
+        class="form-control"
+        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+
+    <small class="text-muted">
+
+        Supported:
+        PDF, Word, Excel and PowerPoint.
+
+    </small>
+
+</div>
+
+
+
+                <button
+                    class="btn btn-success">
+
+                    Publish Notice
+
+                </button>
+
+                <a href="{{ url_for('notices.notices') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

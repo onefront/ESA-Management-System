@@ -1,0 +1,168 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <h2 class="mb-4">
+        <i class="bi bi-gear"></i>
+        Chat Settings
+    </h2>
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <h5>ESA VIBES Configuration</h5>
+
+<hr>
+
+<form method="POST">
+
+    <div class="form-check form-switch mb-3">
+
+        <input
+            class="form-check-input"
+            type="checkbox"
+            id="chat_enabled"
+            name="chat_enabled"
+            {% if settings.chat_enabled %}checked{% endif %}
+        >
+
+        <label class="form-check-label" for="chat_enabled">
+            Enable ESA VIBES
+        </label>
+
+    </div>
+
+    <div class="form-check form-switch mb-3">
+
+        <input
+            class="form-check-input"
+            type="checkbox"
+            id="maintenance_mode"
+            name="maintenance_mode"
+            {% if settings.maintenance_mode %}checked{% endif %}
+        >
+
+        <label class="form-check-label" for="maintenance_mode">
+            Maintenance Mode
+        </label>
+
+    </div>
+
+    <div class="form-check form-switch mb-3">
+
+        <input
+            class="form-check-input"
+            type="checkbox"
+            id="member_to_member"
+            name="member_to_member"
+            {% if settings.member_to_member %}checked{% endif %}
+        >
+
+        <label class="form-check-label" for="member_to_member">
+            Allow Member-to-Member Chat
+        </label>
+
+    </div>
+
+    <div class="form-check form-switch mb-3">
+
+        <input
+            class="form-check-input"
+            type="checkbox"
+            id="member_to_admin"
+            name="member_to_admin"
+            {% if settings.member_to_admin %}checked{% endif %}
+        >
+
+        <label class="form-check-label" for="member_to_admin">
+            Allow Member-to-Administrator Chat
+        </label>
+
+    </div>
+
+    <div class="form-check form-switch mb-4">
+
+        <input
+            class="form-check-input"
+            type="checkbox"
+            id="allow_attachments"
+            name="allow_attachments"
+            {% if settings.allow_attachments %}checked{% endif %}
+        >
+
+        <label class="form-check-label" for="allow_attachments">
+            Allow Attachments
+        </label>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+                Maximum Upload Size (MB)
+            </label>
+
+            <input
+                type="number"
+                class="form-control"
+                name="max_upload_mb"
+                value="{{ settings.max_upload_mb }}"
+            >
+
+        </div>
+
+        <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+                Maximum Message Length
+            </label>
+
+            <input
+                type="number"
+                class="form-control"
+                name="max_message_length"
+                value="{{ settings.max_message_length }}"
+            >
+
+        </div>
+
+    </div>
+
+    <div class="mb-4">
+
+        <label class="form-label">
+            Welcome Message
+        </label>
+
+        <textarea
+            class="form-control"
+            rows="4"
+            name="welcome_message"
+        >{{ settings.welcome_message }}</textarea>
+
+    </div>
+
+    <button
+        type="submit"
+        class="btn btn-primary">
+
+        <i class="bi bi-save"></i>
+
+        Save Changes
+
+    </button>
+
+</form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
