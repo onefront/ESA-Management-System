@@ -222,18 +222,17 @@
 <!--    class="btn btn-primary btn-lg mt-4 w-100 w-lg-auto vote-btn"-->
 
 
-        {% if election.status == "Open" %}
+       {% if settings.voting_status == "Open" %}
 
-<button
-    class="btn btn-primary btn-lg mt-4 w-100 w-lg-auto vote-btn"
-    data-bs-toggle="modal"
-    data-bs-target="#voteModal{{ candidate.id }}">
+<a
+    href="{{ url_for('voting.ballot') }}"
+    class="btn btn-primary btn-lg mt-4 w-100 w-lg-auto">
 
     <i class="bi bi-check-circle-fill me-2"></i>
 
-    Vote Now
+    Proceed to Ballot
 
-</button>
+</a>
 
 {% elif result.winner %}
 

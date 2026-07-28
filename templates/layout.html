@@ -291,6 +291,13 @@
     CHAT
 </li>
 
+<li class="{% if request.endpoint and request.endpoint.startswith('messages') %}active{% endif %}">
+    <a href="{{ url_for('messages.inbox') }}">
+        <i class="bi bi-chat-dots-fill"></i>
+        ESA VIBES
+    </a>
+</li>
+
 <li style="margin-left:20px;"
     class="{% if request.endpoint and request.endpoint.startswith('chat_admin') %}active{% endif %}">
     <a href="{{ url_for('chat_admin.dashboard') }}">
@@ -300,7 +307,6 @@
 </li>
 
 {% endif %}
-
 {% if current_user.role in ["Administrator", "General Secretary"] %}
 
 <li class="menu-title">

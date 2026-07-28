@@ -164,23 +164,17 @@ def add_executive():
 
         executive_id = f"ESA-EX-{next_id:03d}"
 
-        # Save Executive
+        member = Member.query.get_or_404(request.form["member_id"])
+
         executive = Executive(
-
+            member_id=member.id,
             executive_id=executive_id,
-
-            full_name=request.form["full_name"],
-
+            full_name=f"{member.first_name} {member.last_name}",
             position=request.form["position"],
-
-            phone=request.form["phone"],
-
-            email=request.form["email"],
-
+            phone=member.phone,
+            email=member.email,
             year=request.form["year"],
-
-            photo=filename
-
+            photo=member.passport if member.passport else filename
         )
 
         db.session.add(executive)

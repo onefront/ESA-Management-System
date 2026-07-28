@@ -431,6 +431,8 @@ def register():
             session=request.form["session"],
 
             academic_year=request.form["academic_year"],
+            guardian_name=request.form.get("guardian_name"),
+            guardian_phone=request.form.get("guardian_phone"),
 
             class_group_id=class_group.id if class_group else None,
 

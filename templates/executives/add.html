@@ -173,5 +173,33 @@ searchInput.addEventListener("keyup", function () {
         });
 
 });
+
+    document.addEventListener("click", function(e){
+
+    const item = e.target.closest(".member-item");
+
+    if(!item) return;
+
+    e.preventDefault();
+
+    document.getElementById("member_id").value = item.dataset.id;
+
+    document.getElementById("member-name").textContent = item.dataset.name;
+    document.getElementById("member-student-id").textContent = item.dataset.student;
+    document.getElementById("member-programme").textContent = item.dataset.programme;
+    document.getElementById("member-phone").textContent = item.dataset.phone;
+    document.getElementById("member-email").textContent = item.dataset.email;
+
+    if(item.dataset.photo){
+        document.getElementById("member-photo").src =
+            "/static/uploads/" + item.dataset.photo;
+    }
+
+    document.getElementById("selected-member").classList.remove("d-none");
+
+    resultsBox.innerHTML = "";
+
+    searchInput.value = item.dataset.name;
+});
 </script>
 {% endblock %}

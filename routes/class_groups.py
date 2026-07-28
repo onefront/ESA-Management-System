@@ -255,9 +255,27 @@ def add():
         )
 
         db.session.add(group)
+        db.session.flush()
+
+        programme = Programme.query.get(group.programme_id)
+
+        if programme:
+
+            members = Member.query.filter_by(
+                programme=programme.programme_name,
+                level=group.level,
+                session=group.session
+            ).all()
+
+            for member in members:
+                member.class_group_id = group.id
+
         db.session.commit()
 
-        flash("Class Group added successfully.", "success")
+        flash(
+            f"Class Group added successfully. {len(members) if programme else 0} member(s) assigned automatically.",
+            "success"
+        )
 
         return redirect(url_for("class_groups.index"))
 

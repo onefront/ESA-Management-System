@@ -182,14 +182,17 @@
 </a>
 {% endif %}
 
+{% if can_send_notice %}
+
 <a href="{{ url_for('class_notices.create', class_group_id=group.id) }}"
    class="btn btn-warning">
 
     <i class="bi bi-megaphone-fill"></i>
-
     Send Notice
 
 </a>
+
+{% endif %}
 
                 <a href="#" class="btn btn-secondary">
                     <i class="bi bi-printer-fill"></i>

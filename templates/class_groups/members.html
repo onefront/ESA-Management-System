@@ -102,7 +102,40 @@
 
                     <td>
 
-                        <strong>{{ member.last_name }} {{ member.first_name }}</strong>
+<!--                        <strong>{{ member.last_name }} {{ member.first_name }}</strong>-->
+                        <strong>
+    {{ member.last_name }} {{ member.first_name }}
+</strong>
+
+{% if member.executive_profile %}
+
+    <br>
+
+    <span class="badge bg-primary">
+        {{ member.executive_profile[0].position }}
+    </span>
+
+{% endif %}
+
+{% if member.course_rep %}
+
+    <br>
+
+    {% if member.course_rep.position == "Course Rep" %}
+
+        <span class="badge bg-success">
+            {{ member.course_rep.position }}
+        </span>
+
+    {% else %}
+
+        <span class="badge bg-warning text-dark">
+            {{ member.course_rep.position }}
+        </span>
+
+    {% endif %}
+
+{% endif %}
 
                     </td>
 
