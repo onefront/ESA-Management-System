@@ -49,5 +49,9 @@ class ConversationMember(db.Model):
 
     user = db.relationship(
         "User",
-        backref="conversation_memberships"
+        backref=db.backref(
+            "conversation_memberships",
+            passive_deletes=True
+        ),
+        passive_deletes=True
     )

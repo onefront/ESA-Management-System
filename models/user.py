@@ -53,7 +53,6 @@ class User(UserMixin, db.Model):
     created_conversations = db.relationship(
         "Conversation",
         back_populates="creator",
-        cascade="all, delete-orphan",
         passive_deletes=True
     )
 

@@ -46,7 +46,8 @@ class Conversation(db.Model):
 
     creator = db.relationship(
         "User",
-        back_populates="created_conversations"
+        back_populates="created_conversations",
+        passive_deletes=True
     )
 
 
