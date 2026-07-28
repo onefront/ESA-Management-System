@@ -8,6 +8,14 @@ from flask import (
 )
 
 
+from flask import current_app
+from werkzeug.utils import secure_filename
+import uuid
+
+
+
+
+from utils.qrcode_generator import generate_member_qrcode
 from sqlalchemy import func
 from flask import abort
 
@@ -108,12 +116,13 @@ def digital_id():
         flash("Member profile not found.", "warning")
         return redirect(url_for("member_portal.dashboard"))
 
-    qr_code = f"{member.esa_id}.png"
+    qr_code = generate_member_qrcode(member.esa_id)
 
     return render_template(
         "member_portal/digital_id.html",
         member=member,
-        qr_code=qr_code
+        qr_code=qr_code,
+        debug_test="THIS_IS_THE_NEW_TEMPLATE"
     )
 
 @member_portal_bp.route("/payments")
@@ -335,7 +344,24 @@ def edit_profile():
         return redirect(url_for("member_portal.dashboard"))
 
     if request.method == "POST":
+        from werkzeug.utils import secure_filename
+        from flask import current_app
+        import os
+        import uuid
 
+        passport = request.files.get("passport")
+
+        if passport and passport.filename:
+            filename = f"{uuid.uuid4().hex}_{secure_filename(passport.filename)}"
+
+            passport.save(
+                os.path.join(
+                    current_app.config["UPLOAD_FOLDER"],
+                    filename
+                )
+            )
+
+            member.passport = filename
         member.phone = request.form.get("phone")
         member.email = request.form.get("email")
         member.gender = request.form.get("gender")
@@ -416,3 +442,4 @@ def verify_member(esa_id):
         "member_portal/verify_member.html",
         member=member
     )
+

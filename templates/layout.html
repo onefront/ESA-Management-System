@@ -256,6 +256,8 @@
 </li>
 
 {% endif %}
+{% if current_user.is_authenticated and current_user.role == "Member" %}
+
 <li class="menu-title">
     CHAT
 </li>
@@ -267,7 +269,13 @@
     </a>
 </li>
 
+{% endif %}
+
 {% if current_user.role in ["Administrator", "General Secretary"] %}
+
+<li class="menu-title">
+    CHAT
+</li>
 
 <li style="margin-left:20px;"
     class="{% if request.endpoint and request.endpoint.startswith('chat_admin') %}active{% endif %}">

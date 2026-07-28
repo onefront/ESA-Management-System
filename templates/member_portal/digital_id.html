@@ -1,7 +1,9 @@
 {% extends "member_portal/layout2.html" %}
 
 {% block title %}Digital ID{% endblock %}
-
+<h1 style="color:red;text-align:center;">
+    {{ debug_test }}
+</h1>
 {% block content %}
 
 <link rel="stylesheet"
@@ -269,10 +271,9 @@
 
                         <div class="text-center">
 
-                            <img src="{{ url_for('static',
-                            filename='qr_codes/' ~ qr_code) }}"
-                            class="img-fluid qr-image"
-                            alt="QR Code">
+                           <img src="{{ url_for('static', filename='qrcodes/ESA-2026-0036.png') }}"
+     width="180"
+     alt="QR Test">
 
                         </div>
 

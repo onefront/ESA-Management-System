@@ -20,39 +20,26 @@
 <div class="row">
 
 <div class="col-md-12 text-center mb-4">
-
-{% if member.passport %}
-
-<img id="preview"
-     src="{{ url_for('static', filename='uploads/' + member.passport) }}"
-     width="170"
-     height="170"
-     class="rounded-circle border shadow"
-     style="object-fit:cover;">
-
-{% else %}
-
-<img id="preview"
-     src="{{ url_for('static', filename='images/default-avatar.png') }}"
-     width="170"
-     height="170"
-     class="rounded-circle border shadow">
-
-{% endif %}
+<img
+    id="preview"
+    src="{{ url_for('static', filename='uploads/' + member.passport) if member.passport else url_for('static', filename='images/default-avatar.png') }}"
+    width="170"
+    height="170"
+    class="rounded-circle border shadow"
+    style="object-fit:cover;">
 
 <br><br>
 
 <label class="form-label fw-bold">
-Passport Photo
+    Passport Photo
 </label>
 
 <input
-type="file"
-name="passport"
-id="passport"
-class="form-control"
-accept="image/*">
-
+    type="file"
+    name="passport"
+    id="passport"
+    class="form-control"
+    accept="image/*">
 </div>
 
 </div>
@@ -268,6 +255,39 @@ accept="image/*">
 
     </div>
 
+     <div class="col-md-6 mb-3">
+
+    <label class="form-label">
+        Class Group
+    </label>
+
+    <select
+        class="form-select"
+        name="class_group_id">
+
+        <option value="">
+            -- Select Class Group --
+        </option>
+
+        {% for group in class_groups %}
+
+        <option value="{{ group.id }}"
+            {% if member.class_group_id == group.id %}
+                selected
+            {% endif %}>
+
+            {{ group.name }}
+
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+</div>
+
+
+
 </div>
     <hr>
 
@@ -334,82 +354,81 @@ const department = document.getElementById("department");
 // -----------------------------
 // Load Programmes
 // -----------------------------
-faculty.addEventListener("change", function(){
+faculty.addEventListener("change", function () {
 
     fetch("/get_programmes/" + this.value)
+        .then(response => response.json())
+        .then(data => {
 
-    .then(response => response.json())
+            programme.innerHTML =
+                '<option value="">Select Programme</option>';
 
-    .then(data => {
+            department.innerHTML =
+                '<option value="">Select Department</option>';
 
-        programme.innerHTML =
-            '<option value="">Select Programme</option>';
+            data.forEach(function (item) {
 
-        department.innerHTML =
-            '<option value="">Select Department</option>';
-
-        data.forEach(function(item){
-
-            programme.innerHTML +=
-                `<option value="${item.id}">
-                    ${item.name}
-                 </option>`;
+                programme.innerHTML += `
+                    <option value="${item.id}">
+                        ${item.name}
+                    </option>`;
+            });
 
         });
-
-    });
 
 });
 
 // -----------------------------
 // Load Departments
 // -----------------------------
-programme.addEventListener("change", function(){
+programme.addEventListener("change", function () {
 
     fetch("/get_departments/" + this.value)
+        .then(response => response.json())
+        .then(data => {
 
-    .then(response => response.json())
+            department.innerHTML =
+                '<option value="">Select Department</option>';
 
-    .then(data => {
+            data.forEach(function (item) {
 
-        department.innerHTML =
-            '<option value="">Select Department</option>';
-
-        data.forEach(function(item){
-
-            department.innerHTML +=
-                `<option value="${item.id}">
-                    ${item.name}
-                 </option>`;
+                department.innerHTML += `
+                    <option value="${item.id}">
+                        ${item.name}
+                    </option>`;
+            });
 
         });
 
-    });
-
 });
 
-
-document.getElementById("passport").addEventListener("change", function(e){
+// -----------------------------
+// Passport Preview
+// -----------------------------
+document.getElementById("passport").addEventListener("change", function (e) {
 
     const file = e.target.files[0];
 
-    if(file){
+    if (file) {
 
         const reader = new FileReader();
 
-        reader.onload = function(event){
+        reader.onload = function (event) {
+            const preview = document.getElementById("preview");
 
-            document.getElementById("preview").src = event.target.result;
-
-        }
+if (preview instanceof HTMLImageElement) {
+    preview.src = event.target.result;
+}
+        };
 
         reader.readAsDataURL(file);
-
     }
 
 });
 
-
+// -----------------------------
+// Load Existing Department
+// -----------------------------
 document.addEventListener("DOMContentLoaded", function () {
 
     {% if selected_programme %}
@@ -421,18 +440,21 @@ document.addEventListener("DOMContentLoaded", function () {
             department.innerHTML =
                 '<option value="">-- Select Department --</option>';
 
-            data.forEach(function(item){
+            data.forEach(function (item) {
 
-                department.innerHTML +=
-                    `<option value="${item.id}"
+                department.innerHTML += `
+                    <option value="${item.id}"
                         ${item.name === "{{ member.department }}" ? "selected" : ""}>
                         ${item.name}
                     </option>`;
             });
 
         });
-</script>
+
     {% endif %}
 
 });
+
+</script>
+
 {% endblock %}

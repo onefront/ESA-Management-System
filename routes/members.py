@@ -244,6 +244,7 @@ def add_member():
             phone=request.form.get("phone"),
 
             email=request.form.get("email"),
+            passport=filename,
             registration_status="Approved",
 
             status="Active",
@@ -509,7 +510,9 @@ def edit_member(member_id):
         member.level = request.form.get("level")
         member.session = request.form.get("session")
 
-
+        member.class_group_id = (
+                request.form.get("class_group_id") or None
+        )
 
         member.status = request.form.get("status")
         passport = request.files.get("passport")
@@ -541,14 +544,21 @@ def edit_member(member_id):
     faculties = Faculty.query.order_by(
         Faculty.faculty_name
     ).all()
+
+    class_groups = ClassGroup.query.order_by(
+        ClassGroup.name
+    ).all()
+
     selected_programme = Programme.query.filter_by(
         programme_name=member.programme
     ).first()
+
     return render_template(
         "members/edit.html",
         member=member,
         programmes=programmes,
         faculties=faculties,
+        class_groups=class_groups,
         selected_programme=selected_programme
     )
 
@@ -767,17 +777,14 @@ def reset_member_password(member_id):
 
 
 @members_bp.route("/get_programmes/<int:faculty_id>")
-@login_required
-@roles_required("Administrator", "General Secretary")
 def get_programmes(faculty_id):
-
-    programmes = Programme.query.filter_by(
+  programmes = Programme.query.filter_by(
         faculty_id=faculty_id
     ).order_by(
         Programme.programme_name
     ).all()
 
-    return jsonify([
+  return jsonify([
         {
             "id": p.id,
             "name": p.programme_name
@@ -785,8 +792,6 @@ def get_programmes(faculty_id):
         for p in programmes
     ])
 @members_bp.route("/get_departments/<int:programme_id>")
-@login_required
-@roles_required("Administrator", "General Secretary")
 def get_departments(programme_id):
 
     departments = Department.query.filter_by(

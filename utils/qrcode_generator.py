@@ -1,14 +1,13 @@
 import os
 import qrcode
 
-from flask import current_app
+from flask import current_app, url_for
 
 
 def generate_member_qrcode(esa_id):
-
     folder = os.path.join(
         current_app.static_folder,
-        "qr_codes"
+        "qrcodes"
     )
 
     os.makedirs(folder, exist_ok=True)
@@ -18,8 +17,13 @@ def generate_member_qrcode(esa_id):
     filepath = os.path.join(folder, filename)
 
     if not os.path.exists(filepath):
+        from flask import url_for
 
-        url = f"http://127.0.0.1:5000/member/verify/{esa_id}"
+        url = url_for(
+            "member_portal.verify_member",
+            esa_id=esa_id,
+            _external=True
+        )
 
         qr = qrcode.QRCode(
             version=1,

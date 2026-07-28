@@ -15,7 +15,11 @@ from flask_login import (
     login_required,
     current_user
 )
-
+from utils.qrcode_generator import generate_member_qrcode
+from flask import current_app
+from werkzeug.utils import secure_filename
+import os
+import uuid
 from models.department import Department
 from models.faculty import Faculty
 from models.member_index import MemberIndex
@@ -343,6 +347,19 @@ def register():
         db.session.add(user)
 
         db.session.flush()
+        passport = request.files.get("passport")
+
+        filename = None
+
+        if passport and passport.filename:
+            filename = f"{uuid.uuid4().hex}_{secure_filename(passport.filename)}"
+
+            passport.save(
+                os.path.join(
+                    current_app.config["UPLOAD_FOLDER"],
+                    filename
+                )
+            )
         faculty = Faculty.query.get(
             request.form["faculty_id"]
         )
@@ -401,6 +418,8 @@ def register():
 
             email=email,
 
+            passport=filename,
+
             faculty_id=faculty.id if faculty else None,
 
             programme=programme_name,
@@ -426,11 +445,14 @@ def register():
         )
 
         db.session.add(member)
+
         member_index.used = True
         member_index.used_by = user.id
         member_index.used_at = datetime.utcnow()
 
         db.session.commit()
+
+        generate_member_qrcode(member.esa_id)
 
         login_user(user)
 
