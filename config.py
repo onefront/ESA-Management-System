@@ -6,7 +6,8 @@ class Config:
     password = quote_plus("Property@4848")
 
     SQLALCHEMY_DATABASE_URI = (
-        f"mysql+pymysql://root:{password}@localhost/esa_db"
+        f"mysql+pymysql://onefront:{password}"
+        "@onefront.mysql.pythonanywhere-services.com/onefront$esa_db"
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
