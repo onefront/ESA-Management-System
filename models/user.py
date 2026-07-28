@@ -50,6 +50,13 @@ class User(UserMixin, db.Model):
         db.DateTime,
         default=datetime.utcnow
     )
+    created_conversations = db.relationship(
+        "Conversation",
+        back_populates="creator",
+        cascade="all, delete-orphan",
+        passive_deletes=True
+    )
+
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

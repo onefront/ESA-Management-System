@@ -75,13 +75,27 @@
 
     </p>
 
-    <div class="admin-badge">
+   {% if current_user.role in ["Administrator", "General Secretary"] %}
 
-        <i class="bi bi-shield-check"></i>
+<div class="admin-badge">
 
-        ADMIN PANEL
+    <i class="bi bi-shield-check"></i>
 
-    </div>
+    ADMIN PANEL
+
+</div>
+
+{% else %}
+
+<div class="admin-badge">
+
+    <i class="bi bi-person-circle"></i>
+
+    MEMBER PORTAL
+
+</div>
+
+{% endif %}
 
 </div>
         <ul class="menu">

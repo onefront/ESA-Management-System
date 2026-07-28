@@ -10,6 +10,8 @@ from flask_login import login_required
 from models.member_index import MemberIndex
 from extensions import db
 from models.user import User
+from models.conversation import Conversation
+from models.conversation_member import ConversationMember
 from utils.auth import admin_required
 
 users_bp = Blueprint("users", __name__)
@@ -123,7 +125,19 @@ def delete_user(user_id):
             member_index.used = False
             member_index.used_at = None
 
+        # Delete the user's conversation memberships first
+        ConversationMember.query.filter_by(
+            user_id=user.id
+        ).delete(synchronize_session=False)
+
+        # Delete conversations created by this user
+        Conversation.query.filter_by(
+            created_by=user.id
+        ).delete(synchronize_session=False)
+
+        # Finally delete the user
         db.session.delete(user)
+
         db.session.commit()
 
         flash("User deleted successfully.", "success")

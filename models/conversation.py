@@ -29,7 +29,7 @@ class Conversation(db.Model):
 
     created_by = db.Column(
         db.Integer,
-        db.ForeignKey("users.id"),
+        db.ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False
     )
 
@@ -46,8 +46,7 @@ class Conversation(db.Model):
 
     creator = db.relationship(
         "User",
-        backref="created_conversations"
+        back_populates="created_conversations"
     )
-
 
 
