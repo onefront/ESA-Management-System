@@ -243,6 +243,28 @@ def inject_permissions():
 
     def is_course_rep():
         rep = get_course_rep()
+
+        print("========== COURSE REP DEBUG ==========")
+        print("User:", current_user.username)
+        print("Role:", current_user.role)
+        print("Member:", get_member())
+        print("Course Rep Record:", rep)
+
+        if rep:
+            print("Position:", rep.position)
+            print("Status:", rep.status)
+
+        result = (
+                rep is not None
+                and rep.status == "Active"
+                and rep.position == "Course Rep"
+        )
+
+        print("Is Course Rep:", result)
+        print("======================================")
+
+        return result
+        rep = get_course_rep()
         return (
             rep is not None
             and rep.status == "Active"
@@ -259,8 +281,7 @@ def inject_permissions():
 
     def can_view_lecturer_directory():
 
-        # print("=" * 60)
-        # print("Checking Lecturer Directory Permission")
+
 
         if current_user.is_authenticated:
             pass

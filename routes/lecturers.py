@@ -51,10 +51,12 @@ def lecturers():
     ).all()
 
     layout = (
-        "member_portal/layout.html"
+        "member_portal/layout2.html"
         if current_user.role == "Member"
-        else "layout.html"
+        else "layout_old.html"
     )
+
+    print("USING LAYOUT:", layout)
 
     return render_template(
         "lecturers/index.html",

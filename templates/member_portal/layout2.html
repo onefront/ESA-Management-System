@@ -148,6 +148,14 @@
     <span>My Class</span>
 </a>
 
+{% if can_view_lecturer_directory() %}
+<a href="{{ url_for('lecturers.lecturers') }}"
+   class="{% if request.endpoint and request.endpoint.startswith('lecturers') %}active{% endif %}">
+    <i class="bi bi-person-lines-fill"></i>
+    <span>Lecturer Directory</span>
+</a>
+{% endif %}
+
 <hr>
 
     <a href="{{ url_for('auth.logout') }}">

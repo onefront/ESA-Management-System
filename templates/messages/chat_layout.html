@@ -1,5 +1,5 @@
 {% if current_user.role == "Administrator" or current_user.role == "General Secretary" %}
     {% extends "layout.html" %}
 {% else %}
-    {% extends "member_portal/layout.html" %}
+    {% extends "member_portal/layout2.html" %}
 {% endif %}
