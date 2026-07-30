@@ -34,6 +34,8 @@ from routes.notifications import notifications_bp
 
 
 # Import models
+from models.sms_setting import SMSSetting
+
 from models.class_notice import ClassNotice
 from models.payment_settings import PaymentSettings
 from models.class_group import ClassGroup
@@ -116,7 +118,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Load configuration
-app.config.from_object(Config)
+
 
 
 
@@ -242,11 +244,16 @@ def inject_permissions():
         )
 
     def is_course_rep():
+        # Prevent errors for anonymous users
+        if not current_user.is_authenticated:
+            return False
+
         rep = get_course_rep()
 
+        # Debug (safe)
         print("========== COURSE REP DEBUG ==========")
-        print("User:", current_user.username)
-        print("Role:", current_user.role)
+        print("User:", getattr(current_user, "username", "Anonymous"))
+        print("Role:", getattr(current_user, "role", "None"))
         print("Member:", get_member())
         print("Course Rep Record:", rep)
 
@@ -264,46 +271,29 @@ def inject_permissions():
         print("======================================")
 
         return result
-        rep = get_course_rep()
-        return (
-            rep is not None
-            and rep.status == "Active"
-            and rep.position == "Course Rep"
-        )
 
     def is_assistant_course_rep():
+        if not current_user.is_authenticated:
+            return False
+
         rep = get_course_rep()
+
         return (
-            rep is not None
-            and rep.status == "Active"
-            and rep.position == "Assistant Course Rep"
+                rep is not None
+                and rep.status == "Active"
+                and rep.position == "Assistant Course Rep"
         )
 
     def can_view_lecturer_directory():
+        # Anonymous users cannot view the lecturer directory
+        if not current_user.is_authenticated:
+            return False
 
-
-
-        if current_user.is_authenticated:
-            pass
-             # print("User:", current_user.username)
-            # print("Role:", current_user.role)
-
-        member = get_member()
-        # print("Member:", member)
-
-        rep = get_course_rep()
-        # print("Course Rep:", rep)
-
-        if rep:
-            pass
-            # print("Position:", rep.position)
-            # print("Status:", rep.status)
-
-        result = (
-            is_admin()
-            or is_general_secretary()
-            or is_course_rep()
-            or is_assistant_course_rep()
+        return (
+                is_admin()
+                or is_general_secretary()
+                or is_course_rep()
+                or is_assistant_course_rep()
         )
         #
         # print("Permission:", result)
