@@ -1,0 +1,355 @@
+{% extends "layout.html" %}
+
+{% block title %}Complaint Details{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <a href="{{ url_for('feedback.my_complaints') }}"
+           class="btn btn-secondary">
+
+            ← Back
+
+        </a>
+
+        <span class="badge bg-primary fs-6">
+
+            {{ complaint.ticket_no }}
+
+        </span>
+
+    </div>
+
+    <!-- Ticket Information -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h4 class="mb-0">
+
+                {{ complaint.subject }}
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <small class="text-muted">
+
+                        Status
+
+                    </small>
+
+                    <h6>
+
+                        <span class="badge bg-success">
+
+                            {{ complaint.status }}
+
+                        </span>
+
+                    </h6>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <small class="text-muted">
+
+                        Priority
+
+                    </small>
+
+                    <h6>
+
+                        <span class="badge bg-warning text-dark">
+
+                            {{ complaint.priority }}
+
+                        </span>
+
+                    </h6>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <small class="text-muted">
+
+                        Category
+
+                    </small>
+
+                    <h6>
+
+                        {{ complaint.feedback_type }}
+
+                    </h6>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <small class="text-muted">
+
+                        Submitted
+
+                    </small>
+
+                    <h6>
+
+                        {{ complaint.created_at.strftime("%d %b %Y %I:%M %p") }}
+
+                    </h6>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <h5>Description</h5>
+
+            {% if current_user.role in ["Administrator", "CEO", "General Secretary"] %}
+
+<hr>
+
+
+<hr>
+
+<h5>Complaint Management</h5>
+
+<!-- ========================= -->
+<!-- Assign Executive -->
+<!-- ========================= -->
+
+<h6 class="mt-3">Assign Executive</h6>
+
+<form method="POST">
+
+    <input type="hidden" name="action" value="assign">
+
+    <div class="mb-3">
+
+        <label class="form-label">Executive</label>
+
+        <select
+            name="assigned_to"
+            class="form-select"
+            required>
+
+            <option value="">-- Select Executive --</option>
+
+            {% for executive in executives %}
+
+            <option
+                value="{{ executive.id }}"
+                {% if complaint.assigned_to == executive.id %}selected{% endif %}>
+
+                {{ executive.position }} - {{ executive.full_name }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <button
+        type="submit"
+        class="btn btn-primary">
+
+        Assign Complaint
+
+    </button>
+
+</form>
+
+<hr>
+
+<!-- ========================= -->
+<!-- Update Status -->
+<!-- ========================= -->
+
+<h6 class="mt-3">Update Status</h6>
+
+<form method="POST">
+
+    <input
+        type="hidden"
+        name="action"
+        value="update_status">
+
+    <div class="mb-3">
+
+        <label class="form-label">
+
+            Status
+
+        </label>
+
+        <select
+            name="status"
+            class="form-select">
+
+            <option value="New"
+                {% if complaint.status=="New" %}selected{% endif %}>
+                New
+            </option>
+
+            <option value="Assigned"
+                {% if complaint.status=="Assigned" %}selected{% endif %}>
+                Assigned
+            </option>
+
+            <option value="Under Review"
+                {% if complaint.status=="Under Review" %}selected{% endif %}>
+                Under Review
+            </option>
+
+            <option value="Resolved"
+                {% if complaint.status=="Resolved" %}selected{% endif %}>
+                Resolved
+            </option>
+
+            <option value="Closed"
+                {% if complaint.status=="Closed" %}selected{% endif %}>
+                Closed
+            </option>
+
+        </select>
+
+    </div>
+
+    <button
+        type="submit"
+        class="btn btn-success">
+
+        Save Status
+
+    </button>
+
+</form>
+
+
+{% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- Conversation -->
+
+    <!-- Conversation -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+
+        <h5 class="mb-0">
+
+            Conversation
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        {% if replies %}
+
+            {% for reply in replies %}
+
+                <div class="border rounded p-3 mb-3">
+
+                    <strong>
+
+                        {{ reply.user.full_name }}
+
+                    </strong>
+
+                    <br>
+
+                    <small class="text-muted">
+
+                        {{ reply.created_at.strftime("%d %b %Y %I:%M %p") }}
+
+                    </small>
+
+                    <hr>
+
+                    {{ reply.message }}
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="alert alert-secondary">
+
+                No replies yet.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+    <!-- Reply -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+
+                Reply
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <textarea
+    name="message"
+    class="form-control"
+                        rows="5"
+                        placeholder="Write your reply here..."
+                        ></textarea>
+
+                </div>
+
+                <button
+    class="btn btn-primary">
+
+                    Send Reply
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

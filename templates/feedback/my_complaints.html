@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block title %}My Complaints{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between mb-3">
+
+        <h3>My Complaints</h3>
+
+        <a href="{{ url_for('feedback.create_complaint') }}"
+           class="btn btn-primary">
+
+            New Complaint
+
+        </a>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-body">
+
+            {% if complaints %}
+
+            <table class="table table-hover">
+
+                <thead>
+
+                <tr>
+
+                    <th>Ticket No</th>
+
+                    <th>Type</th>
+
+                    <th>Subject</th>
+
+                    <th>Priority</th>
+
+                    <th>Status</th>
+
+                    <th>Date</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for complaint in complaints %}
+
+                <tr>
+
+                    <td>
+
+    <a href="{{ url_for('feedback.complaint_details',
+                        feedback_id=complaint.id) }}">
+
+        {{ complaint.ticket_no }}
+
+    </a>
+
+</td>
+
+                    <td>{{ complaint.feedback_type }}</td>
+
+                    <td>{{ complaint.subject }}</td>
+
+                    <td>{{ complaint.priority }}</td>
+
+                    <td>{{ complaint.status }}</td>
+
+                    <td>{{ complaint.created_at.strftime("%d %b %Y") }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="alert alert-info">
+
+                You have not submitted any complaints yet.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

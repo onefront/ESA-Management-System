@@ -31,3 +31,13 @@ class Config:
             f"mysql+pymysql://root:{password}"
             "@localhost/esa_db"
         )
+
+        # ==========================
+        # Hubtel SMS Configuration
+        # ==========================
+
+        HUBTEL_CLIENT_ID = ""
+
+        HUBTEL_CLIENT_SECRET = ""
+
+        HUBTEL_SENDER_ID = "ESA"

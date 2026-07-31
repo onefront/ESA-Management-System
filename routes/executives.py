@@ -134,52 +134,116 @@ def search_member():
         })
 
     return jsonify(results)
+
+#
+#
+# @executives_bp.route("/executives/add", methods=["GET", "POST"])
+# def add_executive():
+#
+#     if request.method == "POST":
+#
+#         # Upload Photo
+#         photo = request.files.get("photo")
+#
+#         filename = ""
+#
+#         if photo and photo.filename:
+#
+#             filename = secure_filename(photo.filename)
+#
+#             photo.save(
+#                 os.path.join(
+#                     current_app.config["UPLOAD_FOLDER"],
+#                     filename
+#                 )
+#             )
+#
+#         # Generate Executive ID
+#         last = Executive.query.order_by(
+#             Executive.id.desc()
+#         ).first()
+#
+#         next_id = 1 if last is None else last.id + 1
+#
+#         executive_id = f"ESA-EX-{next_id:03d}"
+#
+#         # member = Member.query.get_or_404(request.form["member_id"])
+#         print("FORM DATA:", request.form)
+#
+#         member_id = request.form.get("member_id")
+#         print("MEMBER ID:", member_id)
+#
+#         member = Member.query.get_or_404(member_id)
+#
+#         executive = Executive(
+#             member_id=member.id,
+#             executive_id=executive_id,
+#             full_name=f"{member.first_name} {member.last_name}",
+#             position=request.form["position"],
+#             phone=member.phone,
+#             email=member.email,
+#             year=request.form["year"],
+#             photo=member.passport if member.passport else filename
+#         )
+#
+#         db.session.add(executive)
+#         db.session.commit()
+#
+#         return redirect(url_for("executives.executives"))
+#
+#     return render_template("executives/add.html")
+
 @executives_bp.route("/executives/add", methods=["GET", "POST"])
 def add_executive():
 
     if request.method == "POST":
+        try:
+            print("FORM:", request.form)
 
-        # Upload Photo
-        photo = request.files.get("photo")
+            member_id = request.form.get("member_id")
+            print("Member ID:", member_id)
 
-        filename = ""
+            photo = request.files.get("photo")
 
-        if photo and photo.filename:
+            filename = ""
 
-            filename = secure_filename(photo.filename)
-
-            photo.save(
-                os.path.join(
-                    current_app.config["UPLOAD_FOLDER"],
-                    filename
+            if photo and photo.filename:
+                filename = secure_filename(photo.filename)
+                photo.save(
+                    os.path.join(
+                        current_app.config["UPLOAD_FOLDER"],
+                        filename
+                    )
                 )
+
+            last = Executive.query.order_by(Executive.id.desc()).first()
+            next_id = 1 if last is None else last.id + 1
+            executive_id = f"ESA-EX-{next_id:03d}"
+
+            member = Member.query.get(member_id)
+
+            if member is None:
+                return f"Member not found. member_id={member_id}", 400
+
+            executive = Executive(
+                member_id=member.id,
+                executive_id=executive_id,
+                full_name=f"{member.first_name} {member.last_name}",
+                position=request.form["position"],
+                phone=member.phone,
+                email=member.email,
+                year=request.form["year"],
+                photo=member.passport if member.passport else filename
             )
 
-        # Generate Executive ID
-        last = Executive.query.order_by(
-            Executive.id.desc()
-        ).first()
+            db.session.add(executive)
+            db.session.commit()
 
-        next_id = 1 if last is None else last.id + 1
+            return redirect(url_for("executives.executives"))
 
-        executive_id = f"ESA-EX-{next_id:03d}"
-
-        member = Member.query.get_or_404(request.form["member_id"])
-
-        executive = Executive(
-            member_id=member.id,
-            executive_id=executive_id,
-            full_name=f"{member.first_name} {member.last_name}",
-            position=request.form["position"],
-            phone=member.phone,
-            email=member.email,
-            year=request.form["year"],
-            photo=member.passport if member.passport else filename
-        )
-
-        db.session.add(executive)
-        db.session.commit()
-
-        return redirect(url_for("executives.executives"))
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return str(e), 500
 
     return render_template("executives/add.html")

@@ -130,6 +130,21 @@
         <span>Announcements</span>
     </a>
 
+
+    <a href="{{ url_for('feedback.create_complaint') }}"
+   class="{% if request.endpoint == 'feedback.create_complaint' %}active{% endif %}">
+    <i class="bi bi-plus-circle"></i>
+    <span>Submit Complaint</span>
+</a>
+</li>
+
+<li class="{% if request.endpoint == 'feedback.my_complaints' %}active{% endif %}">
+    <a href="{{ url_for('feedback.my_complaints') }}">
+        <i class="bi bi-chat-square-text"></i>
+        My Complaints
+    </a>
+</li>
+
     <a href="{{ url_for('member_portal.elections') }}"
         class="{% if request.endpoint == 'member_portal.elections' %}active{% endif %}">
         <i class="bi bi-check2-square"></i>

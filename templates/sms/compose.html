@@ -1,0 +1,222 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h3 class="fw-bold mb-1">
+                Compose Bulk SMS
+            </h3>
+
+            <p class="text-muted mb-0">
+                Create a message and choose who should receive it.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <form>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+    <label class="form-label">
+        Recipient Group
+    </label>
+<div id="dynamicFilter" class="mb-3"></div>
+    <select
+        class="form-select"
+        id="recipientGroup">
+
+        <option value="all">
+            All Members
+        </option>
+
+        <option value="faculty">
+            Faculty
+        </option>
+
+        <option value="department">
+            Department
+        </option>
+
+        <option value="programme">
+            Programme
+        </option>
+
+        <option value="level">
+            Level
+        </option>
+
+        <option value="executives">
+            Executives
+        </option>
+
+        <option value="selected">
+            Selected Members
+        </option>
+
+    </select>
+
+</div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            SMS Title
+                        </label>
+
+                        <input
+    type="text"
+    id="smsTitle"
+    class="form-control"
+    placeholder="Meeting Reminder">
+
+                    </div>
+
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Message
+                    </label>
+
+                    <textarea
+    id="smsMessage"
+    class="form-control"
+    rows="6"
+    placeholder="Type your SMS here..."></textarea>
+
+                </div>
+
+                <div class="d-flex justify-content-between">
+
+                    <small class="text-muted">
+
+                        Characters:
+                        <strong>0</strong>
+
+                    </small>
+
+                    <small class="text-muted">
+
+                        Estimated Recipients:
+                        <strong>0</strong>
+
+                    </small>
+
+                </div>
+
+                <hr>
+
+                <button
+    type="button"
+    id="previewBtn"
+    class="btn btn-primary">
+
+    <i class="bi bi-eye-fill"></i>
+
+    Preview SMS
+
+</button>
+
+
+                <div class="modal fade" id="previewModal" tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    SMS Preview
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p><strong>Title:</strong> <span id="previewTitle"></span></p>
+
+                <p><strong>Recipients:</strong> <span id="previewRecipients"></span></p>
+
+                <p><strong>Characters:</strong> <span id="previewCharacters"></span></p>
+
+                <hr>
+
+                <div
+                    id="previewMessage"
+                    class="border rounded p-3 bg-light"
+                    style="white-space:pre-wrap;">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Close
+
+                </button>
+
+                <button
+                    class="btn btn-success">
+
+                    Send SMS
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+{% block scripts %}
+
+<script>
+
+const programmes = {{ programmes|tojson }};
+
+const departments = {{ departments|tojson }};
+
+const faculties = {{ faculties|tojson }};
+
+</script>
+
+<script src="{{ url_for('static', filename='js/sms.js') }}"></script>
+
+{% endblock %}

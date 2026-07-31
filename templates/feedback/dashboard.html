@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block title %}Complaint Management{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h1>Complaint Management</h1>
+
+    <a href="{{ url_for('feedback.all_complaints') }}"
+       class="btn btn-primary">
+
+        <i class="bi bi-list-ul"></i>
+
+        View All Complaints
+
+    </a>
+
+</div>
+
+    <div class="alert alert-success">
+        Feedback Module Loaded Successfully
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>{{ total_tickets }}</h5>
+                    <small>Total</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>{{ new_tickets }}</h5>
+                    <small>New</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>{{ assigned_tickets }}</h5>
+                    <small>Assigned</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>{{ review_tickets }}</h5>
+                    <small>Under Review</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>{{ resolved_tickets }}</h5>
+                    <small>Resolved</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>{{ closed_tickets }}</h5>
+                    <small>Closed</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

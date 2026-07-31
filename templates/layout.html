@@ -177,10 +177,15 @@
     </a>
 </li>
 {% endif %}
-<!--            &lt;!&ndash; ACADEMICS &ndash;&gt;-->
-<!--<li class="menu-title">-->
-<!--    ACADEMIC-->
-<!--</li>-->
+{% if current_user.role in ["Administrator", "General Secretary"] %}
+  <li class="{% if request.endpoint and request.endpoint.startswith('feedback') %}active{% endif %}">
+    <a href="{{ url_for('feedback.dashboard') }}">
+        <i class="bi bi-chat-square-text"></i>
+        Complaint Management
+    </a>
+</li>
+{% endif %}
+
 {% if current_user.role in ["Administrator", "General Secretary"] %}
 
 <li class="menu-title">
@@ -260,6 +265,12 @@
 </li>
 {% endif %}
 
+<li class="{% if request.blueprint == 'sms' %}active{% endif %}">
+    <a href="{{ url_for('sms.dashboard') }}">
+        <i class="bi bi-send-fill"></i>
+        Bulk SMS
+    </a>
+</li>
     {% if current_user.role in ["Administrator", "General Secretary"] %}
 
 <li class="{% if request.endpoint and request.endpoint.startswith('attendance') %}active{% endif %}">
@@ -590,6 +601,7 @@ overlay.addEventListener("click", function () {
 
 </script>
 
-</body>
+{% block scripts %}{% endblock %}
+
 </body>
 </html>

@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block title %}All Complaints{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <h3>Complaint Management</h3>
+
+        <a href="{{ url_for('feedback.dashboard') }}"
+           class="btn btn-secondary">
+
+            Dashboard
+
+        </a>
+
+    </div>
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Ticket</th>
+                        <th>Member</th>
+                        <th>Category</th>
+                        <th>Subject</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for complaint in complaints %}
+
+                    <tr>
+
+                        <td>{{ complaint.ticket_no }}</td>
+
+                        <td>
+                            {{ complaint.member.first_name }}
+                            {{ complaint.member.last_name }}
+                        </td>
+
+                        <td>{{ complaint.feedback_type }}</td>
+
+                        <td>{{ complaint.subject }}</td>
+
+                        <td>{{ complaint.priority }}</td>
+
+                        <td>{{ complaint.status }}</td>
+
+                        <td>
+                            {{ complaint.created_at.strftime("%d %b %Y") }}
+                        </td>
+
+                        <td>
+
+                            <a href="{{ url_for('feedback.complaint_details',
+                                                feedback_id=complaint.id) }}"
+                               class="btn btn-sm btn-primary">
+
+                                Open
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

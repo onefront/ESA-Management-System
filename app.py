@@ -11,7 +11,7 @@ from flask_migrate import Migrate
 
 from models.slider import Slider
 from flask_login import current_user
-
+from models.feedback import Feedback
 from models.executive import Executive
 from config import Config
 from routes.events import events_bp
@@ -28,14 +28,18 @@ from routes.class_groups import class_groups_bp
 from routes.payment_settings import payment_settings_bp
 from routes.chat_admin import chat_admin_bp
 from routes.notifications import notifications_bp
-
+from routes.feedback import feedback_bp
 
 
 
 
 # Import models
 from models.sms_setting import SMSSetting
-
+from datetime import datetime
+from extensions import db
+from models.feedback import Feedback
+from models.feedback_reply import FeedbackReply
+from models.feedback_attachment import FeedbackAttachment
 from models.class_notice import ClassNotice
 from models.payment_settings import PaymentSettings
 from models.class_group import ClassGroup
@@ -67,6 +71,11 @@ from models.notice import Notice
 from models.message import Message
 from models.user import User
 from models.notification import Notification
+
+
+
+
+
 
 
 # Create Flask App
@@ -159,12 +168,14 @@ from routes.class_announcements import class_announcements_bp
 from routes.payment_approval import payment_approval_bp
 from routes.slides import slides_bp
 from routes.chat_block import chat_block_bp
-
+from routes.sms import sms_bp
 
 
 
 
 # Register blueprints
+app.register_blueprint(sms_bp)
+app.register_blueprint(feedback_bp)
 app.register_blueprint(notifications_bp)
 app.register_blueprint(class_notices_bp)
 app.register_blueprint(backup_bp)
