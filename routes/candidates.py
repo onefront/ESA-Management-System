@@ -90,3 +90,76 @@ def add_candidate():
         portfolios=portfolios,
         members=members
     )
+
+@candidates_bp.route("/edit/<int:candidate_id>", methods=["GET", "POST"])
+@login_required
+@roles_required("Administrator", "General Secretary")
+def edit_candidate(candidate_id):
+
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    elections = Election.query.order_by(
+        Election.election_name
+    ).all()
+
+    portfolios = Portfolio.query.order_by(
+        Portfolio.display_order
+    ).all()
+
+    members = Member.query.order_by(
+        Member.first_name
+    ).all()
+
+    if request.method == "POST":
+
+        candidate.election_id = request.form["election_id"]
+        candidate.portfolio_id = request.form["portfolio_id"]
+        candidate.member_id = request.form["member_id"]
+        candidate.slogan = request.form["slogan"]
+        candidate.manifesto = request.form["manifesto"]
+        candidate.status = request.form["status"]
+
+        db.session.commit()
+
+        flash(
+            "Candidate updated successfully.",
+            "success"
+        )
+
+        return redirect(
+            url_for("candidates.candidates")
+        )
+
+    return render_template(
+        "candidates/edit.html",
+        candidate=candidate,
+        elections=elections,
+        portfolios=portfolios,
+        members=members
+    )
+
+@candidates_bp.route("/delete/<int:candidate_id>", methods=["GET", "POST"])
+@login_required
+@roles_required("Administrator", "General Secretary")
+def delete_candidate(candidate_id):
+
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    if request.method == "POST":
+
+        db.session.delete(candidate)
+        db.session.commit()
+
+        flash(
+            "Candidate deleted successfully.",
+            "success"
+        )
+
+        return redirect(
+            url_for("candidates.candidates")
+        )
+
+    return render_template(
+        "candidates/delete.html",
+        candidate=candidate
+    )
