@@ -1,10 +1,153 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout.html" %}
 
-</body>
-</html>
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-pencil-square text-warning"></i>
+
+                Edit Portfolio
+
+            </h2>
+
+            <p class="text-muted">
+
+                Update portfolio information.
+
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('portfolios.portfolios') }}"
+           class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Portfolio Name
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="portfolio_name"
+                        class="form-control"
+                        value="{{ portfolio.portfolio_name }}"
+                        required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Description
+
+                    </label>
+
+                    <textarea
+                        name="description"
+                        rows="4"
+                        class="form-control">{{ portfolio.description }}</textarea>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+
+                            Display Order
+
+                        </label>
+
+                        <input
+                            type="number"
+                            name="display_order"
+                            class="form-control"
+                            value="{{ portfolio.display_order }}"
+                            min="1"
+                            required>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+
+                            Status
+
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select">
+
+                            <option value="Active"
+                            {% if portfolio.status == "Active" %}selected{% endif %}>
+                                Active
+                            </option>
+
+                            <option value="Inactive"
+                            {% if portfolio.status == "Inactive" %}selected{% endif %}>
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="mt-4">
+
+                    <button
+                        type="submit"
+                        class="btn btn-warning">
+
+                        <i class="bi bi-save"></i>
+
+                        Update Portfolio
+
+                    </button>
+
+                    <a href="{{ url_for('portfolios.portfolios') }}"
+                       class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

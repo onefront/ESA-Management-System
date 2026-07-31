@@ -1,10 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout.html" %}
 
-</body>
-</html>
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-danger text-white">
+
+            <h3 class="mb-0">
+
+                Delete Portfolio
+
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <p class="lead">
+
+                Are you sure you want to delete the portfolio
+
+                <strong>{{ portfolio.portfolio_name }}</strong>?
+
+            </p>
+
+            <form method="POST">
+
+                <button
+                    type="submit"
+                    class="btn btn-danger">
+
+                    <i class="bi bi-trash"></i>
+
+                    Delete Portfolio
+
+                </button>
+
+                <a href="{{ url_for('portfolios.portfolios') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
