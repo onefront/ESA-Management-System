@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from models.member import Member
 from models.class_group import ClassGroup
 from models.course_rep import CourseRep
+from models.fee_setting import FeeSetting
 from utils.auth import admin_required
 from models.class_notice import ClassNotice
 from flask import request, flash, redirect, url_for
@@ -20,6 +21,13 @@ REQUIRED_PAYMENT_TYPES = [
     "Annual Dues",
     "Welfare Levy"
 ]
+
+REGISTRATION_REQUIRED = 200
+ANNUAL_DUES_REQUIRED = 50
+TOTAL_REQUIRED = REGISTRATION_REQUIRED + ANNUAL_DUES_REQUIRED
+
+
+
 @class_groups_bp.route("/")
 @login_required
 @admin_required
@@ -154,51 +162,112 @@ def view(id):
 @class_groups_bp.route("/<int:id>/members")
 @login_required
 def members(id):
-    group = ClassGroup.query.get_or_404(id)
 
-    members = Member.query.filter_by(
-        class_group_id=id
-    ).order_by(
-        Member.last_name,
-        Member.first_name
-    ).all()
+    group = ClassGroup.query.get_or_404(id)
+    fee = FeeSetting.query.filter_by(active=True).first()
+
+    if fee:
+        registration_required = fee.registration_fee
+        annual_dues_required = fee.annual_dues
+        welfare_required = fee.welfare_levy
+        other_required = fee.other_fee
+
+        total_required = (
+                registration_required +
+                annual_dues_required +
+                welfare_required +
+                other_required
+        )
+    else:
+        registration_required = 200
+        annual_dues_required = 50
+        welfare_required = 0
+        other_required = 0
+        total_required = 250
+    status = request.args.get("status", "all")
+    members = (
+        Member.query
+        .filter_by(class_group_id=id)
+        .order_by(Member.last_name, Member.first_name)
+        .all()
+    )
+    for member in members:
+
+        registration_paid = sum(
+            p.amount for p in member.payments
+            if p.payment_type == "Registration Fee"
+            and p.status == "Approved"
+        )
+
+        dues_paid = sum(
+            p.amount for p in member.payments
+            if p.payment_type == "Annual Dues"
+            and p.status == "Approved"
+        )
+
+        total_paid = registration_paid + dues_paid
+
+        balance = max(total_required - total_paid, 0)
+
+        if (
+                registration_paid >= registration_required
+                and dues_paid >= annual_dues_required
+        ):
+            payment_status = "Paid"
+        elif total_paid > 0:
+            payment_status = "Partial"
+        else:
+            payment_status = "Outstanding"
+
+        member.registration_paid = registration_paid
+        member.dues_paid = dues_paid
+        member.total_paid = total_paid
+        member.balance = balance
+        member.payment_status = payment_status
+    if status == "paid":
+        members = [m for m in members if m.payment_status == "Paid"]
+
+    elif status == "partial":
+        members = [m for m in members if m.payment_status == "Partial"]
+
+    elif status == "outstanding":
+        members = [m for m in members if m.payment_status == "Outstanding"]
+
 
     member_count = len(members)
 
-    male_count = Member.query.filter_by(
-        class_group_id=id,
-        gender="Male"
-    ).count()
+    male_count = sum(1 for m in members if m.gender == "Male")
+    female_count = sum(1 for m in members if m.gender == "Female")
 
-    female_count = Member.query.filter_by(
-        class_group_id=id,
-        gender="Female"
-    ).count()
-
-    paid_count = (
-        db.session.query(Payment.member_id)
-        .join(Member, Payment.member_id == Member.id)
-        .filter(Member.class_group_id == id)
-        .filter(
-            Payment.payment_type.in_(REQUIRED_PAYMENT_TYPES)
-        )
-        .distinct()
-        .count()
+    paid_count = sum(
+        1 for m in members
+        if m.payment_status == "Paid"
     )
 
-    unpaid_count = max(member_count - paid_count, 0)
+    partial_count = sum(
+        1 for m in members
+        if m.payment_status == "Partial"
+    )
 
+    unpaid_count = sum(
+        1 for m in members
+        if m.payment_status == "Outstanding"
+    )
 
     return render_template(
-    "class_groups/members.html",
-    group=group,
-    members=members,
-    member_count=member_count,
-    male_count=male_count,
-    female_count=female_count,
-    paid_count=paid_count,
-    unpaid_count=unpaid_count
-)
+        "class_groups/members.html",
+        group=group,
+        members=members,
+        member_count=member_count,
+        male_count=male_count,
+        female_count=female_count,
+        paid_count=paid_count,
+        partial_count=partial_count,
+        unpaid_count=unpaid_count,
+    status = status,
+    )
+
+
 @class_groups_bp.route("/add", methods=["GET", "POST"])
 @login_required
 @admin_required

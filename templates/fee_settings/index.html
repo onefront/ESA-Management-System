@@ -1,0 +1,162 @@
+{% extends "layout.html" %}
+
+{% block title %}Fee Settings{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <div class="card shadow">
+
+       <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+    <h4 class="mb-0">
+        <i class="fas fa-money-bill-wave"></i>
+        Fee Settings
+    </h4>
+
+    <div>
+
+        <a href="{{ url_for('dashboard.dashboard') }}"
+           class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('fee_settings.add') }}"
+           class="btn btn-light">
+            <i class="fas fa-plus"></i>
+            Add Fee Setting
+        </a>
+
+    </div>
+
+</div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead class="table-dark">
+
+                <tr>
+
+                       <th>#</th>
+                      <th>Actions</th>
+                    <th>Academic Year</th>
+
+                    <th>Registration Fee</th>
+
+                    <th>Annual Dues</th>
+
+                    <th>Welfare Levy</th>
+
+                    <th>Other Fee</th>
+
+                    <th>Total</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for fee in settings %}
+
+                <tr>
+
+                    <td>{{ loop.index }}</td>
+
+                    <td>{{ fee.academic_year }}</td>
+
+                    <td>GH₵ {{ "%.2f"|format(fee.registration_fee) }}</td>
+
+                    <td>GH₵ {{ "%.2f"|format(fee.annual_dues) }}</td>
+
+                    <td>GH₵ {{ "%.2f"|format(fee.welfare_levy) }}</td>
+
+                    <td>GH₵ {{ "%.2f"|format(fee.other_fee) }}</td>
+
+                    <td>
+                        <strong>
+                            GH₵
+                            {{ "%.2f"|format(
+                                fee.registration_fee +
+                                fee.annual_dues +
+                                fee.welfare_levy +
+                                fee.other_fee
+                            ) }}
+                        </strong>
+                    </td>
+
+                    <td>
+
+                        {% if fee.active %}
+
+                            <span class="badge bg-success">
+                                Active
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+                                Inactive
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+<td>
+
+    {% if not fee.active %}
+
+    <a href="{{ url_for('fee_settings.activate', id=fee.id) }}"
+       class="btn btn-success btn-sm">
+        Activate
+    </a>
+
+    {% endif %}
+
+    <a href="{{ url_for('fee_settings.edit', id=fee.id) }}"
+       class="btn btn-warning btn-sm">
+        Edit
+    </a>
+
+    <a href="{{ url_for('fee_settings.delete', id=fee.id) }}"
+       class="btn btn-danger btn-sm"
+       onclick="return confirm('Delete this fee setting?');">
+        Delete
+    </a>
+
+</td>
+
+
+
+                </tr>
+
+
+                {% else %}
+
+                <tr>
+
+                    <td colspan="8" class="text-center">
+                        No fee settings found.
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

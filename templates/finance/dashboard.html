@@ -1,0 +1,466 @@
+{% extends "layout.html" %}
+
+{% block title %}Financial Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <!-- Header -->
+  <div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h2 class="mb-1 text-primary">
+                    <i class="fas fa-chart-line"></i>
+                    Financial Dashboard
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Monitor ESA income, dues, balances and payment performance.
+                </p>
+
+            </div>
+
+            <div>
+
+                <a href="{{ url_for('dashboard.dashboard') }}"
+                   class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Dashboard
+                </a>
+
+                <button class="btn btn-primary">
+                    <i class="fas fa-print"></i>
+                    Print
+                </button>
+
+                <button class="btn btn-success">
+                    <i class="fas fa-file-excel"></i>
+                    Excel
+                </button>
+
+                <button class="btn btn-danger">
+                    <i class="fas fa-file-pdf"></i>
+                    PDF
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- First Row -->
+<div class="row mt-2">
+
+    <!-- Paid Members -->
+    <div class="col-md-3 mb-4">
+        <div class="card shadow border-0 bg-success text-white">
+            <div class="card-body text-center">
+                <h2>{{ paid_members }}</h2>
+                <p class="mb-0">Paid Members</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partial Members -->
+    <div class="col-md-3 mb-4">
+        <div class="card shadow border-0 bg-warning">
+            <div class="card-body text-center">
+                <h2>{{ partial_members }}</h2>
+                <p class="mb-0">Partial Members</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Outstanding Members -->
+    <div class="col-md-3 mb-4">
+        <div class="card shadow border-0 bg-danger text-white">
+            <div class="card-body text-center">
+                <h2>{{ outstanding_members }}</h2>
+                <p class="mb-0">Outstanding Members</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collection Rate -->
+    <div class="col-md-3 mb-4">
+        <div class="card shadow border-0 bg-dark text-white">
+            <div class="card-body text-center">
+                <h2>{{ collection_rate }}%</h2>
+                <p class="mb-0">Collection Rate</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+  <div class="card shadow mb-4">
+
+    <div class="card-header bg-primary text-white">
+
+        <h5 class="mb-0">
+
+            <i class="fas fa-bolt"></i>
+
+            Quick Actions
+
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row text-center">
+
+            <div class="col-md-3 mb-3">
+
+               <a href="{{ url_for('payments.payments') }}"
+                   class="btn btn-outline-primary w-100 py-3">
+
+                    <i class="fas fa-money-check-alt fa-2x"></i>
+
+                    <br><br>
+
+                    Record Payment
+
+                </a>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <a href="{{ url_for('fee_settings.index') }}"
+                   class="btn btn-outline-success w-100 py-3">
+
+                    <i class="fas fa-cogs fa-2x"></i>
+
+                    <br><br>
+
+                    Fee Settings
+
+                </a>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <button class="btn btn-outline-warning w-100 py-3">
+
+                    <i class="fas fa-chart-bar fa-2x"></i>
+
+                    <br><br>
+
+                    Reports
+
+                </button>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <button class="btn btn-outline-danger w-100 py-3">
+
+                    <i class="fas fa-file-export fa-2x"></i>
+
+                    <br><br>
+
+                    Export
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+    <!-- Second Row -->
+    <div class="row">
+
+        <div class="col-md-6 mb-4">
+
+        <div class="card shadow">
+
+    <div class="card-header bg-primary text-white">
+
+        <h5 class="mb-0">
+            <i class="fas fa-history"></i>
+            Recent Payments
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover table-striped">
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>Member</th>
+                        <th>Payment Type</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for payment in recent_payments %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>
+                            {{ payment.member.first_name }}
+                            {{ payment.member.last_name }}
+                        </td>
+
+                        <td>{{ payment.payment_type }}</td>
+
+                        <td>
+                            GH₵ {{ "%.2f"|format(payment.amount) }}
+                        </td>
+
+                        <td>
+
+                            {% if payment.status == "Approved" %}
+
+                                <span class="badge bg-success">
+                                    Approved
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-warning text-dark">
+                                    {{ payment.status }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center text-muted">
+
+                            No recent payments found.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+        </div>
+
+       <div class="card shadow mb-4">
+
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-chart-bar"></i>
+            Monthly Revenue
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <canvas id="monthlyRevenueChart" height="100"></canvas>
+
+    </div>
+
+</div>
+
+
+        <div class="card shadow">
+
+    <div class="card-header bg-danger text-white">
+
+        <h5 class="mb-0">
+            <i class="fas fa-exclamation-circle"></i>
+            Top Outstanding Members
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>Member</th>
+                        <th>Balance</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for item in outstanding_list %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>
+                            {{ item.member.first_name }}
+                            {{ item.member.last_name }}
+                        </td>
+
+                        <td class="text-danger fw-bold">
+                            GH₵ {{ "%.2f"|format(item.balance) }}
+                        </td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="3" class="text-center text-muted">
+
+                            No outstanding balances.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+                <div class="card-body">
+
+                    <table class="table table-bordered">
+
+                        <tr>
+                            <th>Total Required Per Member</th>
+                            <td>
+                                GH₵ {{ "%.2f"|format(total_required) }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Total Members</th>
+                            <td>{{ total_members }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Expected Revenue</th>
+                            <td>
+                                <strong>
+                                    GH₵ {{ "%.2f"|format(total_required * total_members) }}
+                                </strong>
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+
+const ctx = document.getElementById('monthlyRevenueChart');
+
+new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: {{ chart_labels|tojson }},
+
+        datasets: [{
+
+            label: 'Revenue (GH₵)',
+
+            data: {{ chart_values|tojson }},
+
+            borderWidth: 1
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+                display: true
+            }
+
+        },
+
+        scales: {
+
+            y: {
+                beginAtZero: true
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

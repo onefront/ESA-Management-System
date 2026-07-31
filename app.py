@@ -8,7 +8,7 @@ from flask import (
     url_for
 )
 from flask_migrate import Migrate
-
+from models.fee_setting import FeeSetting
 from models.slider import Slider
 from flask_login import current_user
 from models.feedback import Feedback
@@ -29,7 +29,7 @@ from routes.payment_settings import payment_settings_bp
 from routes.chat_admin import chat_admin_bp
 from routes.notifications import notifications_bp
 from routes.feedback import feedback_bp
-
+from routes.fee_settings import fee_settings_bp
 
 
 
@@ -169,11 +169,13 @@ from routes.payment_approval import payment_approval_bp
 from routes.slides import slides_bp
 from routes.chat_block import chat_block_bp
 from routes.sms import sms_bp
-
+from routes.finance import finance_bp
 
 
 
 # Register blueprints
+app.register_blueprint(finance_bp)
+app.register_blueprint(fee_settings_bp)
 app.register_blueprint(sms_bp)
 app.register_blueprint(feedback_bp)
 app.register_blueprint(notifications_bp)

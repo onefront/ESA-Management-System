@@ -151,94 +151,82 @@
         </div>
 
     </div>
+<!-- RIGHT -->
+<div class="col-12 col-lg-8">
 
-
-    <!-- RIGHT -->
-<!--    <div class="col-lg-4">-->
-    <!-- RIGHT -->
-<div class="col-lg-8">
-
-<!--        <div class="card border-0 shadow-sm rounded-4">-->
     <div class="card border-0 shadow-sm rounded-4 h-100">
 
-            <div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Quick Actions</h5>
+        </div>
 
-                <h5 class="mb-0">
+        <div class="card-body">
 
+            <div class="row g-3">
 
-
-
-                    Quick Actions
-                </h5>
-
-            </div>
-
-            <div class="card-body">
-
-               <div class="d-grid gap-3 quick-actions">
-
-                    <a href="{{ url_for('members.add_member') }}"
-                       class="btn btn-primary">
-                        Add Member
-                    </a>
-
-                    <a href="{{ url_for('members.members') }}"
-                       class="btn btn-success">
-                        Members
-                    </a>
-
-<!--                    <a href="{{ url_for('attendance.attendance_by_event') }}"-->
-<!--                       class="btn btn-info">-->
-<!--                        Attendance-->
-<!--                    </a>-->
-
-                    <a href="{{ url_for('events.events') }}"
-                       class="btn btn-warning">
-                        Events
-                    </a>
-
-                    <a href="{{ url_for('executives.executives') }}"
-                       class="btn btn-secondary">
-                        Executives
-                    </a>
-
-                    <a href="{{ url_for('members.members_by_programme') }}"
-                       class="btn btn-dark">
-                        Programmes
-                    </a>
-
-                   <a href="{{ url_for('departments.departments') }}"
-   class="btn btn-dark">
-    Departments
-</a>
-<a href="{{ url_for('lecturers.lecturers') }}"
-   class="btn btn-outline-info">
-    Lecturer Directorate
-</a>
-                   <a href="{{ url_for('sms.dashboard') }}"
-   class="btn btn-primary">
-    Bulk SMS
-</a>
-                    <a href="{{ url_for('payments.reports') }}"
-                       class="btn btn-outline-danger">
-                        Payment Reports
-                    </a>
-
-                    <a href="{{ url_for('audit.dashboard') }}"
-                       class="btn btn-outline-dark">
-                        Audit Logs
-                    </a>
-                  <a href="{{ url_for('reports.reports') }}"
-   class="btn btn-outline-primary">
-    Reports
-</a>
-
-<a href="{{ url_for('messages.inbox') }}"
-   class="btn btn-outline-success">
-    💬 ESA Vibes
-</a>
-
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('members.add_member') }}" class="btn btn-primary w-100">Add Member</a>
                 </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('members.members') }}" class="btn btn-success w-100">Members</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('events.events') }}" class="btn btn-warning w-100">Events</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('executives.executives') }}" class="btn btn-secondary w-100">Executives</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('members.members_by_programme') }}" class="btn btn-dark w-100">Programmes</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('departments.departments') }}" class="btn btn-dark w-100">Departments</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('lecturers.lecturers') }}" class="btn btn-info w-100">Lecturer Directorate</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('sms.dashboard') }}" class="btn btn-primary w-100">Bulk SMS</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('payments.reports') }}" class="btn btn-outline-danger w-100">Payment Reports</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('audit.dashboard') }}" class="btn btn-outline-dark w-100">Audit Logs</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('reports.reports') }}" class="btn btn-outline-primary w-100">Reports</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('messages.inbox') }}" class="btn btn-outline-success w-100">
+                        💬 ESA Vibes
+                    </a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('fee_settings.index') }}" class="btn btn-info w-100">
+                        <i class="fas fa-cogs"></i> Fee Settings
+                    </a>
+                </div>
+                 <div class="col-lg-3 col-md-6">
+                    <a href="{{ url_for('finance.dashboard') }}"
+   class="btn btn-success">
+    <i class="fas fa-chart-line"></i>
+    Finance Dashboard
+</a>
+                          </div>
+
 
             </div>
 
@@ -247,6 +235,5 @@
     </div>
 
 </div>
-
 
 {% endblock %}
