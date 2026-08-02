@@ -71,8 +71,8 @@ from models.notice import Notice
 from models.message import Message
 from models.user import User
 from models.notification import Notification
-
-
+from models.timetable import Timetable
+from models.timetable import Timetable
 
 
 
@@ -170,10 +170,15 @@ from routes.slides import slides_bp
 from routes.chat_block import chat_block_bp
 from routes.sms import sms_bp
 from routes.finance import finance_bp
+from routes.timetable import timetable_bp
+
+
+
 
 
 
 # Register blueprints
+app.register_blueprint(timetable_bp)
 app.register_blueprint(finance_bp)
 app.register_blueprint(fee_settings_bp)
 app.register_blueprint(sms_bp)

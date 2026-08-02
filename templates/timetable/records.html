@@ -1,0 +1,370 @@
+{% extends "layout.html" %}
+
+{% block title %}Timetable Records{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('timetable.management') }}"
+   class="btn btn-secondary mb-3">
+
+    <i class="fas fa-arrow-left"></i>
+    Back to Timetable Management
+
+</a>
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+                Timetable Records
+            </h4>
+
+        </div>
+
+         <div class="card-body">
+
+    <div class="alert alert-primary d-flex justify-content-between align-items-center mb-3">
+
+        <div>
+            <strong>Total Timetable Records:</strong>
+            {{ timetables|length }}
+        </div>
+
+        <div>
+            <strong>Academic Year:</strong>
+            {{ timetables[0].academic_year if timetables else "-" }}
+        </div>
+
+    </div>
+
+
+         <form method="GET"
+      action="{{ url_for('timetable.records') }}"
+      class="mb-4">
+
+    <div class="row g-2">
+
+        <div class="col-md-4">
+
+            <input
+                type="text"
+                name="search"
+                class="form-control"
+                placeholder="Search..."
+                value="{{ search }}">
+
+        </div>
+
+        <div class="col-md-2">
+
+            <select
+                name="programme"
+                class="form-select">
+
+                <option value="">All Programmes</option>
+
+                {% for p in programmes %}
+
+                <option
+                    value="{{ p[0] }}"
+                    {% if programme == p[0] %}selected{% endif %}>
+
+                    {{ p[0] }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="col-md-2">
+
+            <select
+                name="level"
+                class="form-select">
+
+                <option value="">All Levels</option>
+
+                {% for l in levels %}
+
+                <option
+                    value="{{ l[0] }}"
+                    {% if level == l[0] %}selected{% endif %}>
+
+                    {{ l[0] }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="col-md-2">
+
+            <select
+                name="day"
+                class="form-select">
+
+                <option value="">All Days</option>
+
+                {% for d in days %}
+
+                <option
+                    value="{{ d[0] }}"
+                    {% if day == d[0] %}selected{% endif %}>
+
+                    {{ d[0] }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="col-md-2 d-grid">
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+
+                Filter
+
+            </button>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+
+
+    <!-- Search -->
+    <table class="table table-bordered table-hover">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Date</th>
+
+                        <th>Day</th>
+
+                        <th>Time</th>
+
+                        <th>Programme</th>
+
+                        <th>Level</th>
+
+                        <th>Course</th>
+
+                        <th>Venue</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for row in timetables %}
+
+                    <tr>
+
+                        <td>{{ row.exam_date }}</td>
+
+                        <td>{{ row.day }}</td>
+
+                        <td>
+
+                            {{ row.start_time }}
+
+                            -
+
+                            {{ row.end_time }}
+
+                        </td>
+
+                        <td>{{ row.programme }}</td>
+
+                        <td>{{ row.level }}</td>
+
+                        <td>
+
+                            <strong>
+
+                                {{ row.course_code }}
+
+                            </strong>
+
+                            <br>
+
+                            {{ row.course_title }}
+
+                        </td>
+
+                        <td>{{ row.venue }}</td>
+
+                        <td>
+
+    <div class="dropdown">
+
+        <button
+            class="btn btn-sm btn-primary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown">
+
+            Actions
+
+        </button>
+
+        <ul class="dropdown-menu">
+
+            <li>
+
+                <a class="dropdown-item"
+                   href="{{ url_for('timetable.view_record', timetable_id=row.id) }}">
+
+                    View
+
+                </a>
+
+            </li>
+
+            <li>
+
+                <a class="dropdown-item"
+                   href="{{ url_for('timetable.edit_record', timetable_id=row.id) }}">
+
+                    Edit
+
+                </a>
+
+            </li>
+
+            <li>
+
+     <a class="dropdown-item text-danger"
+   href="{{ url_for('timetable.delete_record', timetable_id=row.id) }}">
+    Delete
+</a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</td>
+
+                    </tr>
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="8"
+                            class="text-center">
+
+                            No timetable records found.
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+</table>
+
+{% if pagination.pages > 1 %}
+
+<nav class="mt-4">
+
+    <ul class="pagination justify-content-center">
+
+        {% if pagination.has_prev %}
+
+        <li class="page-item">
+
+            <a class="page-link"
+               href="{{ url_for('timetable.records',
+                                page=pagination.prev_num,
+                                search=search,
+                                programme=programme,
+                                level=level,
+                                day=day) }}">
+
+                Previous
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+        {% for p in pagination.iter_pages() %}
+
+            {% if p %}
+
+                <li class="page-item {% if p == pagination.page %}active{% endif %}">
+
+                    <a class="page-link"
+                       href="{{ url_for('timetable.records',
+                                        page=p,
+                                        search=search,
+                                        programme=programme,
+                                        level=level,
+                                        day=day) }}">
+
+                        {{ p }}
+
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+        {% endfor %}
+
+        {% if pagination.has_next %}
+
+        <li class="page-item">
+
+            <a class="page-link"
+               href="{{ url_for('timetable.records',
+                                page=pagination.next_num,
+                                search=search,
+                                programme=programme,
+                                level=level,
+                                day=day) }}">
+
+                Next
+
+            </a>
+
+        </li>
+
+        {% endif %}
+
+    </ul>
+
+</nav>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+{% endblock %}

@@ -1,141 +1,238 @@
 {% extends "layout.html" %}
 
+{% block styles %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
 {% block content %}
 
-<div class="container-fluid">
+<div class="chat-page">
 
-    <div class="card shadow-sm">
+    <div class="container-fluid px-0">
 
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="chat-container shadow-sm">
 
-            <h3 class="mb-0">
+            <div class="row g-0">
 
-                <i class="bi bi-chat-left-text"></i>
+                <!-- LEFT SIDEBAR -->
 
-                Inbox
+                <div class="col-lg-4 border-end chat-sidebar">
 
-            </h3>
+                    <!-- Header -->
 
-            <a href="{{ url_for('messages.contacts') }}"
-               class="btn btn-primary">
+                    <div class="chat-search">
 
-                <i class="bi bi-plus-circle"></i>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
 
-                New Chat
+                            <div>
 
-            </a>
+                                <h4 class="fw-bold mb-0">
 
-        </div>
+                                    <i class="bi bi-chat-dots-fill text-primary"></i>
 
-        <div class="list-group list-group-flush">
+                                    ESA Messenger
 
-            {% for membership in conversations %}
+                                </h4>
 
-                {% set conversation = membership.conversation %}
+                                <small class="text-muted">
 
-                {% for member in conversation.members %}
+                                    Administrator
 
-                    {% if member.user_id != current_user.id %}
-
-                        <a href="{{ url_for('messages.view_conversation',
-                                conversation_id=conversation.id) }}"
-                           class="list-group-item list-group-item-action">
-
-                            <div class="d-flex align-items-center">
-
-                                {% if member.user.member_profile and member.user.member_profile.passport %}
-
-                                    <img src="{{ url_for(
-                                        'static',
-                                        filename='uploads/' +
-                                        member.user.member_profile.passport
-                                    ) }}"
-                                         class="rounded-circle me-3"
-                                         width="55"
-                                         height="55"
-                                         style="object-fit:cover;">
-
-                                {% else %}
-
-                                    <img src="{{ url_for(
-                                        'static',
-                                        filename='images/default-avatar.png'
-                                    ) }}"
-                                         class="rounded-circle me-3"
-                                         width="55"
-                                         height="55">
-
-                                {% endif %}
-
-
-                                <div class="flex-grow-1">
-
-    {% if conversation.messages %}
-
-        <div class="text-muted">
-
-            {% if conversation.messages[-1].sender_id == current_user.id %}
-
-                <small>
-
-                    <i class="bi bi-check2-all text-primary"></i>
-
-                    You: {{ conversation.messages[-1].message[:35] }}
-
-                </small>
-
-            {% else %}
-
-                <small>
-
-                    {{ conversation.messages[-1].message[:40] }}
-
-                </small>
-
-            {% endif %}
-
-        </div>
-
-    {% else %}
-
-        <small class="text-muted">
-
-            No messages yet
-
-        </small>
-
-    {% endif %}
-
-</div>
-
-
-
-
+                                </small>
 
                             </div>
 
-                        </a>
+                            <a href="{{ url_for('messages.contacts') }}"
+                               class="btn btn-primary rounded-circle">
 
-                    {% endif %}
+                                <i class="bi bi-plus-lg"></i>
 
-                {% endfor %}
+                            </a>
 
-            {% else %}
+                        </div>
 
-                <div class="p-5 text-center text-muted">
+                        <input
+                            id="chatSearch"
+                            type="text"
+                            class="form-control"
+                            placeholder="Search conversations...">
 
-                    <h5>No conversations yet.</h5>
+                    </div>
 
-                    <p>Click <strong>New Chat</strong> to start messaging.</p>
+                    <!-- Conversation List -->
+
+                    <div class="chat-list">
+
+                        {% if conversations %}
+
+                            {% for membership in conversations %}
+
+                                {% set conversation = membership.conversation %}
+
+                                {% for member in conversation.members %}
+
+                                    {% if member.user_id != current_user.id %}
+
+                                        <a href="{{ url_for('messages.view_conversation',
+                                                conversation_id=conversation.id) }}"
+                                           class="chat-item text-decoration-none">
+
+                                            <div class="position-relative">
+
+                                                {% if member.user.member_profile
+                                                      and member.user.member_profile.passport %}
+
+                                                    <img
+                                                        src="{{ url_for('static',
+                                                        filename='uploads/' +
+                                                        member.user.member_profile.passport) }}"
+                                                        class="chat-avatar">
+
+                                                {% else %}
+
+                                                    <img
+                                                        src="{{ url_for('static',
+                                                        filename='images/default-avatar.png') }}"
+                                                        class="chat-avatar">
+
+                                                {% endif %}
+
+                                                <span class="online-dot"></span>
+
+                                            </div>
+
+                                            <div class="chat-info">
+                                                                                                <div class="d-flex justify-content-between align-items-center">
+
+                                                    <div class="chat-name fw-bold">
+
+                                                        {{ member.user.full_name }}
+
+                                                    </div>
+
+                                                    {% if conversation.messages %}
+
+                                                        <small class="text-muted">
+
+                                                            {{ conversation.messages[-1].created_at.strftime('%I:%M %p') }}
+
+                                                        </small>
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                                <div class="chat-preview mt-1">
+
+                                                    {% if conversation.messages %}
+
+                                                        {% if conversation.messages[-1].sender_id == current_user.id %}
+
+                                                            <i class="bi bi-check2-all text-primary"></i>
+
+                                                            You:
+
+                                                        {% endif %}
+
+                                                        {{ conversation.messages[-1].message[:45] }}
+
+                                                    {% else %}
+
+                                                        <span class="text-muted">
+
+                                                            No messages yet
+
+                                                        </span>
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                                {% if unread_counts.get(conversation.id, 0) > 0 %}
+
+                                                    <div class="mt-2">
+
+                                                        <span class="badge bg-primary rounded-pill">
+
+                                                            {{ unread_counts[conversation.id] }}
+
+                                                        </span>
+
+                                                    </div>
+
+                                                {% endif %}
+
+                                            </div>
+
+                                        </a>
+
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <div class="text-center p-5 text-muted">
+
+                                <i class="bi bi-chat-square-text"
+                                   style="font-size:55px;"></i>
+
+                                <p class="mt-3 mb-0">
+
+                                    No conversations found.
+
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
 
                 </div>
 
-            {% endfor %}
+                <!-- RIGHT PANEL -->
+
+                <div class="col-lg-8 d-none d-lg-flex align-items-center justify-content-center">
+                                        <div class="text-center text-muted px-5">
+
+                        <i class="bi bi-chat-square-dots"
+                           style="font-size:90px;"></i>
+
+                        <h2 class="mt-4 fw-bold">
+
+                            Welcome to ESA Messenger
+
+                        </h2>
+
+                        <p class="lead">
+
+                            Select a conversation from the left to start chatting.
+
+                        </p>
+
+                        <div class="mt-4">
+
+                            <span class="badge bg-primary fs-6">
+
+                                Executive Student Association
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 
     </div>
 
 </div>
-
 {% endblock %}

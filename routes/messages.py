@@ -95,10 +95,14 @@ def inbox():
         )
 
     return render_template(
-        "messages/member/inbox.html",
+        "messages/inbox.html",
         conversations=conversations,
         unread_counts=unread_counts
     )
+
+
+
+
 
 
 

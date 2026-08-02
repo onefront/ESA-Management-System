@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block title %}Upload Timetable{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('timetable.management') }}"
+   class="btn btn-secondary mb-3">
+
+    <i class="fas fa-arrow-left"></i>
+    Back to Timetable Management
+
+</a>
+<div class="container mt-4">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="fas fa-upload"></i>
+                Upload Timetable
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST" enctype="multipart/form-data">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Academic Year
+                        </label>
+
+                        <input
+                            type="text"
+                            name="academic_year"
+                            class="form-control"
+                            placeholder="2026/2027"
+                            required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Semester
+                        </label>
+
+                        <select
+                            name="semester"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Select Semester
+                            </option>
+
+                            <option value="First Semester">
+                                First Semester
+                            </option>
+
+                            <option value="Second Semester">
+                                Second Semester
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Timetable Type
+                        </label>
+
+                        <select
+                            name="timetable_type"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Select Type
+                            </option>
+
+                            <option value="Lecture">
+                                Lecture Timetable
+                            </option>
+
+                            <option value="Examination">
+                                Examination Timetable
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Upload File
+                        </label>
+
+                        <input
+                            type="file"
+                            name="file"
+                            class="form-control"
+                            accept=".doc,.docx,.pdf,.xlsx,.xls"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    <i class="fas fa-upload"></i>
+
+                    Upload Timetable
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

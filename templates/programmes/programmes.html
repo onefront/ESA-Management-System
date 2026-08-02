@@ -71,7 +71,8 @@
 
     <th>#</th>
 
-    <th>Programme</th>
+    <th>Code</th>
+<th>Programme</th>
 
     <th>Faculty</th>
 
@@ -91,7 +92,15 @@
 
     <td>{{ loop.index }}</td>
 
-    <td>{{ programme.programme_name }}</td>
+    <td>
+    <span class="badge bg-primary">
+        {{ programme.programme_code or "-" }}
+    </span>
+</td>
+
+<td>
+    {{ programme.programme_name }}
+</td>
 
     <td>{{ programme.faculty.faculty_name }}</td>
 

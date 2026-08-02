@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block title %}Clear Timetable{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card border-danger shadow">
+
+        <div class="card-header bg-danger text-white">
+
+            <h3>⚠ Clear Timetable</h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="alert alert-danger">
+
+                <h5>Warning!</h5>
+
+                <p>
+
+                    This will permanently delete every timetable record.
+
+                </p>
+
+                <p>
+
+                    This action cannot be undone.
+
+                </p>
+
+            </div>
+
+            <p>
+
+                Type
+
+                <strong>CLEAR</strong>
+
+                below to continue.
+
+            </p>
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <input
+                        id="confirmText"
+                        type="text"
+                        class="form-control"
+                        placeholder="Type CLEAR">
+
+                </div>
+
+                <button
+                    id="deleteBtn"
+                    class="btn btn-danger"
+                    disabled>
+
+                    🗑 Clear Timetable
+
+                </button>
+
+                <a href="{{ url_for('timetable.management') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const input = document.getElementById("confirmText");
+const button = document.getElementById("deleteBtn");
+
+input.addEventListener("keyup", function(){
+
+    button.disabled = input.value !== "CLEAR";
+
+});
+
+</script>
+
+{% endblock %}

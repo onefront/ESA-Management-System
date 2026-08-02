@@ -55,8 +55,9 @@ def add_programme():
     ).all()
 
     if request.method == "POST":
-
         programme_name = request.form["programme_name"]
+
+        programme_code = request.form["programme_code"].upper().strip()
 
         faculty_id = request.form["faculty_id"]
 
@@ -64,6 +65,7 @@ def add_programme():
 
         programme = Programme(
             programme_name=programme_name,
+            programme_code=programme_code,
             faculty_id=faculty_id,
             status=status
         )
@@ -90,9 +92,16 @@ def edit_programme(id):
     ).all()
 
     if request.method == "POST":
-
         programme.programme_name = request.form["programme_name"]
+
+        programme.programme_code = (
+            request.form["programme_code"]
+            .upper()
+            .strip()
+        )
+
         programme.faculty_id = request.form["faculty_id"]
+
         programme.status = request.form["status"]
 
         db.session.commit()

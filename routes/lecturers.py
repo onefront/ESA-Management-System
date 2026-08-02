@@ -53,7 +53,7 @@ def lecturers():
     layout = (
         "member_portal/layout2.html"
         if current_user.role == "Member"
-        else "layout_old.html"
+        else "layout.html"
     )
 
     print("USING LAYOUT:", layout)

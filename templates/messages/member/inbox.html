@@ -1,5 +1,8 @@
 {% extends "member_portal/layout2.html" %}
-
+{% block styles %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
 {% block content %}
 
 <div class="container-fluid">

@@ -7,7 +7,8 @@ from flask import (
     request
 )
 
-
+from datetime import date
+from models.timetable import Timetable
 from flask import current_app
 from werkzeug.utils import secure_filename
 import uuid
@@ -80,11 +81,48 @@ def dashboard():
         .all()
     )
 
+    today_exam = (
+        Timetable.query
+        .filter_by(
+            programme=member.programme,
+            level=member.level,
+            session=member.session,
+            academic_year=member.academic_year
+        )
+        .filter(
+            Timetable.exam_date == date.today()
+        )
+        .order_by(
+            Timetable.start_time.asc()
+        )
+        .first()
+    )
+
+    next_exam = (
+        Timetable.query
+        .filter_by(
+            programme=member.programme,
+            level=member.level,
+            session=member.session,
+            academic_year=member.academic_year
+        )
+        .filter(
+            Timetable.exam_date >= date.today()
+        )
+        .order_by(
+            Timetable.exam_date.asc(),
+            Timetable.start_time.asc()
+        )
+        .first()
+    )
+
     return render_template(
         "member_portal/dashboard_v2.html",
         member=member,
         latest_notices=latest_notices,
         class_announcements=class_announcements,
+        today_exam=today_exam,
+        next_exam=next_exam
     )
 
 

@@ -1,0 +1,164 @@
+{% extends "layout.html" %}
+
+{% block styles %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="chat-page">
+
+    <div class="container-fluid">
+
+        <div class="chat-container">
+
+            <div class="row g-0">
+
+                <!-- LEFT SIDEBAR -->
+
+                <div class="col-lg-4 chat-sidebar">
+
+                    <div class="chat-search">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <h4 class="fw-bold mb-0">
+
+                                <i class="bi bi-chat-dots-fill text-primary"></i>
+
+                                ESA Messenger
+
+                            </h4>
+
+                            <a href="{{ url_for('messages.contacts') }}"
+                               class="btn btn-primary rounded-circle">
+
+                                <i class="bi bi-plus-lg"></i>
+
+                            </a>
+
+                        </div>
+
+                        <input
+                            type="text"
+                            id="chatSearch"
+                            class="form-control"
+                            placeholder="Search conversations...">
+
+                    </div>
+
+                    <div class="chat-list">
+
+                        {% for membership in conversations %}
+
+                            {% set conversation = membership.conversation %}
+
+                            {% for member in conversation.members %}
+
+                                {% if member.user_id != current_user.id %}
+
+                                    <a class="chat-item"
+                                       href="{{ url_for('messages.view_conversation',
+                                       conversation_id=conversation.id) }}">
+
+                                        <div class="position-relative">
+
+                                            {% if member.user.member_profile and member.user.member_profile.passport %}
+
+                                                <img
+                                                    src="{{ url_for('static',
+                                                    filename='uploads/' + member.user.member_profile.passport) }}"
+                                                    class="chat-avatar">
+
+                                            {% else %}
+
+                                                <img
+                                                    src="{{ url_for('static',
+                                                    filename='images/default-avatar.png') }}"
+                                                    class="chat-avatar">
+
+                                            {% endif %}
+
+                                            <span class="online-dot"></span>
+
+                                        </div>
+
+                                        <div class="chat-info">
+
+                                            <div class="chat-name">
+
+                                                {{ member.user.full_name }}
+
+                                            </div>
+
+                                            <div class="chat-preview">
+
+                                                {% if conversation.messages %}
+
+                                                    {% if conversation.messages[-1].sender_id == current_user.id %}
+
+                                                        <i class="bi bi-check2-all text-primary"></i>
+
+                                                        You:
+
+                                                    {% endif %}
+
+                                                    {{ conversation.messages[-1].message[:45] }}
+
+                                                {% else %}
+
+                                                    No messages yet
+
+                                                {% endif %}
+
+                                            </div>
+
+                                        </div>
+
+                                    </a>
+
+                                {% endif %}
+
+                            {% endfor %}
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                <!-- RIGHT PANEL -->
+
+                <div class="col-lg-8 d-none d-lg-flex align-items-center justify-content-center">
+
+                    <div class="text-center text-muted">
+
+                        <i class="bi bi-chat-square-dots"
+                           style="font-size:90px;"></i>
+
+                        <h3 class="mt-4">
+
+                            Welcome to ESA Messenger
+
+                        </h3>
+
+                        <p>
+
+                            Select a conversation to begin chatting.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

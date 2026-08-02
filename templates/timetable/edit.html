@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block title %}Edit Timetable{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('timetable.management') }}"
+   class="btn btn-secondary mb-3">
+
+    <i class="fas fa-arrow-left"></i>
+    Back to Timetable Management
+
+</a>
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-warning">
+
+            <h4>Edit Timetable</h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label>Day</label>
+
+                    <input
+                        type="text"
+                        name="day"
+                        class="form-control"
+                        value="{{ timetable.day }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Programme</label>
+
+                    <input
+                        type="text"
+                        name="programme"
+                        class="form-control"
+                        value="{{ timetable.programme }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Level</label>
+
+                    <input
+                        type="text"
+                        name="level"
+                        class="form-control"
+                        value="{{ timetable.level }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Course Code</label>
+
+                    <input
+                        type="text"
+                        name="course_code"
+                        class="form-control"
+                        value="{{ timetable.course_code }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Course Title</label>
+
+                    <input
+                        type="text"
+                        name="course_title"
+                        class="form-control"
+                        value="{{ timetable.course_title }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Venue</label>
+
+                    <input
+                        type="text"
+                        name="venue"
+                        class="form-control"
+                        value="{{ timetable.venue }}">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Examiner</label>
+
+                    <input
+                        type="text"
+                        name="examiner"
+                        class="form-control"
+                        value="{{ timetable.examiner }}">
+
+                </div>
+
+                <button
+                    class="btn btn-success">
+
+                    Save Changes
+
+                </button>
+
+                <a href="{{ url_for('timetable.records') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}Delete Timetable{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('timetable.management') }}"
+   class="btn btn-secondary mb-3">
+
+    <i class="fas fa-arrow-left"></i>
+    Back to Timetable Management
+
+</a>
+<div class="container mt-4">
+
+    <div class="card border-danger shadow">
+
+        <div class="card-header bg-danger text-white">
+
+            <h4>Delete Timetable Record</h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <p class="fs-5">
+
+                Are you sure you want to delete this timetable record?
+
+            </p>
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <th>Programme</th>
+                    <td>{{ timetable.programme }}</td>
+                </tr>
+
+                <tr>
+                    <th>Course Code</th>
+                    <td>{{ timetable.course_code }}</td>
+                </tr>
+
+                <tr>
+                    <th>Course Title</th>
+                    <td>{{ timetable.course_title }}</td>
+                </tr>
+
+                <tr>
+                    <th>Date</th>
+                    <td>{{ timetable.exam_date }}</td>
+                </tr>
+
+            </table>
+
+            <form method="POST">
+
+                <button
+                    class="btn btn-danger">
+
+                    Delete Record
+
+                </button>
+
+                <a href="{{ url_for('timetable.records') }}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
