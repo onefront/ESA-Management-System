@@ -234,3 +234,58 @@ async function loadMembers(search) {
         });
 
 }
+
+
+// =====================================
+// Send SMS
+// =====================================
+
+document.addEventListener("click", async function (e) {
+console.log("Clicked:", e.target.id);
+    if (e.target.id !== "sendSMSBtn") return;
+
+console.log("Send SMS button detected");
+
+    const title = document.getElementById("smsTitle").value;
+
+    const message = document.getElementById("smsMessage").value;
+
+    const recipientGroup =
+        document.getElementById("recipientGroup").value;
+
+    const selectedMembers = [];
+
+    document.querySelectorAll(".memberCheck:checked")
+        .forEach(box => {
+
+            selectedMembers.push(box.value);
+
+        });
+
+    const response = await fetch("/sms/send", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            title,
+
+            message,
+
+            recipient_group: recipientGroup,
+
+            selected_members: selectedMembers
+
+        })
+
+    });
+
+    const result = await response.json();
+
+    alert(result.message);
+
+});

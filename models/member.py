@@ -112,7 +112,18 @@ class Member(db.Model):
 
 
     # Membership
-    status = db.Column(db.String(20), default="Active")
+    status = db.Column(db.String(20),
+                       default="Active")
+
+    graduation_year = db.Column(
+        db.String(10),
+        nullable=True
+    )
+
+    graduation_date = db.Column(
+        db.Date,
+        nullable=True
+    )
     # Registration Approval
     registration_status = db.Column(
         db.String(20),

@@ -73,9 +73,13 @@ from models.user import User
 from models.notification import Notification
 from models.timetable import Timetable
 from models.timetable import Timetable
-
-
-
+from models.sms_log import SMSLog
+from models.sms_recipient import SMSRecipient
+from models.sms_template import SMSTemplate
+from models.member import Member
+from models.sms_log import SMSLog
+from models.sms_recipient import SMSRecipient
+...
 
 
 # Create Flask App

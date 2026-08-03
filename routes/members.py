@@ -9,6 +9,7 @@ from flask import (
     flash,
     jsonify,make_response
 )
+from datetime import date
 from flask_login import login_required, current_user
 from utils.audit import log_activity
 from dateutil.relativedelta import relativedelta
@@ -52,7 +53,7 @@ def members():
     programme = request.args.get("programme", "")
     level = request.args.get("level", "")
     session = request.args.get("session", "")
-
+    status = request.args.get("status", "")
     page = request.args.get("page", 1, type=int)
 
     query = Member.query
@@ -68,6 +69,7 @@ def members():
                 Member.student_id.ilike(f"%{search}%"),
                 Member.esa_id.ilike(f"%{search}%"),
                 Member.phone.ilike(f"%{search}%")
+
             )
         )
 
@@ -82,13 +84,31 @@ def members():
 
     if session:
         query = query.filter(Member.session == session)
-
+    if status:
+        query = query.filter(Member.status == status)
     # -------------------------------
     # Statistics
     # -------------------------------
+    # -------------------------------
+    # Statistics
+    # -------------------------------
+
     total_members = Member.query.count()
+
     active_members = Member.query.filter_by(
         status="Active"
+    ).count()
+
+    alumni_members = Member.query.filter_by(
+        status="Alumni"
+    ).count()
+
+    suspended_members = Member.query.filter_by(
+        status="Suspended"
+    ).count()
+
+    inactive_members = Member.query.filter_by(
+        status="Inactive"
     ).count()
 
     total_programmes = Programme.query.count()
@@ -101,7 +121,6 @@ def members():
         session="Evening"
     ).count()
 
-    # -------------------------------
     # Pagination
     # -------------------------------
     members = query.order_by(
@@ -131,15 +150,19 @@ def members():
 
         evening_members=evening_members,
         active_members=active_members,
+        alumni_members=alumni_members,
 
+        suspended_members=suspended_members,
+
+        inactive_members=inactive_members,
         search=search,
 
         programme=programme,
 
         level=level,
 
-        session=session
-
+        session=session,
+      status = status
     )
 # ==========================================
 # Add Member
@@ -461,6 +484,242 @@ def member_profile(member_id):
         attendance_count=attendance_count,
         recent_payments=recent_payments
     )
+
+
+@members_bp.route("/members/graduation-wizard", methods=["GET", "POST"])
+@login_required
+@roles_required("Administrator", "General Secretary")
+def graduation_wizard():
+
+    if request.method == "POST":
+
+        selected = request.form.getlist("members")
+
+        graduated = 0
+
+        for member_id in selected:
+
+            member = Member.query.get(int(member_id))
+
+            if member and member.status == "Active":
+
+                member.status = "Alumni"
+                member.graduation_year = str(date.today().year)
+                member.graduation_date = date.today()
+
+                graduated += 1
+
+        db.session.commit()
+
+        flash(
+            f"{graduated} member(s) successfully moved to Alumni.",
+            "success"
+        )
+
+        return redirect(
+            url_for("members.graduation_wizard")
+        )
+
+    members = Member.query.filter(
+        Member.status == "Active",
+        Member.level == "400"
+    ).order_by(
+        Member.programme,
+        Member.last_name
+    ).all()
+
+    return render_template(
+        "members/graduation_wizard.html",
+        members=members
+    )
+
+
+
+
+@members_bp.route("/members/alumni")
+@login_required
+@roles_required("Administrator", "General Secretary")
+def alumni_members():
+    search = request.args.get("search", "")
+    programme = request.args.get("programme", "")
+    session = request.args.get("session", "")
+    graduation_year = request.args.get("graduation_year", "")
+
+    query = Member.query.filter_by(
+        status="Alumni"
+    )
+
+    if search:
+
+        query = query.filter(
+            or_(
+                Member.first_name.ilike(f"%{search}%"),
+                Member.last_name.ilike(f"%{search}%"),
+                Member.student_id.ilike(f"%{search}%"),
+                Member.esa_id.ilike(f"%{search}%")
+            )
+        )
+
+    if programme:
+        query = query.filter(
+            Member.programme == programme
+        )
+
+    if session:
+        query = query.filter(
+            Member.session == session
+        )
+
+    if graduation_year:
+        query = query.filter(
+            Member.graduation_year == graduation_year
+        )
+
+    members = query.order_by(
+        Member.graduation_year.desc(),
+        Member.last_name.asc()
+    ).all()
+
+    current_year = str(date.today().year)
+
+    total_alumni = Member.query.filter_by(
+        status="Alumni"
+    ).count()
+
+    this_year = Member.query.filter_by(
+        status="Alumni",
+        graduation_year=current_year
+    ).count()
+
+    years = db.session.query(
+        Member.graduation_year
+    ).filter(
+        Member.status == "Alumni"
+    ).distinct().all()
+
+    programme_stats = db.session.query(
+        Member.programme,
+        db.func.count(Member.id)
+    ).filter(
+        Member.status == "Alumni"
+    ).group_by(
+        Member.programme
+    ).all()
+
+    programmes = db.session.query(
+        Member.programme
+    ).filter(
+        Member.status == "Alumni"
+    ).distinct().order_by(
+        Member.programme
+    ).all()
+
+    sessions = db.session.query(
+        Member.session
+    ).filter(
+        Member.status == "Alumni"
+    ).distinct().order_by(
+        Member.session
+    ).all()
+
+    graduation_years = db.session.query(
+        Member.graduation_year
+    ).filter(
+        Member.status == "Alumni"
+    ).distinct().order_by(
+        Member.graduation_year.desc()
+    ).all()
+
+    return render_template(
+        "members/alumni.html",
+        members=members,
+        total_alumni=total_alumni,
+        this_year=this_year,
+        years=years,
+        programme_stats=programme_stats,
+
+        programmes=programmes,
+        sessions=sessions,
+        graduation_years=graduation_years,
+
+        search=search,
+        programme=programme,
+        session=session,
+        graduation_year=graduation_year
+    )
+
+
+
+
+
+@members_bp.route("/members/<int:id>/restore")
+@login_required
+@roles_required(
+    "Administrator",
+    "CEO",
+    "General Secretary"
+)
+def restore_member(id):
+
+    member = Member.query.get_or_404(id)
+
+    if member.status != "Alumni":
+
+        flash(
+            "This member is not an Alumni.",
+            "warning"
+        )
+
+        return redirect(
+            url_for("members.alumni_members")
+        )
+
+    member.status = "Active"
+    member.graduation_year = None
+    member.graduation_date = None
+
+    db.session.commit()
+
+    flash(
+        f"{member.full_name} has been restored to Active Members.",
+        "success"
+    )
+
+    return redirect(
+        url_for("members.alumni_members")
+    )
+
+
+
+@members_bp.route("/members/alumni/<int:id>")
+@login_required
+@roles_required(
+    "Administrator",
+    "CEO",
+    "General Secretary"
+)
+def alumni_profile(id):
+
+    member = Member.query.get_or_404(id)
+
+    if member.status != "Alumni":
+
+        flash(
+            "This member is not in the Alumni Network.",
+            "warning"
+        )
+
+        return redirect(
+            url_for("members.members")
+        )
+
+    return render_template(
+        "members/alumni_profile.html",
+        member=member
+    )
+
+
+
 # ==========================================
 # Edit Member
 # ==========================================
@@ -791,6 +1050,40 @@ def get_programmes(faculty_id):
         }
         for p in programmes
     ])
+
+
+@members_bp.route("/members/<int:id>/graduate")
+@login_required
+@roles_required(
+    "Administrator",
+    "CEO",
+    "General Secretary"
+)
+def graduate_member(id):
+
+    member = Member.query.get_or_404(id)
+
+    member.status = "Alumni"
+
+    member.graduation_year = str(date.today().year)
+
+    member.graduation_date = date.today()
+
+    db.session.commit()
+
+    flash(
+        f"{member.full_name} has been moved to Alumni.",
+        "success"
+    )
+
+    return redirect(
+        url_for("members.members")
+    )
+
+
+
+
+
 @members_bp.route("/get_departments/<int:programme_id>")
 def get_departments(programme_id):
 
@@ -836,3 +1129,4 @@ def get_class_group():
         })
 
     return jsonify({})
+

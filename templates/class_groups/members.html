@@ -3,7 +3,9 @@
 {% block content %}
 
 <!-- Statistics -->
-
+<h5 class="text-danger">
+    Role: {{ current_user.role }}
+</h5>
 <div class="row mb-4">
 
     <div class="col-md-3 mb-3">
@@ -33,14 +35,16 @@
         </div>
     </div>
 
-    <div class="col-md-3 mb-3">
-        <div class="card border-0 shadow-sm bg-warning text-dark">
-            <div class="card-body text-center">
-                <h2>{{ paid_count }}</h2>
-                <small>Paid Members</small>
-            </div>
+    {% if current_user.role in ["Administrator", "System Administrator", "Treasurer", "Financial Secretary"] %}
+<div class="col-md-3 mb-3">
+    <div class="card border-0 shadow-sm bg-warning text-dark">
+        <div class="card-body text-center">
+            <h2>{{ paid_count }}</h2>
+            <small>Paid Members</small>
         </div>
     </div>
+</div>
+{% endif %}
 
 </div>
 
@@ -77,7 +81,7 @@
    class="btn btn-outline-primary btn-sm">
     All Members
 </a>
-
+{% if current_user.role in ["Administrator", "System Administrator", "Treasurer", "Financial Secretary"] %}
 <a href="{{ url_for('class_groups.members', id=group.id, status='paid') }}"
    class="btn btn-outline-success btn-sm">
     Paid
@@ -92,7 +96,7 @@
    class="btn btn-outline-danger btn-sm">
     Outstanding
 </a>
-
+{% endif %}
    
 
 
@@ -108,13 +112,15 @@
 <th>Name</th>
 <th>Gender</th>
 <th>Phone</th>
-
+{% if current_user.role in ["Administrator", "System Administrator", "Treasurer", "Financial Secretary"] %}
 <th class="text-end">Registration</th>
 <th class="text-end">Annual Dues</th>
 <th class="text-end">Total Paid</th>
 <th class="text-end">Balance</th>
 
 <th>Status</th>
+{% endif %}
+
 
                 </tr>
 
@@ -175,8 +181,9 @@
 
                     <td>{{ member.phone }}</td>
 
-
+{% if current_user.role in ["Administrator", "System Administrator", "Treasurer", "Financial Secretary"] %}
                     <td class="text-end">
+
     GH₵ {{ "%.2f"|format(member.registration_paid) }}
 </td>
 
@@ -215,7 +222,7 @@
 {% endif %}
 
 </td>
-
+{% endif %}
 
 
                 </tr>

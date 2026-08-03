@@ -98,6 +98,8 @@
 {% endif %}
 
 </div>
+
+
         <ul class="menu">
 
 {% if current_user.role in ["Administrator", "General Secretary"] %}
@@ -139,154 +141,232 @@
     {% if current_user.role in ["Administrator", "General Secretary"] %}
 
 <li class="menu-title">
-    MANAGEMENT
+    <i class="bi bi-people-fill"></i>
+    MEMBER MANAGEMENT
 </li>
 
 {% endif %}
 
-    {% if current_user.role in ["Administrator", "General Secretary"] %}
-<li>
+  {% if current_user.role in ["Administrator", "General Secretary"] %}
+
+<li class="submenu
+{% if request.endpoint and (
+request.endpoint.startswith('members')
+) %}
+open
+{% endif %}
+">
+
+ <a href="#">
+
+    <i class="bi bi-people"></i>
+
+    Members
+
+    <i class="bi bi-chevron-down float-end"></i>
+
+</a>
+
+<ul>
+
+        <li>
+
+           <li class="{% if request.endpoint == 'members.members' %}active{% endif %}">
+
     <a href="{{ url_for('members.members') }}">
-        <i class="bi bi-people"></i>
-        Members
-    </a>
-</li>
-            <li class="nav-item">
-    <a class="nav-link" href="{{ url_for('member_indexes.index') }}">
+
+                <i class="bi bi-person-lines-fill"></i>
+
+                Member Management
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <li class="{% if request.endpoint == 'members.graduation_wizard' %}active{% endif %}">
+
+    <a href="{{ url_for('members.graduation_wizard') }}">
+
+                <i class="bi bi-mortarboard-fill"></i>
+
+                Graduation Wizard
+
+            </a>
+
+        </li>
+
+    <li>
+
+    <li class="{% if request.endpoint == 'member_indexes.index' %}active{% endif %}">
+
+    <a href="{{ url_for('member_indexes.index') }}">
+
         <i class="bi bi-card-checklist"></i>
+
         Approved Student IDs
+
     </a>
-</li>
-            <li class="{% if request.endpoint and request.endpoint.startswith('programmes') %}active{% endif %}">
-    <a href="{{ url_for('programmes.programmes') }}">
-        <i class="bi bi-book"></i>
-        Programmes
-    </a>
+
 </li>
 
-<li class="{% if request.endpoint and request.endpoint.startswith('departments') %}active{% endif %}">
-    <a href="{{ url_for('departments.departments') }}">
-        <i class="bi bi-building"></i>
-        Departments
-    </a>
-</li>
-<li class="nav-item">
-    <a href="{{ url_for('class_groups.index') }}" class="nav-link">
-        <i class="bi bi-people-fill"></i>
-        <span>Class Groups</span>
-    </a>
-</li>
-{% endif %}
-{% if current_user.role in ["Administrator", "General Secretary"] %}
-  <li class="{% if request.endpoint and request.endpoint.startswith('feedback') %}active{% endif %}">
-    <a href="{{ url_for('feedback.dashboard') }}">
-        <i class="bi bi-chat-square-text"></i>
-        Complaint Management
-    </a>
-</li>
-{% endif %}
 
-{% if current_user.role in ["Administrator", "General Secretary"] %}
+            <li>
 
-<li class="menu-title">
-    ACADEMIC
+            <li class="{% if request.endpoint == 'members.alumni_members' %}active{% endif %}">
+
+    <a href="{{ url_for('members.alumni_members') }}">
+
+                <i class="bi bi-award-fill"></i>
+
+                ESA Alumni Network
+
+            </a>
+
+        </li>
+
+    </ul>
+
 </li>
 
 {% endif %}
-{% if current_user.role == "Administrator" %}
 
 
-{% endif %}
-
-            {% if current_user.role == "Administrator" %}
-
-<li class="{% if request.endpoint and request.endpoint.startswith('executives') %}active{% endif %}">
-    <a href="{{ url_for('executives.executives') }}">
-        <i class="bi bi-person-badge"></i>
-        Executives
-    </a>
 </li>
 
-{% endif %}
-  {% if can_view_lecturer_directory() %}
-
-<li class="{% if request.endpoint and request.endpoint.startswith('lecturers') %}active{% endif %}">
-    <a href="{{ url_for('lecturers.lecturers') }}">
-        <i class="bi bi-person-lines-fill"></i>
-        Lecturer Directory
-    </a>
-</li>
-
-{% endif %}
 
 {% if current_user.role in ["Administrator", "General Secretary"] %}
 
-<li class="{% if request.endpoint and request.endpoint.startswith('course_reps') %}active{% endif %}">
-    <a href="{{ url_for('course_reps.course_reps') }}">
-        <i class="bi bi-person-workspace"></i>
-        Course Representatives
+<li class="submenu {% if request.endpoint and (
+    request.endpoint.startswith('programmes') or
+    request.endpoint.startswith('departments') or
+    request.endpoint.startswith('class_groups') or
+    request.endpoint.startswith('attendance') or
+    request.endpoint.startswith('lecturers') or
+    request.endpoint.startswith('course_reps')
+) %}open{% endif %}">
+
+    <a href="#">
+
+        <i class="bi bi-mortarboard-fill"></i>
+
+        Academics
+
+        <i class="bi bi-chevron-down float-end"></i>
+
     </a>
+
+    <ul>
+
+        <li>
+            <a href="{{ url_for('programmes.programmes') }}">
+                <i class="bi bi-book"></i>
+                Programmes
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('departments.departments') }}">
+                <i class="bi bi-building"></i>
+                Departments
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('class_groups.index') }}">
+                <i class="bi bi-people-fill"></i>
+                Class Groups
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('attendance.attendance') }}">
+                <i class="bi bi-person-check"></i>
+                Attendance
+            </a>
+        </li>
+
+        {% if can_view_lecturer_directory() %}
+        <li>
+            <a href="{{ url_for('lecturers.lecturers') }}">
+                <i class="bi bi-person-lines-fill"></i>
+                Lecturer Directory
+            </a>
+        </li>
+        {% endif %}
+
+        <li>
+            <a href="{{ url_for('course_reps.course_reps') }}">
+                <i class="bi bi-person-workspace"></i>
+                Course Representatives
+            </a>
+        </li>
+
+    </ul>
+
 </li>
-
-
 
 {% endif %}
 
-    <!-- ACTIVITIES -->
-    <li class="menu-title">
-        ACTIVITIES
-    </li>
 
-    {% if current_user.role in ["Administrator", "General Secretary"] %}
+ {% if current_user.role in ["Administrator", "General Secretary"] %}
 
-<li class="{% if request.endpoint and request.endpoint.startswith('events') %}active{% endif %}">
-    <a href="{{ url_for('events.events') }}">
+<li class="submenu {% if request.endpoint and (
+    request.endpoint.startswith('events') or
+    request.endpoint.startswith('slides')
+) %}open{% endif %}">
+
+    <a href="#">
+
         <i class="bi bi-calendar-event"></i>
-        Events
-    </a>
-</li>
 
-  <li class="nav-item">
-    <a class="nav-link"
-       href="{{ url_for('slides.index') }}">
+        Activities
 
-        <i class="bi bi-images"></i>
-        <span>Slides</span>
+        <i class="bi bi-chevron-down float-end"></i>
 
     </a>
+
+    <ul>
+
+        <li>
+
+            <a href="{{ url_for('events.events') }}">
+
+                <i class="bi bi-calendar-event"></i>
+
+                Events
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="{{ url_for('slides.index') }}">
+
+                <i class="bi bi-images"></i>
+
+                Slides
+
+            </a>
+
+        </li>
+
+    </ul>
+
 </li>
 
-
-<li class="{% if request.endpoint and request.endpoint.startswith('notices') %}active{% endif %}">
-    <a href="{{ url_for('notices.notices') }}">
-        <i class="bi bi-megaphone"></i>
-        Notice Board
-    </a>
-</li>
 {% endif %}
 
-<li class="{% if request.blueprint == 'sms' %}active{% endif %}">
-    <a href="{{ url_for('sms.dashboard') }}">
-        <i class="bi bi-send-fill"></i>
-        Bulk SMS
-    </a>
-</li>
-    {% if current_user.role in ["Administrator", "General Secretary"] %}
 
-<li class="{% if request.endpoint and request.endpoint.startswith('attendance') %}active{% endif %}">
-    <a href="{{ url_for('attendance.attendance') }}">
-        <i class="bi bi-person-check"></i>
-        Attendance
-    </a>
-</li>
 
-{% endif %}
 {% if current_user.is_authenticated and current_user.role == "Member" %}
 
 <li class="menu-title">
-    CHAT
+    <i class="bi bi-megaphone-fill"></i>
+    COMMUNICATION
 </li>
-
 <li class="{% if request.endpoint and request.endpoint.startswith('messages') %}active{% endif %}">
     <a href="{{ url_for('messages.inbox') }}">
         <i class="bi bi-chat-dots"></i>
@@ -296,101 +376,214 @@
 
 {% endif %}
 
-{% if current_user.role in ["Administrator", "General Secretary"] %}
 
-<li class="menu-title">
-    CHAT
+   <li class="submenu {% if request.endpoint and (
+    request.blueprint == 'sms' or
+    request.endpoint.startswith('feedback') or
+    request.endpoint.startswith('messages') or
+    request.endpoint.startswith('chat_admin') or
+    request.endpoint.startswith('notices')
+) %}open{% endif %}">
+
+    <a href="#">
+
+        <i class="bi bi-megaphone-fill"></i>
+
+        Communication
+
+        <i class="bi bi-chevron-down float-end"></i>
+
+    </a>
+
+    <ul>
+
+        <li>
+            <a href="{{ url_for('sms.dashboard') }}">
+                <i class="bi bi-send-fill"></i>
+                Bulk SMS
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('feedback.dashboard') }}">
+                <i class="bi bi-chat-square-text"></i>
+                Complaint Management
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('notices.notices') }}">
+                <i class="bi bi-megaphone"></i>
+                Notice Board
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('messages.inbox') }}">
+                <i class="bi bi-chat-dots-fill"></i>
+                ESA VIBES
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('chat_admin.dashboard') }}">
+                <i class="bi bi-gear"></i>
+                Chat Management
+            </a>
+        </li>
+
+    </ul>
+
 </li>
 
-<li class="{% if request.endpoint and request.endpoint.startswith('messages') %}active{% endif %}">
-    <a href="{{ url_for('messages.inbox') }}">
-        <i class="bi bi-chat-dots-fill"></i>
-        ESA VIBES
-    </a>
-</li>
 
-<li style="margin-left:20px;"
-    class="{% if request.endpoint and request.endpoint.startswith('chat_admin') %}active{% endif %}">
-    <a href="{{ url_for('chat_admin.dashboard') }}">
-        <i class="bi bi-gear"></i>
-        Chat Management
+ {% if current_user.role in ["Administrator", "General Secretary"] %}
+
+<li class="submenu {% if request.endpoint and (
+    request.endpoint.startswith('payment_settings') or
+    request.endpoint.startswith('payment_approval') or
+    request.endpoint.startswith('reports')
+) %}open{% endif %}">
+
+    <a href="#">
+
+        <i class="bi bi-cash-stack"></i>
+
+        Finance
+
+        <i class="bi bi-chevron-down float-end"></i>
+
     </a>
+
+    <ul>
+
+        <li>
+            <a href="{{ url_for('payment_settings.settings') }}">
+                <i class="bi bi-gear-wide-connected"></i>
+                Payment Settings
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('payment_approval.index') }}">
+                <i class="bi bi-cash-coin"></i>
+                Payment Requests
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ url_for('reports.reports') }}">
+                <i class="bi bi-bar-chart"></i>
+                Reports
+            </a>
+        </li>
+
+    </ul>
+
 </li>
 
 {% endif %}
-{% if current_user.role in ["Administrator", "General Secretary"] %}
-
-<li class="menu-title">
-    FINANCE
-</li>
-
-{% endif %}
-
-   {% if current_user.role in ["Administrator", "General Secretary"] %}
-
-<li class="{% if request.endpoint and request.endpoint.startswith('member_payments') %}active{% endif %}">
-    <a href="{{ url_for('payment_settings.settings') }}">
-        <i class="bi bi-gear-wide-connected"></i>
-        Payment Settings
-    </a>
-</li>
-
-<li class="{% if request.endpoint and request.endpoint.startswith('payment_approval') %}active{% endif %}">
-    <a href="{{ url_for('payment_approval.index') }}">
-        <i class="bi bi-cash-coin"></i>
-        Payment Requests
-    </a>
-</li>
-
-<li>
-    <a href="{{ url_for('reports.reports') }}">
-        <i class="bi bi-bar-chart"></i>
-        Reports
-    </a>
-</li>
-
-{% endif %}
 
 
-    <!-- SYSTEM -->
-    <li class="menu-title">
-        SYSTEM
-    </li>
+<!-- ELECTIONS -->
 
-    {% if current_user.role == "Administrator" %}
-    <li>
-        <a href="{{ url_for('users.users') }}">
-            <i class="bi bi-person-gear"></i>
-            Users
-        </a>
-    </li>
-    {% endif %}
-   {% if current_user.role in ["Administrator", "General Secretary"] %}
+  <!-- ELECTIONS -->
 
-<li class="nav-item">
+<li class="submenu {% if request.endpoint and request.endpoint.startswith('elections') %}open{% endif %}">
 
-    <a class="nav-link"
-       href="{{ url_for('elections.dashboard') }}">
+    <a href="#">
 
         <i class="bi bi-check2-square"></i>
 
-        Election Management
+        Elections
+
+        <i class="bi bi-chevron-down float-end"></i>
 
     </a>
+
+    <ul>
+
+        <li>
+
+            <a href="{{ url_for('elections.dashboard') }}">
+
+                <i class="bi bi-check2-square"></i>
+
+                Election Management
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</li>
+
+
+ {% if current_user.role == "Administrator" %}
+
+<li class="submenu {% if request.endpoint and (
+    request.endpoint.startswith('executives') or
+    request.endpoint.startswith('users') or
+    request.endpoint.startswith('settings')
+) %}open{% endif %}">
+
+    <a href="#">
+
+        <i class="bi bi-shield-lock-fill"></i>
+
+        Administration
+
+        <i class="bi bi-chevron-down float-end"></i>
+
+    </a>
+
+    <ul>
+
+        <li>
+
+            <a href="{{ url_for('executives.executives') }}">
+
+                <i class="bi bi-person-badge"></i>
+
+                Executives
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="{{ url_for('users.users') }}">
+
+                <i class="bi bi-person-gear"></i>
+
+                Users
+
+            </a>
+
+        </li>
+
+        <li>
+
+            <a href="{{ url_for('settings.dashboard') }}">
+
+                <i class="bi bi-gear"></i>
+
+                Settings
+
+            </a>
+
+        </li>
+
+    </ul>
 
 </li>
 
 {% endif %}
-  {% if current_user.role == "Administrator" %}
 
-<li>
-    <a href="{{ url_for('settings.dashboard') }}">
-        <i class="bi bi-gear"></i>
-        Settings
-    </a>
-</li>
 
-{% endif %}
+
 </ul>
     </aside>
 
@@ -602,6 +795,26 @@ overlay.addEventListener("click", function () {
 </script>
 
 {% block scripts %}{% endblock %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll(".submenu > a").forEach(function(menu){
+
+        menu.addEventListener("click", function(e){
+
+            e.preventDefault();
+
+            this.parentElement.classList.toggle("open");
+
+        });
+
+    });
+
+});
+
+</script>
 
 </body>
 </html>

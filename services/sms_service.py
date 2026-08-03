@@ -1,54 +1,51 @@
 import requests
-from flask import current_app
+
+from models.sms_setting import SMSSetting
 
 
 class SMSService:
-    """Hubtel SMS Service"""
 
     @staticmethod
-    def send_sms(recipient, message):
-        """
-        Sends an SMS through Hubtel.
+    def send_sms(phone, message):
 
-        Returns:
-            dict:
-                {
-                    "success": True/False,
-                    "response": ...
-                }
-        """
+        settings = SMSSetting.query.filter_by(
+            is_active=True
+        ).first()
 
-        client_id = current_app.config.get("HUBTEL_CLIENT_ID")
-        client_secret = current_app.config.get("HUBTEL_CLIENT_SECRET")
-        sender = current_app.config.get("HUBTEL_SENDER_ID")
+        if not settings:
+            return False, "SMS Settings not configured."
 
-        # Credentials not configured yet
-        if not client_id or not client_secret:
-            return {
-                "success": False,
-                "response": "Hubtel credentials not configured."
-            }
+        url = f"{settings.base_url}?key={settings.api_key}"
 
-        url = "https://smsc.hubtel.com/v1/messages/send"
+        payload = {
+            "recipient": [phone],
+            "sender": settings.sender_id,
+            "message": message,
+            "is_schedule": False,
+            "schedule_date": ""
+        }
 
-        params = {
-            "clientid": client_id,
-            "clientsecret": client_secret,
-            "from": sender,
-            "to": recipient,
-            "content": message
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
         }
 
         try:
-            response = requests.get(url, params=params, timeout=30)
 
-            return {
-                "success": response.status_code == 200,
-                "response": response.json()
-            }
+            response = requests.post(
+                url,
+                json=payload,
+                headers=headers,
+                timeout=30
+            )
+
+            result = response.json()
+
+            if response.status_code == 200:
+                return True, result
+
+            return False, result
 
         except Exception as e:
-            return {
-                "success": False,
-                "response": str(e)
-            }
+
+            return False, str(e)

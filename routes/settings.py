@@ -75,6 +75,11 @@ def edit_system():
         settings.membership_validity = int(
             request.form["membership_validity"]
         )
+        settings.current_academic_year = request.form["current_academic_year"]
+        settings.current_semester = request.form["current_semester"]
+
+
+
         logo = request.files.get("logo")
 
         if logo and logo.filename:

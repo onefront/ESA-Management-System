@@ -1,0 +1,366 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Header -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+
+                <i class="bi bi-mortarboard-fill text-primary"></i>
+
+                ESA Alumni Network
+
+            </h2>
+
+            <p class="text-muted">
+
+                Manage all graduated members.
+
+            </p>
+
+        </div>
+
+        <div>
+
+            <a href="{{ url_for('members.members') }}"
+               class="btn btn-outline-secondary">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Back to Members
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Search -->
+
+    <form method="GET" class="row g-3 mb-4">
+
+    <div class="col-lg-3">
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            class="form-control"
+            placeholder="Search Alumni...">
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <select
+            name="programme"
+            class="form-select">
+
+            <option value="">All Programmes</option>
+
+            {% for p in programmes %}
+
+            <option
+                value="{{ p.programme }}"
+                {% if programme == p.programme %}selected{% endif %}>
+
+                {{ p.programme }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="col-lg-2">
+
+        <select
+            name="graduation_year"
+            class="form-select">
+
+            <option value="">Graduation Year</option>
+
+            {% for y in graduation_years %}
+
+            <option
+                value="{{ y.graduation_year }}"
+                {% if graduation_year == y.graduation_year %}selected{% endif %}>
+
+                {{ y.graduation_year }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="col-lg-2">
+
+        <select
+            name="session"
+            class="form-select">
+
+            <option value="">All Sessions</option>
+
+            {% for s in sessions %}
+
+            <option
+                value="{{ s.session }}"
+                {% if session == s.session %}selected{% endif %}>
+
+                {{ s.session }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="col-lg-2 d-grid">
+
+        <button
+            class="btn btn-primary">
+
+            <i class="bi bi-search"></i>
+
+            Search
+
+        </button>
+
+    </div>
+
+</form>
+
+
+    <!-- Statistics -->
+
+    <div class="row mb-4">
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body text-center">
+
+                <small>Total Alumni</small>
+
+                <h2 class="text-primary">
+
+                    {{ total_alumni }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body text-center">
+
+                <small>This Year</small>
+
+                <h2 class="text-success">
+
+                    {{ this_year }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body text-center">
+
+                <small>Graduation Years</small>
+
+                <h2 class="text-warning">
+
+                    {{ years|length }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body text-center">
+
+                <small>Programmes</small>
+
+                <h2 class="text-danger">
+
+                    {{ programme_stats|length }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+ <div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+
+        <strong>Quick Actions</strong>
+
+    </div>
+
+    <div class="card-body">
+
+        <a href="/sms/compose"
+           class="btn btn-primary">
+
+            📱 SMS Alumni
+
+        </a>
+
+        <a href="#"
+           class="btn btn-success">
+
+            📄 Export Excel
+
+        </a>
+
+        <a href="#"
+           class="btn btn-danger">
+
+            🖨 Export PDF
+
+        </a>
+
+    </div>
+
+</div>
+
+
+    <!-- Alumni Table -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+
+                <tr>
+
+                    <th>Name</th>
+
+                    <th>Student ID</th>
+
+                    <th>Programme</th>
+
+                    <th>Graduation Year</th>
+
+                    <th>Phone</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for member in members %}
+
+                <tr>
+
+                   <td>
+
+    <a href="{{ url_for('members.alumni_profile', id=member.id) }}"
+       class="text-decoration-none fw-bold">
+
+        {{ member.first_name }}
+        {{ member.last_name }}
+
+    </a>
+
+</td>
+
+                    <td>{{ member.student_id }}</td>
+
+                    <td>{{ member.programme }}</td>
+
+                    <td>{{ member.graduation_year }}</td>
+
+                    <td>{{ member.phone }}</td>
+
+                    <td>
+
+                        <a href="{{ url_for('members.restore_member', id=member.id) }}"
+   class="btn btn-success btn-sm"
+   onclick="return confirm('Restore this member to Active Members?');">
+
+                            <i class="bi bi-arrow-counterclockwise"></i>
+
+                            Restore
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+
+                    <td colspan="6" class="text-center text-muted">
+
+                        No Alumni Found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

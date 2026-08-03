@@ -1,5 +1,5 @@
-from extensions import db
 from datetime import datetime
+from extensions import db
 
 
 class SMSLog(db.Model):
@@ -7,19 +7,22 @@ class SMSLog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    title = db.Column(db.String(150), nullable=False)
-
+    title = db.Column(db.String(200), nullable=True)
     message = db.Column(db.Text, nullable=False)
 
+    recipient_group = db.Column(db.String(100), nullable=False)
     recipient_count = db.Column(db.Integer, default=0)
 
-    status = db.Column(
-        db.String(30),
-        default="Pending"
-    )
+    provider = db.Column(db.String(50), default="MNotify")
 
-    provider = db.Column(
-        db.String(100)
+    campaign_id = db.Column(db.String(100))
+    message_id = db.Column(db.String(100))
+
+    credits_used = db.Column(db.Integer, default=0)
+
+    status = db.Column(
+        db.String(20),
+        default="Success"
     )
 
     sent_by = db.Column(
@@ -30,4 +33,9 @@ class SMSLog(db.Model):
     created_at = db.Column(
         db.DateTime,
         default=datetime.utcnow
+    )
+
+    user = db.relationship(
+        "User",
+        backref="sms_logs"
     )

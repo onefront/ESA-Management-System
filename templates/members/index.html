@@ -36,56 +36,86 @@
 
     </div>
 
-
 <!-- Statistics -->
-<!-- ========================= -->
 
 <div class="row g-3 mb-4">
 
-    <div class="col-xl-3 col-md-6">
-        <div class="card stat-card">
+    <div class="col-lg col-md-6">
+        <div class="card stat-card text-center">
             <div class="card-body">
                 <small>Total Members</small>
-                <h2>{{ total_members }}</h2>
+                <h2 class="text-primary">{{ total_members }}</h2>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-3 col-md-6">
-        <div class="card stat-card">
+    <div class="col-lg col-md-6">
+        <div class="card stat-card text-center">
             <div class="card-body">
-                <small>Active Members</small>
-                <h2>{{ active_members }}</h2>
+                <small>Active</small>
+                <h2 class="text-success">{{ active_members }}</h2>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-2 col-md-6">
-        <div class="card stat-card">
+    <div class="col-lg col-md-6">
+        <div class="card stat-card text-center">
             <div class="card-body">
-                <small>Programmes</small>
-                <h2>{{ total_programmes }}</h2>
+                <small>🎓 Alumni</small>
+                <h2 class="text-warning">{{ alumni_members }}</h2>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-2 col-md-6">
-        <div class="card stat-card">
+    <div class="col-lg col-md-6">
+        <div class="card stat-card text-center">
             <div class="card-body">
-                <small>Weekend</small>
-                <h2>{{ weekend_members }}</h2>
+                <small>⛔ Suspended</small>
+                <h2 class="text-danger">{{ suspended_members }}</h2>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-2 col-md-6">
-        <div class="card stat-card">
+    <div class="col-lg col-md-6">
+        <div class="card stat-card text-center">
             <div class="card-body">
-                <small>Evening</small>
-                <h2>{{ evening_members }}</h2>
+                <small>📁 Inactive</small>
+                <h2 class="text-secondary">{{ inactive_members }}</h2>
             </div>
         </div>
     </div>
+
+</div>345rt
+
+
+
+
+<div class="mb-4">
+
+    <a href="{{ url_for('members.members') }}"
+       class="btn btn-outline-primary">
+        All
+    </a>
+
+    <a href="{{ url_for('members.members', status='Active') }}"
+       class="btn btn-outline-success">
+        Active
+    </a>
+
+    <a href="{{ url_for('members.members', status='Alumni') }}"
+       class="btn btn-outline-warning">
+        🎓 Alumni
+    </a>
+
+    <a href="{{ url_for('members.members', status='Suspended') }}"
+       class="btn btn-outline-danger">
+        ⛔ Suspended
+    </a>
+
+    <a href="{{ url_for('members.members', status='Inactive') }}"
+       class="btn btn-outline-secondary">
+        📁 Inactive
+    </a>
 
 </div>
     <!-- ========================= -->
@@ -345,11 +375,27 @@
 
     {% endif %}
 
-    <a href="{{ url_for('members.delete_member', member_id=member.id) }}"
-       class="btn btn-danger btn-sm"
-       title="Delete">
-        <i class="bi bi-trash"></i>
-    </a>
+    {% if member.status == "Active" %}
+
+<a href="{{ url_for('members.graduate_member', id=member.id) }}"
+   class="btn btn-success btn-sm"
+   title="Graduate"
+   onclick="return confirm('Move this member to Alumni?');">
+
+    <i class="bi bi-mortarboard-fill"></i>
+
+</a>
+
+{% endif %}
+
+<a href="{{ url_for('members.delete_member', member_id=member.id) }}"
+   class="btn btn-danger btn-sm"
+   title="Deactivate"
+   onclick="return confirm('Deactivate this member?');">
+
+    <i class="bi bi-person-x-fill"></i>
+
+</a>
 
 </div>
 

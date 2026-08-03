@@ -501,3 +501,122 @@ body{
 
 }
 
+/* ===========================
+   Sidebar Submenu
+=========================== */
+
+
+
+/* ===============================
+   Sidebar Dropdown
+================================ */
+
+.submenu > a{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.submenu ul{
+
+    list-style:none;
+
+    margin:6px 0 0 0;
+
+    padding-left:12px;
+
+    max-height:0;
+
+    overflow:hidden;
+
+    transition:max-height .35s ease;
+
+}
+
+.submenu.open ul{
+
+    max-height:500px;
+
+}
+
+.submenu ul li{
+
+    list-style:none;
+
+    margin:6px 0;
+
+}
+
+.submenu ul li a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:10px 16px;
+
+    font-size:15px;
+
+    border-radius:10px;
+
+    transition:all .25s ease;
+
+    color:#ffffff;
+
+}
+
+
+/* Hover Effect */
+
+.submenu ul li a:hover{
+
+    background:#3B82F6;
+
+    color:#fff;
+
+}
+
+/* Active Submenu */
+
+.submenu ul li.active a{
+
+    background:#3B82F6;
+
+    color:#fff;
+
+    font-weight:600;
+
+    box-shadow:0 4px 12px rgba(59,130,246,.35);
+
+}
+
+.submenu ul li a i{
+
+    width:20px;
+
+    text-align:center;
+
+    font-size:16px;
+
+}
+
+
+.submenu ul li a:hover{
+
+    background:rgba(255,255,255,.08);
+
+}
+
+.submenu>a .bi-chevron-down{
+
+    transition:.3s;
+
+}
+
+.submenu.open>a .bi-chevron-down{
+
+    transform:rotate(180deg);
+
+}

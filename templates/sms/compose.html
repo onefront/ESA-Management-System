@@ -6,17 +6,28 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
 
-            <h3 class="fw-bold mb-1">
-                Compose Bulk SMS
-            </h3>
+    <div>
 
-            <p class="text-muted mb-0">
-                Create a message and choose who should receive it.
-            </p>
+        <h1>Compose Bulk SMS</h1>
 
-        </div>
+        <p class="mb-0">
+            Create a message and choose who should receive it.
+        </p>
+
+    </div>
+
+    <a href="{{ url_for('sms.dashboard') }}"
+       class="btn btn-outline-primary">
+
+        <i class="bi bi-arrow-left"></i>
+
+        Back
+
+    </a>
+
+</div>
 
     </div>
 
@@ -182,11 +193,15 @@
                 </button>
 
                 <button
-                    class="btn btn-success">
+    type="button"
+    id="sendSMSBtn"
+    class="btn btn-success">
 
-                    Send SMS
+    <i class="bi bi-send-fill"></i>
 
-                </button>
+    Send SMS
+
+</button>
 
             </div>
 

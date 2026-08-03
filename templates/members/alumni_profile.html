@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <a href="{{ url_for('members.alumni_members') }}"
+       class="btn btn-outline-secondary mb-4">
+
+        <i class="bi bi-arrow-left"></i>
+
+        Back to Alumni
+
+    </a>
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-3 text-center">
+
+                    {% if member.passport %}
+
+                        <img src="{{ url_for('static', filename=member.passport) }}"
+                             class="img-fluid rounded-circle shadow"
+                             style="width:180px;height:180px;object-fit:cover;">
+
+                    {% else %}
+
+                        <img src="{{ url_for('static', filename='images/default-avatar.png') }}"
+                             class="img-fluid rounded-circle shadow"
+                             style="width:180px;height:180px;object-fit:cover;">
+
+                    {% endif %}
+
+                    <h4 class="mt-3">
+
+                        {{ member.first_name }}
+                        {{ member.last_name }}
+
+                    </h4>
+
+                    <span class="badge bg-success">
+
+                        Alumni
+
+                    </span>
+
+                </div>
+
+                <div class="col-md-9">
+
+                    <h3 class="mb-4">
+
+                        Alumni Information
+
+                    </h3>
+
+                    <table class="table table-bordered">
+
+                        <tr>
+                            <th>Student ID</th>
+                            <td>{{ member.student_id }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>ESA ID</th>
+                            <td>{{ member.esa_id }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Programme</th>
+                            <td>{{ member.programme }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Department</th>
+                            <td>{{ member.department }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Session</th>
+                            <td>{{ member.session }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Phone</th>
+                            <td>{{ member.phone }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ member.email }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Graduation Year</th>
+                            <td>{{ member.graduation_year }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Graduation Date</th>
+                            <td>{{ member.graduation_date }}</td>
+                        </tr>
+
+                    </table>
+
+                    <div class="mt-4">
+
+                        <a href="{{ url_for('members.restore_member', id=member.id) }}"
+                           class="btn btn-success"
+                           onclick="return confirm('Restore this member to Active Members?')">
+
+                            <i class="bi bi-arrow-counterclockwise"></i>
+
+                            Restore Member
+
+                        </a>
+
+                        <button class="btn btn-primary">
+
+                            <i class="bi bi-printer"></i>
+
+                            Print Profile
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

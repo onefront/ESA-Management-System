@@ -88,6 +88,85 @@
                         value="{{ settings.membership_validity }}">
 
                 </div>
+                <hr>
+
+<h5 class="mb-3">
+
+    Academic Configuration
+
+</h5>
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <label class="form-label">
+
+            Current Academic Year
+
+        </label>
+
+        <input
+            type="text"
+            class="form-control"
+            name="current_academic_year"
+            value="{{ settings.current_academic_year }}">
+
+    </div>
+
+    <div class="col-md-4">
+
+        <label class="form-label">
+
+            Current Semester
+
+        </label>
+
+        <select
+            class="form-select"
+            name="current_semester">
+
+            <option value="First Semester"
+                {% if settings.current_semester=="First Semester" %}selected{% endif %}>
+                First Semester
+            </option>
+
+            <option value="Second Semester"
+                {% if settings.current_semester=="Second Semester" %}selected{% endif %}>
+                Second Semester
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="col-md-4">
+
+
+
+            <option value="Regular"
+                {% if settings.current_session=="Regular" %}selected{% endif %}>
+                Regular
+            </option>
+
+            <option value="Weekend"
+                {% if settings.current_session=="Weekend" %}selected{% endif %}>
+                Weekend
+            </option>
+
+            <option value="Evening"
+                {% if settings.current_session=="Evening" %}selected{% endif %}>
+                Evening
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+
+
               <hr>
 
 <h5 class="mb-3">

@@ -28,6 +28,22 @@ class SystemSettings(db.Model):
         default=2
     )
 
+    # Academic Settings
+    current_academic_year = db.Column(
+        db.String(20),
+        default="2026/2027"
+    )
+
+    current_semester = db.Column(
+        db.String(50),
+        default="Second Semester"
+    )
+
+    current_session = db.Column(
+        db.String(30),
+        default="Weekend"
+    )
+
     # Branding
     logo = db.Column(
         db.String(255),

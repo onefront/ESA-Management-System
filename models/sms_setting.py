@@ -9,7 +9,7 @@ class SMSSetting(db.Model):
     provider = db.Column(
         db.String(50),
         nullable=False,
-        default="Arkesel"
+        default="MNotify"
     )
 
     api_key = db.Column(
@@ -25,7 +25,7 @@ class SMSSetting(db.Model):
     base_url = db.Column(
         db.String(255),
         nullable=False,
-        default="https://sms.arkesel.com/api/v2"
+        default="https://api.mnotify.com/api/sms/quick"
     )
 
     is_active = db.Column(

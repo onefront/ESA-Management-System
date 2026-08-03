@@ -1,0 +1,183 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-header bg-primary text-white">
+
+       <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+    <h4 class="mb-0">
+        <i class="bi bi-chat-dots"></i>
+        SMS Details
+    </h4>
+
+    <div>
+
+        <a href="{{ url_for('sms.history') }}"
+           class="btn btn-light btn-sm">
+
+            <i class="bi bi-arrow-left"></i>
+            Back
+
+        </a>
+
+        <a href="{{ url_for('sms.dashboard') }}"
+           class="btn btn-warning btn-sm">
+
+            <i class="bi bi-house"></i>
+            Dashboard
+
+        </a>
+
+    </div>
+
+</div>
+
+    </div>
+
+    <div class="card-body">
+
+        <p>
+
+            <strong>Title:</strong>
+
+            {{ sms.title }}
+
+        </p>
+
+        <p>
+
+            <strong>Message:</strong>
+
+            {{ sms.message }}
+
+        </p>
+
+        <p>
+
+            <strong>Campaign ID:</strong>
+
+            {{ sms.campaign_id }}
+
+        </p>
+
+        <p>
+
+            <strong>Recipients:</strong>
+
+            {{ sms.recipient_count }}
+
+        </p>
+
+        <p>
+
+            <strong>Status:</strong>
+
+            {{ sms.status }}
+
+        </p>
+
+    </div>
+
+</div>
+
+<div class="card shadow-sm mt-3">
+
+    <div class="card-header">
+
+        Recipients
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-striped">
+
+            <thead class="table-dark">
+
+<tr>
+
+    <th>#</th>
+
+    <th>ESA ID</th>
+
+    <th>Student ID</th>
+
+    <th>Name</th>
+
+    <th>Phone</th>
+
+    <th>Status</th>
+
+</tr>
+
+</thead>
+
+
+          <tbody>
+
+{% for r in sms.recipients %}
+
+<tr>
+
+    <td>{{ loop.index }}</td>
+
+    <td>{{ r.member.esa_id if r.member else "-" }}</td>
+
+    <td>{{ r.member.student_id if r.member else "-" }}</td>
+
+    <td>
+
+        {% if r.member %}
+
+            {{ r.member.last_name }} {{ r.member.first_name }}
+
+        {% else %}
+
+            Unknown Member
+
+        {% endif %}
+
+    </td>
+
+    <td>{{ r.phone }}</td>
+
+    <td>
+
+        {% if r.status == "Sent" %}
+
+            <span class="badge bg-success">
+
+                Sent
+
+            </span>
+
+        {% else %}
+
+            <span class="badge bg-danger">
+
+                Failed
+
+            </span>
+
+        {% endif %}
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -38,7 +38,7 @@ from models.event import Event
 from models.payment import Payment
 from models.class_announcement import ClassAnnouncement
 from models.election import Election
-
+from models.system_settings import SystemSettings
 member_portal_bp = Blueprint(
     "member_portal",
     __name__,
@@ -81,13 +81,16 @@ def dashboard():
         .all()
     )
 
+    settings = SystemSettings.query.first()
+
     today_exam = (
         Timetable.query
         .filter_by(
             programme=member.programme,
             level=member.level,
             session=member.session,
-            academic_year=member.academic_year
+            academic_year=settings.current_academic_year,
+            semester=settings.current_semester
         )
         .filter(
             Timetable.exam_date == date.today()
@@ -104,7 +107,8 @@ def dashboard():
             programme=member.programme,
             level=member.level,
             session=member.session,
-            academic_year=member.academic_year
+            academic_year=settings.current_academic_year,
+            semester=settings.current_semester
         )
         .filter(
             Timetable.exam_date >= date.today()
