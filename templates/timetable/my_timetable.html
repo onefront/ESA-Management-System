@@ -12,15 +12,27 @@
 
             <h3>📅 My Examination Timetable</h3>
 
-            <p class="text-muted mb-0">
+            <div class="mt-2">
 
-                {{ member.programme }}
-                |
-                Level {{ member.level }}
-                |
-                {{ member.session }}
+    <span class="badge bg-primary">
 
-            </p>
+        {{ member.programme }}
+
+    </span>
+
+    <span class="badge bg-success">
+
+        Level {{ member.level }}
+
+    </span>
+
+    <span class="badge bg-secondary">
+
+        {{ member.session }}
+
+    </span>
+
+</div>
 
         </div>
 
@@ -39,13 +51,137 @@
 
     </div>
 
-    <div class="card shadow">
+  <div class="card shadow mb-4">
 
-        <div class="card-body">
+    <div class="card-body">
+
+        <form method="GET">
+
+            <div class="row">
+
+                <div class="col-md-5">
+
+                    <label class="form-label">
+                        Academic Year
+                    </label>
+
+                    <select
+                        name="academic_year"
+                        class="form-select"
+                        required>
+
+                        <option value="">
+                            Select Academic Year
+                        </option>
+
+                        {% for year in academic_years %}
+
+                        <option
+                            value="{{ year[0] }}"
+                            {% if selected_year == year[0] %}selected{% endif %}>
+
+                            {{ year[0] }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-5">
+
+                    <label class="form-label">
+                        Semester
+                    </label>
+
+                    <select
+                        name="semester"
+                        class="form-select"
+                        required>
+
+                        <option value="">
+                            Select Semester
+                        </option>
+
+                        {% for sem in semesters %}
+
+                        <option
+                            value="{{ sem[0] }}"
+                            {% if selected_semester == sem[0] %}selected{% endif %}>
+
+                            {{ sem[0] }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2 d-grid">
+
+                    <label>&nbsp;</label>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        <i class="fas fa-search"></i>
+
+                        View
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="card shadow">
+
+    <div class="card-body">
 
             {% if timetables %}
 
-            <table class="table table-striped table-hover">
+<div class="alert alert-success">
+
+    <i class="fas fa-check-circle"></i>
+
+    <strong>{{ timetables|length }}</strong>
+
+    examination paper(s) found.
+
+</div>
+
+            <h5 class="mb-3">
+
+    <i class="fas fa-calendar-alt text-primary"></i>
+
+    Examination Timetable
+
+    <span class="badge bg-primary ms-2">
+
+        {{ selected_year }}
+
+    </span>
+
+    <span class="badge bg-success">
+
+        {{ selected_semester }}
+
+    </span>
+
+</h5>
+
+<table class="table table-bordered table-hover align-middle">
 
                 <thead class="table-dark">
 
@@ -100,11 +236,21 @@
 
             <div class="alert alert-info">
 
-                <h5>No timetable available.</h5>
+    {% if not selected_year %}
 
-                Your examination timetable has not yet been published.
+        <h5>Select an Academic Year and Semester</h5>
 
-            </div>
+        Click <strong>View</strong> to display your examination timetable.
+
+    {% else %}
+
+        <h5>No timetable found.</h5>
+
+        There is no published timetable for the selected Academic Year and Semester.
+
+    {% endif %}
+
+</div>
 
             {% endif %}
 

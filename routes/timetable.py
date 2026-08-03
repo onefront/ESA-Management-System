@@ -368,8 +368,7 @@ def delete_record(timetable_id):
     )
 
 
-
-@timetable_bp.route("/my")
+@timetable_bp.route("/my", methods=["GET", "POST"])
 @login_required
 def my_timetable():
 
@@ -378,15 +377,9 @@ def my_timetable():
     ).first()
 
     if not member:
+        flash("Member profile not found.", "danger")
+        return redirect(url_for("dashboard.dashboard"))
 
-        flash(
-            "Member profile not found.",
-            "danger"
-        )
-
-        return redirect(
-            url_for("dashboard.dashboard")
-        )
     programme = Programme.query.filter_by(
         programme_name=member.programme
     ).first()
@@ -397,34 +390,53 @@ def my_timetable():
         else member.programme
     )
 
-
-
-    timetables = (
-        Timetable.query
-        .filter_by(
-
-            programme=programme_code,
-            level=member.level,
-            session=member.session,
-            academic_year=member.academic_year
-        )
-
-
-
-        .order_by(
-            Timetable.exam_date.asc(),
-            Timetable.start_time.asc()
-        )
+    # Academic Year & Semester options
+    academic_years = (
+        db.session.query(Timetable.academic_year)
+        .distinct()
+        .order_by(Timetable.academic_year.desc())
         .all()
     )
 
-    print("Timetable Records Found:", len(timetables))
+    semesters = (
+        db.session.query(Timetable.semester)
+        .distinct()
+        .order_by(Timetable.semester)
+        .all()
+    )
+
+    selected_year = request.args.get("academic_year")
+    selected_semester = request.args.get("semester")
+
+    timetables = []
+
+    if selected_year and selected_semester:
+
+        timetables = (
+            Timetable.query
+            .filter_by(
+                programme=programme_code,
+                level=member.level,
+                session=member.session,
+                academic_year=selected_year,
+                semester=selected_semester
+            )
+            .order_by(
+                Timetable.exam_date.asc(),
+                Timetable.start_time.asc()
+            )
+            .all()
+        )
+
     return render_template(
         "timetable/my_timetable.html",
         member=member,
-        timetables=timetables
+        timetables=timetables,
+        academic_years=academic_years,
+        semesters=semesters,
+        selected_year=selected_year,
+        selected_semester=selected_semester
     )
-
 
 
 
