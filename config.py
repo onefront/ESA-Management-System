@@ -41,3 +41,4 @@ class Config:
         HUBTEL_CLIENT_SECRET = ""
 
         HUBTEL_SENDER_ID = "ESA"
+

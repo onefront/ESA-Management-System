@@ -82,11 +82,16 @@ def dashboard():
     )
 
     settings = SystemSettings.query.first()
+    programme = Programme.query.filter_by(
+        programme_name=member.programme
+    ).first()
+
+    programme_code = programme.programme_code if programme else member.programme
 
     today_exam = (
         Timetable.query
         .filter_by(
-            programme=member.programme,
+            programme=programme_code,
             level=member.level,
             session=member.session,
             academic_year=settings.current_academic_year,
@@ -104,7 +109,7 @@ def dashboard():
     next_exam = (
         Timetable.query
         .filter_by(
-            programme=member.programme,
+            programme=programme_code,
             level=member.level,
             session=member.session,
             academic_year=settings.current_academic_year,
