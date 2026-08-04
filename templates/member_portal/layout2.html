@@ -124,7 +124,12 @@
     <span>My Timetable</span>
 </a>
 
-
+<li class="{% if request.endpoint and request.endpoint.startswith('library') %}active{% endif %}">
+    <a href="{{ url_for('library.student_library') }}">
+        <i class="bi bi-journal-bookmark-fill"></i>
+        Past Questions
+    </a>
+</li>
 
     <a href="{{ url_for('member_portal.events') }}"
         class="{% if request.endpoint == 'member_portal.events' %}active{% endif %}">

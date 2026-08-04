@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-header bg-primary text-white">
+
+        <h3>📚 Manage Academic Resources</h3>
+             <form method="GET" class="mb-4">
+
+    <div class="input-group">
+
+        <input
+            type="text"
+            name="search"
+            class="form-control"
+            placeholder="Search by Course Code or Course Title..."
+            value="{{ search }}">
+
+        <button
+            class="btn btn-primary">
+
+            🔍 Search
+
+        </button>
+
+    </div>
+
+</form>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-hover">
+
+            <thead>
+
+                <tr>
+
+                    <th>Course</th>
+                    <th>Level</th>
+                    <th>Year</th>
+                    <th>Semester</th>
+                    <th>Exam</th>
+                    <th>Downloads</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for item in resources %}
+
+                <tr>
+
+                    <td>{{ item.course_code }} - {{ item.course_title }}</td>
+
+                    <td>{{ item.level }}</td>
+
+                    <td>{{ item.academic_year }}</td>
+
+                    <td>{{ item.semester }}</td>
+
+                    <td>{{ item.exam_type }}</td>
+
+                    <td>{{ item.downloads }}</td>
+
+                    <td>
+
+                        <a href="{{ url_for('library.view_resource', id=item.id) }}"
+   target="_blank"
+   class="btn btn-primary btn-sm">
+    View
+</a>
+
+                        <a href="{{ url_for('library.edit_resource', id=item.id) }}"
+   class="btn btn-warning btn-sm">
+    Edit
+</a>
+
+                       <a href="{{ url_for('library.delete_resource', id=item.id) }}"
+   class="btn btn-danger btn-sm">
+    Delete
+</a>
+
+                    </td>
+
+                </tr>
+
+            {% else %}
+
+                <tr>
+
+                    <td colspan="7" class="text-center">
+
+                        No resources uploaded.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -37,6 +37,9 @@ from routes.data_management import data_management_bp
 
 
 # Import models
+
+from models.library_category import LibraryCategory
+from models.library_resource import LibraryResource
 from models.sms_setting import SMSSetting
 from datetime import datetime
 from extensions import db
@@ -53,6 +56,7 @@ from models.faculty import Faculty
 from models.member_application import MemberApplication
 from models.member import Member
 from models.programme import Programme
+from routes.library import library_bp
 from models.payment import Payment
 from models.election import Election
 from models.election_settings import ElectionSettings
@@ -186,7 +190,7 @@ from routes.pwa import pwa_bp
 
 # Register blueprints
 
-
+app.register_blueprint(library_bp)
 app.register_blueprint(pwa_bp)
 app.register_blueprint(data_management_bp)
 app.register_blueprint(timetable_bp)

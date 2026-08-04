@@ -1,0 +1,452 @@
+{% extends "layout.html" %}
+
+{% block title %}ESA Past Questions{% endblock %}
+
+{% block content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-header bg-primary text-white">
+       <h3>📚 ESA Past Questions</h3>
+        <small>Browse and Download Past Examination Papers</small>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row mb-4">
+
+    <div class="col-md-3">
+
+        <div class="card border-primary shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h2>📚</h2>
+
+                <h3>{{ total_resources }}</h3>
+
+                <small>Total Past Questions</small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card border-success shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h2>🏫</h2>
+
+                <h3>{{ total_programmes }}</h3>
+
+                <small>Available Programmes</small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card border-warning shadow-sm">
+
+            <div class="card-body text-center">
+
+                <h2>📥</h2>
+
+                <h3>{{ total_downloads }}</h3>
+
+                <small>Total Downloads</small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card border-danger shadow-sm">
+
+            <div class="card-body text-center">
+
+           <h2>🆕</h2>
+
+<h5>
+    {% if latest_upload %}
+        {{ latest_upload.course_code }}
+    {% else %}
+        None
+    {% endif %}
+</h5>
+
+{% if latest_upload %}
+<small class="text-muted">
+    {{ latest_upload.academic_year }}
+</small>
+{% endif %}
+
+<br>
+
+<small>Latest Upload</small>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+        <form method="GET">
+
+
+            <div class="row mb-3">
+
+    <div class="col-12">
+
+        <div class="input-group">
+
+    <span class="input-group-text">
+        <i class="bi bi-search"></i>
+    </span>
+
+    <input
+        type="text"
+        class="form-control"
+        name="search"
+        placeholder="Search by Course Code or Course Title..."
+        value="{{ request.args.get('search', '') }}">
+
+</div>
+
+    </div>
+
+</div>
+
+
+            <div class="row">
+
+                <div class="col-md-3 mb-3">
+                    <label>Programme</label>
+
+                    <select
+                        name="programme"
+                        class="form-control">
+
+                        <option value="">
+                            All Programmes
+                        </option>
+
+      {% for programme in programmes %}
+
+<option
+    value="{{ programme.id }}"
+    {% if request.args.get('programme') == programme.id|string %}
+        selected
+    {% endif %}>
+    {{ programme.programme_name }}
+</option>
+
+{% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2 mb-3">
+
+                    <label>Level</label>
+<select
+    name="level"
+    class="form-control">
+
+    <option value="">All</option>
+
+    <option value="Level 100"
+        {% if request.args.get('level') == 'Level 100' %}selected{% endif %}>
+        Level 100
+    </option>
+
+    <option value="Level 200"
+        {% if request.args.get('level') == 'Level 200' %}selected{% endif %}>
+        Level 200
+    </option>
+
+    <option value="Level 300"
+        {% if request.args.get('level') == 'Level 300' %}selected{% endif %}>
+        Level 300
+    </option>
+
+    <option value="Level 400"
+        {% if request.args.get('level') == 'Level 400' %}selected{% endif %}>
+        Level 400
+    </option>
+
+</select>
+
+                </div>
+
+                <div class="col-md-3 mb-3">
+
+                    <label>Semester</label>
+
+                    <select
+                        name="semester"
+                        class="form-control">
+
+                        <option value="">All</option>
+
+<option value="First Semester"
+{% if request.args.get('semester') == 'First Semester' %}
+selected
+{% endif %}>
+First Semester
+</option>
+
+<option value="Second Semester"
+{% if request.args.get('semester') == 'Second Semester' %}
+selected
+{% endif %}>
+Second Semester
+</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2 mb-3">
+
+                    <label>Exam</label>
+
+                    <select
+                        name="exam"
+                        class="form-control">
+
+                        <option value="">All</option>
+
+<option value="Midsem"
+{% if request.args.get('exam') == 'Midsem' %}
+selected
+{% endif %}>
+Midsem
+</option>
+
+<option value="End Semester"
+{% if request.args.get('exam') == 'End Semester' %}
+selected
+{% endif %}>
+End Semester
+</option>
+
+<option value="Resit"
+{% if request.args.get('exam') == 'Resit' %}
+selected
+{% endif %}>
+Resit
+</option>
+                    </select>
+
+                </div>
+
+                <div class="col-md-2 mb-3 d-flex align-items-end">
+
+                    <button
+                        class="btn btn-primary w-100">
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+        <hr>
+
+   <div class="table-responsive d-none d-md-block">
+
+<table class="table table-bordered table-hover">
+
+    <thead>
+        ...
+    </thead>
+
+    <tbody>
+        ...
+    </tbody>
+
+</table>
+
+</div>
+     <div class="d-block d-md-none">
+
+{% for item in resources %}
+
+<div class="card shadow-sm mb-3">
+
+    <div class="card-body">
+
+        <h5 class="text-primary">
+
+            {{ item.course_code }}
+
+        </h5>
+
+        <p>
+
+            <strong>{{ item.course_title }}</strong>
+
+        </p>
+
+        <p>
+
+            🎓 {{ item.level }}
+
+        </p>
+
+        <p>
+
+            📅 {{ item.academic_year }}
+
+        </p>
+
+        <p>
+
+            📖 {{ item.semester }}
+
+        </p>
+
+        <p>
+
+            📝 {{ item.exam_type }}
+
+        </p>
+
+        <p>
+
+            📥 Downloads: {{ item.downloads }}
+
+        </p>
+
+        <a
+
+            href="{{ url_for('library.view_resource', id=item.id) }}"
+
+            target="_blank"
+
+            class="btn btn-primary w-100">
+
+            View PDF
+
+        </a>
+
+    </div>
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info">
+
+    No Past Questions Available.
+
+</div>
+
+{% endfor %}
+
+</div>
+            <thead>
+
+                <tr>
+
+                    <th>Course</th>
+
+                    <th>Level</th>
+
+                    <th>Year</th>
+
+                    <th>Semester</th>
+
+                    <th>Exam</th>
+
+                    <th>Downloads</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for item in resources %}
+
+                <tr>
+
+                    <td>
+
+                        <strong>{{ item.course_code }}</strong>
+
+                        <br>
+
+                        {{ item.course_title }}
+
+                    </td>
+
+                    <td>{{ item.level }}</td>
+
+                    <td>{{ item.academic_year }}</td>
+
+                    <td>{{ item.semester }}</td>
+
+                    <td>{{ item.exam_type }}</td>
+
+                    <td>{{ item.downloads }}</td>
+
+                    <td>
+
+                        <a
+                            href="{{ url_for('library.view_resource', id=item.id) }}"
+                            target="_blank"
+                            class="btn btn-success btn-sm">
+
+                            View PDF
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            {% else %}
+
+                <tr>
+
+                    <td colspan="7" class="text-center">
+
+                        No resources available.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}
