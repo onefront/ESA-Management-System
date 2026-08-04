@@ -99,3 +99,6 @@ def dashboard():
 
 
 
+@dashboard_bp.route("/offline")
+def offline():
+    return render_template("offline.html")

@@ -36,9 +36,104 @@
       filename='css/election.css') }}">
     <link rel="stylesheet"
       href="{{ url_for('static', filename='css/messages.css') }}">
+
+    <!-- PWA -->
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+
+<meta name="theme-color" content="#0d6efd">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta name="apple-mobile-web-app-title" content="ESA">
+
+<link rel="apple-touch-icon"
+      href="{{ url_for('static', filename='icons/icon-192.png') }}">
+
+
 </head>
 
 <body>
+
+<div id="installCard"
+     style="display:none;
+            position:fixed;
+            bottom:20px;
+            right:20px;
+            z-index:9999;
+            background:#fff;
+            width:320px;
+            border-radius:18px;
+            box-shadow:0 12px 35px rgba(0,0,0,.18);
+            padding:20px;">
+
+    <div class="d-flex align-items-center">
+
+        <img src="{{ url_for('static', filename='images/logo.png') }}"
+             width="55"
+             class="me-3">
+
+        <div>
+
+            <strong>Install ESA</strong><br>
+
+            <small class="text-muted">
+                Install the ESA Management System for faster access.
+            </small>
+
+        </div>
+
+    </div>
+
+    <button
+        id="installBtn"
+        class="btn btn-primary w-100 mt-3">
+
+        <i class="bi bi-download"></i>
+
+        Install App
+
+    </button>
+
+</div>
+
+
+<div id="updateBanner"
+     style="display:none;
+            position:fixed;
+            bottom:20px;
+            left:20px;
+            width:340px;
+            z-index:9999;
+            background:#ffffff;
+            border-radius:18px;
+            box-shadow:0 12px 35px rgba(0,0,0,.2);
+            padding:20px;">
+
+    <h5 class="mb-2">
+        🚀 New ESA Update
+    </h5>
+
+    <p class="text-muted mb-3">
+
+        A new version of the ESA Management System is available.
+
+    </p>
+
+    <button
+        id="updateNow"
+        class="btn btn-success w-100">
+
+        Update Now
+
+    </button>
+
+</div>
+
+
 
 <div class="d-flex">
 
@@ -838,10 +933,10 @@ overlay.addEventListener("click", function () {
 
 </script>
 
+
 {% block scripts %}{% endblock %}
 
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
 
     document.querySelectorAll(".submenu > a").forEach(function(menu){
@@ -857,8 +952,33 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-
 </script>
+
+<!-- Register Service Worker -->
+<script>
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", async () => {
+
+        try {
+
+            const registration = await navigator.serviceWorker.register("/sw.js");
+
+            console.log("✅ Service Worker Registered:", registration.scope);
+
+        } catch (error) {
+
+            console.error("❌ Service Worker Registration Failed:", error);
+
+        }
+
+    });
+
+}
+</script>
+
+<script src="{{ url_for('static', filename='js/pwa-install.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pwa-update.js') }}"></script>
 
 </body>
 </html>

@@ -7,6 +7,7 @@ from flask import (
     redirect,
     url_for
 )
+from flask import send_from_directory
 from flask_migrate import Migrate
 from models.fee_setting import FeeSetting
 from models.slider import Slider
@@ -177,13 +178,16 @@ from routes.chat_block import chat_block_bp
 from routes.sms import sms_bp
 from routes.finance import finance_bp
 from routes.timetable import timetable_bp
-
+from routes.pwa import pwa_bp
 
 
 
 
 
 # Register blueprints
+
+
+app.register_blueprint(pwa_bp)
 app.register_blueprint(data_management_bp)
 app.register_blueprint(timetable_bp)
 app.register_blueprint(finance_bp)
@@ -384,6 +388,15 @@ def home():
     return render_template(
         "public/index.html"
     )
+
+
+
+
+
+
+@app.route("/sw.js")
+def service_worker():
+    return send_from_directory("static", "sw.js")
 
 
 if __name__ == "__main__":
