@@ -398,12 +398,11 @@ def my_timetable():
         .all()
     )
 
-    semesters = (
-        db.session.query(Timetable.semester)
-        .distinct()
-        .order_by(Timetable.semester)
-        .all()
-    )
+    # Always show both semesters
+    semesters = [
+        ("First Semester",),
+        ("Second Semester",)
+    ]
 
     selected_year = request.args.get("academic_year")
     selected_semester = request.args.get("semester")

@@ -30,6 +30,8 @@ from routes.chat_admin import chat_admin_bp
 from routes.notifications import notifications_bp
 from routes.feedback import feedback_bp
 from routes.fee_settings import fee_settings_bp
+from routes.data_management import data_management_bp
+
 
 
 
@@ -182,6 +184,7 @@ from routes.timetable import timetable_bp
 
 
 # Register blueprints
+app.register_blueprint(data_management_bp)
 app.register_blueprint(timetable_bp)
 app.register_blueprint(finance_bp)
 app.register_blueprint(fee_settings_bp)

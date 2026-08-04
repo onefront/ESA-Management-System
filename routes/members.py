@@ -250,6 +250,16 @@ def add_member():
             request.form.get("department")
         )
 
+        # Automatically assign Class Group
+        class_group = ClassGroup.query.filter_by(
+            programme_id=programme.id if programme else None,
+            level=request.form.get("level"),
+            session=request.form.get("session"),
+            status="Active"
+        ).first()
+
+
+
         member = Member(
 
             esa_id=esa_id,
@@ -275,7 +285,7 @@ def add_member():
             approved_by=current_user.id,
 
             approved_at=datetime.utcnow(),
-            class_group_id=request.form.get("class_group_id") or None,
+            class_group_id=class_group.id if class_group else None,
             faculty_id=request.form.get("faculty_id") or None,
 
             programme=programme.programme_name if programme else "",
@@ -760,6 +770,8 @@ def edit_member(member_id):
         department = Department.query.get(
             request.form.get("department")
         )
+
+
 
         member.programme = programme.programme_name if programme else ""
 
