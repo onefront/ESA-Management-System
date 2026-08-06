@@ -2,122 +2,213 @@
 
 {% block content %}
 
+
 <div class="container py-4">
 
-<div class="card shadow border-0 rounded-4">
+    <div class="card shadow border-0 rounded-4">
 
-<div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                Appoint Course Representative
+            </h4>
+        </div>
 
-<h4 class="mb-0">
+        <div class="card-body">
 
-Appoint Course Representative
+            <form method="POST"
+      action="{{ url_for('course_reps.search_course_rep_member') }}">
 
-</h4>
+                <!-- Search Section -->
+                <div class="mb-4">
 
-</div>
+                    <label class="form-label fw-bold">
+                        Search by Index Number
+                    </label>
 
-<div class="card-body">
+                    <div class="input-group">
 
-<form method="POST">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="student_id"
+                            placeholder="Enter Student Index Number"
+                            value="{{ request.form.student_id if request.form.student_id else '' }}">
 
-<div class="mb-3">
+                        <button
+                            type="submit"
+                            name="action"
+                            value="search"
+                            class="btn btn-primary">
 
-<label class="form-label">
+                            <i class="bi bi-search"></i>
 
-Select Member
+                            Search
 
-</label>
+                        </button>
 
-<select
-name="member_id"
-class="form-select"
-required>
+                    </div>
 
-<option value="">
--- Select Member --
-</option>
+                </div>
 
-{% for member in members %}
+                <hr>
+            </form>
+                {% if member %}
+                    <form method="POST"
+      action="{{ url_for('course_reps.add_course_rep') }}">
+                <div class="row">
 
-<option value="{{ member.id }}">
+                    <div class="col-md-6 mb-3">
 
-{{ member.first_name }}
-{{ member.last_name }}
+                        <label class="form-label">
+                            Member Name
+                        </label>
 
-—
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{{ member.first_name }} {{ member.last_name }}"
+                            readonly>
 
-{{ member.programme }}
+                    </div>
 
-—
+                    <div class="col-md-6 mb-3">
 
-Level {{ member.level }}
+                        <label class="form-label">
+                            Index Number
+                        </label>
 
-—
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{{ member.student_id }}"
+                            readonly>
 
-{{ member.session }}
+                    </div>
 
-</option>
+                    <div class="col-md-6 mb-3">
 
-{% endfor %}
+                        <label class="form-label">
+                            Programme
+                        </label>
 
-</select>
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{{ member.programme }}"
+                            readonly>
 
-</div>
+                    </div>
 
-<div class="mb-3">
+                    <div class="col-md-6 mb-3">
 
-    <label class="form-label">
+                        <label class="form-label">
+                            Department
+                        </label>
 
-        Position
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{{ member.department }}"
+                            readonly>
 
-    </label>
+                    </div>
 
-    <select
-        name="position"
-        class="form-select"
-        required>
+                    <div class="col-md-6 mb-3">
 
-        <option value="">
-            -- Select Position --
-        </option>
+                        <label class="form-label">
+                            Level
+                        </label>
 
-        <option value="Course Rep">
-            Course Representative
-        </option>
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{{ member.level }}"
+                            readonly>
 
-        <option value="Assistant Course Rep">
-            Assistant Course Representative
-        </option>
+                    </div>
 
-    </select>
+                    <div class="col-md-6 mb-3">
 
-</div>
+                        <label class="form-label">
+                            Session
+                        </label>
 
-<hr>
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{{ member.session }}"
+                            readonly>
 
-<a href="{{ url_for('course_reps.course_reps') }}"
-class="btn btn-secondary">
+                    </div>
 
-<i class="bi bi-arrow-left"></i>
+                </div>
 
-Back
+                <input
+                    type="hidden"
+                    name="member_id"
+                    value="{{ member.id }}">
 
-</a>
+                <div class="mb-3">
 
-<button
-class="btn btn-success">
+                    <label class="form-label">
+                        Position
+                    </label>
 
-<i class="bi bi-check-circle"></i>
+                    <select
+                        name="position"
+                        class="form-select"
+                        required>
 
-Appoint
+                        <option value="">
+                            -- Select Position --
+                        </option>
 
-</button>
+                        <option value="Course Rep">
+                            Course Representative
+                        </option>
 
-</form>
+                        <option value="Assistant Course Rep">
+                            Assistant Course Representative
+                        </option>
 
-</div>
+                    </select>
 
-</div>
+                </div>
+
+                {% endif %}
+
+                <hr>
+
+                <a href="{{ url_for('course_reps.course_reps') }}"
+                   class="btn btn-secondary">
+
+                    <i class="bi bi-arrow-left"></i>
+
+                    Back
+
+                </a>
+
+                {% if member %}
+
+                <button
+                    type="submit"
+                    name="action"
+                    value="appoint"
+                    class="btn btn-success">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Appoint
+
+                </button>
+                 </form>
+                {% endif %}
+
+
+
+        </div>
+
+    </div>
 
 </div>
 

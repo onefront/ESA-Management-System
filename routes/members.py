@@ -56,7 +56,9 @@ def members():
     status = request.args.get("status", "")
     page = request.args.get("page", 1, type=int)
 
-    query = Member.query
+    query = Member.query.filter_by(
+        member_type="Student"
+    )
 
     # -------------------------------
     # Search
@@ -100,7 +102,7 @@ def members():
     ).count()
 
     alumni_members = Member.query.filter_by(
-        status="Alumni"
+        member_type="Alumni"
     ).count()
 
     suspended_members = Member.query.filter_by(
@@ -305,11 +307,13 @@ def add_member():
         # Check if a user already exists
 
         email = request.form.get("email", "").strip()
-
+        user = None
         if email == "":
             email = None
 
+        # Check if email already exists
         if email:
+
             existing_email = User.query.filter_by(
                 email=email
             ).first()
@@ -319,26 +323,35 @@ def add_member():
                     "A user account with this email already exists.",
                     "danger"
                 )
-                return redirect(url_for("members.add_member"))
-            # Create the login account
-            user = User(
-                full_name=f"{request.form['first_name']} {request.form['last_name']}",
-                username=username,
-                email=email,
-                role="Member",
-                must_change_password=True
-            )
 
-            user.set_password(password)
+                return redirect(
+                    url_for("members.add_member")
+                )
 
-            db.session.add(user)
+        # ---------------------------------------
+        # Create Login Account
+        # ---------------------------------------
 
-            # Save user first so it gets an ID
-            db.session.flush()
+        user = User(
 
-            # Link Member to User
-            member.user_id = user.id
-            # Link Member to User
+            full_name=f"{request.form['first_name']} {request.form['last_name']}",
+
+            username=username,
+
+            email=email,
+
+            role="Member",
+
+            must_change_password=True
+
+        )
+
+        user.set_password(password)
+
+        db.session.add(user)
+
+        db.session.flush()
+
         member.user_id = user.id
 
         db.session.add(member)
@@ -697,35 +710,6 @@ def restore_member(id):
 
     return redirect(
         url_for("members.alumni_members")
-    )
-
-
-
-@members_bp.route("/members/alumni/<int:id>")
-@login_required
-@roles_required(
-    "Administrator",
-    "CEO",
-    "General Secretary"
-)
-def alumni_profile(id):
-
-    member = Member.query.get_or_404(id)
-
-    if member.status != "Alumni":
-
-        flash(
-            "This member is not in the Alumni Network.",
-            "warning"
-        )
-
-        return redirect(
-            url_for("members.members")
-        )
-
-    return render_template(
-        "members/alumni_profile.html",
-        member=member
     )
 
 

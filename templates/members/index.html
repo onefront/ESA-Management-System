@@ -375,16 +375,29 @@
 
     {% endif %}
 
-    {% if member.status == "Active" %}
+{% if member.status == "Active" %}
 
-<a href="{{ url_for('members.graduate_member', id=member.id) }}"
+    {% if member.level == 400 or member.level == "400" %}
+
+        <a href="{{ url_for('members.graduate_member', id=member.id) }}"
+           class="btn btn-success btn-sm"
+           title="Graduate"
+           onclick="return confirm('Move this member to Alumni?');">
+
+            <i class="bi bi-mortarboard-fill"></i>
+
+        </a>
+
+    {% else %}
+
+        <a href="#"
    class="btn btn-success btn-sm"
-   title="Graduate"
-   onclick="return confirm('Move this member to Alumni?');">
-
-    <i class="bi bi-mortarboard-fill"></i>
-
+   title="Promotion is done from Academic Classes"
+   onclick="alert('Promote members from the Academic Classes page.'); return false;">
+    <i class="bi bi-arrow-up-circle-fill"></i>
 </a>
+
+    {% endif %}
 
 {% endif %}
 

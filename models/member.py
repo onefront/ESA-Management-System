@@ -107,13 +107,23 @@ class Member(db.Model):
 
     class_group = db.relationship(
         "ClassGroup",
-        foreign_keys=[class_group_id]
+        foreign_keys=[class_group_id],
+        back_populates="members"
     )
 
 
     # Membership
-    status = db.Column(db.String(20),
-                       default="Active")
+
+
+    member_type = db.Column(
+        db.String(20),
+        default="Student"
+    )
+
+    status = db.Column(
+        db.String(20),
+        default="Active"
+    )
 
     graduation_year = db.Column(
         db.String(10),

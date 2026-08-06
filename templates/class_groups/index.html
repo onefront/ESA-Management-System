@@ -47,6 +47,7 @@
                     <th>Class Group</th>
                     <th>Programme</th>
                     <th>Level</th>
+                    <th>Students</th>
                     <th>Admission</th>
                     <th>Graduation</th>
                     <th>Status</th>
@@ -68,7 +69,18 @@
 
                     <td>{{ group.level }}</td>
 
-                    <td>{{ group.admission_year }}</td>
+                        <td class="text-center">
+
+                        <a href="{{ url_for('class_groups.members', id=group.id) }}"
+                            class="badge bg-primary text-decoration-none">
+
+                          {{ group.members|length }}
+
+                       </a>
+
+                         </td>
+
+                           <td>{{ group.admission_year }}</td>
 
                     <td>{{ group.graduation_year }}</td>
 
@@ -92,13 +104,27 @@
 
     </a>
 
-    <a href="{{ url_for('class_groups.delete', id=group.id) }}"
-       class="btn btn-danger btn-sm"
-       onclick="return confirm('Delete this Academic Class?')">
+    {% if group.level == "400" %}
 
-        <i class="bi bi-trash"></i>
+<a href="{{ url_for('class_groups.promote', id=group.id) }}"
+   class="btn btn-success btn-sm"
+   title="Graduate Class">
 
-    </a>
+    <i class="bi bi-mortarboard-fill"></i>
+
+</a>
+
+{% else %}
+
+<a href="{{ url_for('class_groups.promote', id=group.id) }}"
+   class="btn btn-primary btn-sm"
+   title="Promote Class">
+
+    <i class="bi bi-arrow-up-circle"></i>
+
+</a>
+
+{% endif %}
 
 </div>
 

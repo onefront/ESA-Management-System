@@ -5,6 +5,7 @@ from models.class_group import ClassGroup
 from models.course_rep import CourseRep
 from models.fee_setting import FeeSetting
 from utils.auth import admin_required
+from datetime import datetime
 from models.class_notice import ClassNotice
 from flask import request, flash, redirect, url_for
 class_groups_bp = Blueprint(
@@ -28,6 +29,36 @@ TOTAL_REQUIRED = REGISTRATION_REQUIRED + ANNUAL_DUES_REQUIRED
 
 
 
+
+
+def generate_class_name(programme_name, session, level, admission_year):
+    """
+    Generate an academic class name.
+    Example:
+    B.Ed. Information Technology
+        -> ITE-W100-2026
+    """
+
+    words = programme_name.split()
+
+    abbreviation = ""
+
+    for word in words:
+        if word.upper() not in [
+            "B.SC.", "BSC",
+            "B.ED.", "BED",
+            "OF", "IN"
+        ]:
+            abbreviation += word[0].upper()
+
+    session_code = "W" if session == "Weekend" else "E"
+
+    admission = admission_year.split("/")[0]
+
+    return f"{abbreviation}-{session_code}{level}-{admission}"
+
+
+
 @class_groups_bp.route("/")
 @login_required
 @admin_required
@@ -44,6 +75,11 @@ from flask import request, redirect, url_for, flash
 from models.programme import Programme
 from extensions import db
 from models.payment import Payment
+
+
+
+
+
 
 
 
@@ -400,3 +436,180 @@ def delete(id):
     flash("Class Group deleted successfully.", "success")
 
     return redirect(url_for("class_groups.index"))
+
+
+
+# ==========================================
+# Promote Academic Class
+# ==========================================
+@class_groups_bp.route("/promote/<int:id>")
+@login_required
+@admin_required
+def promote(id):
+
+    group = ClassGroup.query.get_or_404(id)
+
+    student_count = Member.query.filter_by(
+        class_group_id=group.id
+    ).count()
+
+    level_map = {
+        "100": "200",
+        "200": "300",
+        "300": "400"
+    }
+
+    if group.level == "400":
+        next_level = "Alumni"
+    else:
+        next_level = level_map.get(group.level)
+
+    return render_template(
+        "class_groups/promote.html",
+        group=group,
+        student_count=student_count,
+        next_level=next_level
+    )
+
+# ==========================================
+# Execute Class Promotion
+# ==========================================
+@class_groups_bp.route("/promote/<int:id>/confirm", methods=["POST"])
+@login_required
+@admin_required
+def confirm_promotion(id):
+
+    group = ClassGroup.query.get_or_404(id)
+
+    level_map = {
+        "100": "200",
+        "200": "300",
+        "300": "400"
+    }
+
+    if group.level == "400":
+
+        members = Member.query.filter_by(
+            class_group_id=group.id
+        ).all()
+
+        for member in members:
+            member.member_type = "Alumni"
+
+            member.status = "Graduated"
+
+            member.graduation_year = group.graduation_year
+
+            member.graduation_date = datetime.utcnow().date()
+
+        group.status = "Graduated"
+
+        try:
+
+            db.session.commit()
+
+            flash(
+                f"{len(members)} members graduated successfully.",
+                "success"
+            )
+
+        except Exception as e:
+
+            db.session.rollback()
+
+            flash(
+                f"Graduation failed: {str(e)}",
+                "danger"
+            )
+
+        return redirect(
+            url_for("class_groups.index")
+        )
+
+    new_level = level_map[group.level]
+
+    # -----------------------------------------
+    # Generate new class name
+    # -----------------------------------------
+
+    parts = group.name.split("-")
+
+    parts[1] = f"{group.session[0]}{new_level}"
+
+    new_name = "-".join(parts)
+
+    # -----------------------------------------
+    # Check if already exists
+    # -----------------------------------------
+
+    existing = ClassGroup.query.filter_by(
+        name=new_name
+    ).first()
+
+    if existing:
+        flash(
+            "The next Academic Class already exists.",
+            "warning"
+        )
+
+        return redirect(
+            url_for("class_groups.view", id=existing.id)
+        )
+
+    # -----------------------------------------
+    # Update Class Group
+    # -----------------------------------------
+
+    old_level = group.level
+
+    group.name = group.name.replace(
+        old_level,
+        new_level
+    )
+
+    group.level = new_level
+
+    # -----------------------------------------
+    # Promote Students
+    # -----------------------------------------
+
+    members = Member.query.filter_by(
+        class_group_id=group.id
+    ).all()
+
+    for member in members:
+        member.level = new_level
+        if member.academic_year:
+            start, end = member.academic_year.split("/")
+
+            member.academic_year = f"{int(start) + 1}/{int(end) + 1}"
+        member.class_group_id = group.id
+
+    try:
+
+        db.session.commit()
+
+        flash(
+            "Academic Class promoted successfully.",
+            "success"
+        )
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        flash(
+            f"Promotion failed: {str(e)}",
+            "danger"
+        )
+
+        return redirect(
+            url_for("class_groups.promote", id=id)
+        )
+
+    return redirect(
+        url_for(
+            "class_groups.view",
+            id=group.id
+        )
+    )

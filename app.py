@@ -183,13 +183,13 @@ from routes.sms import sms_bp
 from routes.finance import finance_bp
 from routes.timetable import timetable_bp
 from routes.pwa import pwa_bp
-
+from routes.alumni import alumni_bp
 
 
 
 
 # Register blueprints
-
+app.register_blueprint(alumni_bp)
 app.register_blueprint(library_bp)
 app.register_blueprint(pwa_bp)
 app.register_blueprint(data_management_bp)

@@ -62,6 +62,31 @@ class ClassGroup(db.Model):
         foreign_keys=[assistant_course_rep_id]
     )
 
+    # ==========================================
+    # Promotion History
+    # ==========================================
+    parent_class_group_id = db.Column(
+        db.Integer,
+        db.ForeignKey("class_groups.id"),
+        nullable=True
+    )
+
+    parent_class = db.relationship(
+        "ClassGroup",
+        remote_side=[id],
+        backref="promoted_classes"
+    )
+
+
+
+    members = db.relationship(
+        "Member",
+        foreign_keys="Member.class_group_id",
+        back_populates="class_group",
+        lazy=True
+    )
+
+
 
 
     def __repr__(self):

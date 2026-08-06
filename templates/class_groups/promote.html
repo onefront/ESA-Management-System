@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+
+{% block title %}Promote Academic Class{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="card shadow border-0 rounded-4">
+
+        {% if group.level == "400" %}
+
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-mortarboard-fill"></i>
+                Graduate Academic Class
+            </h4>
+        </div>
+
+        {% else %}
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-arrow-up-circle"></i>
+                Promote Academic Class
+            </h4>
+        </div>
+
+        {% endif %}
+
+        <div class="card-body">
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <th width="30%">Class Group</th>
+                    <td>{{ group.name }}</td>
+                </tr>
+
+                <tr>
+                    <th>Programme</th>
+                    <td>{{ group.programme.programme_name }}</td>
+                </tr>
+
+                <tr>
+                    <th>Session</th>
+                    <td>{{ group.session }}</td>
+                </tr>
+
+                <tr>
+                    <th>Current Level</th>
+                    <td>{{ group.level }}</td>
+                </tr>
+
+                <tr>
+                    <th>
+                        {% if group.level == "400" %}
+                        Destination
+                        {% else %}
+                        Next Level
+                        {% endif %}
+                    </th>
+
+                    <td>{{ next_level }}</td>
+                </tr>
+
+                <tr>
+                    <th>Total Students</th>
+                    <td>{{ student_count }}</td>
+                </tr>
+
+                <tr>
+                    <th>Admission Year</th>
+                    <td>{{ group.admission_year }}</td>
+                </tr>
+
+                <tr>
+                    <th>Expected Graduation</th>
+                    <td>{{ group.graduation_year }}</td>
+                </tr>
+
+            </table>
+
+            <div class="alert alert-warning">
+
+                {% if group.level == "400" %}
+
+                <strong>Warning!</strong>
+
+                This will graduate this class and move all eligible students to the
+                <strong>ESA Alumni Members</strong> module.
+
+                {% else %}
+
+                <strong>Warning!</strong>
+
+                This will create the next academic class and promote all eligible
+                students.
+
+                {% endif %}
+
+            </div>
+
+            <div class="d-flex justify-content-between">
+
+                <a href="{{ url_for('class_groups.index') }}"
+                   class="btn btn-secondary">
+
+                    <i class="bi bi-arrow-left"></i>
+
+                    Back
+
+                </a>
+
+                {% if group.level == "400" %}
+
+                <form method="POST"
+      action="{{ url_for('class_groups.confirm_promotion', id=group.id) }}">
+
+    <button
+        type="submit"
+        class="btn btn-success">
+
+        <i class="bi bi-mortarboard-fill"></i>
+
+        Graduate Class
+
+    </button>
+
+</form>
+
+                {% else %}
+
+                <form method="POST"
+      action="{{ url_for('class_groups.confirm_promotion', id=group.id) }}">
+
+    <button
+        type="submit"
+        class="btn btn-primary">
+
+        <i class="bi bi-arrow-up-circle"></i>
+
+        Promote Class
+
+    </button>
+
+</form>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

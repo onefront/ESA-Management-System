@@ -1,0 +1,254 @@
+{% extends "layout.html" %}
+
+{% block title %}ESA Alumni Network{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h3>
+        <i class="bi bi-mortarboard-fill text-primary"></i>
+        ESA Alumni Network
+    </h3>
+
+</div>
+
+<div class="row mb-4">
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">Total Alumni</h6>
+
+                <h2 class="text-primary">
+
+                    {{ total_alumni }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">Graduated</h6>
+
+                <h2 class="text-success">
+
+                    {{ this_year }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">Programmes</h6>
+
+                <h2 class="text-warning">
+
+                    {{ programme_count }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted">Male / Female</h6>
+
+                <h4>
+
+                    {{ male_count }}
+
+                    /
+
+                    {{ female_count }}
+
+                </h4>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+             <form method="GET" class="row mb-4">
+
+    <div class="col-md-10">
+
+        <input
+            type="text"
+            name="search"
+            class="form-control"
+            placeholder="Search by Name, ESA ID, Student ID, Phone or Programme..."
+            value="{{ request.args.get('search', '') }}">
+
+    </div>
+
+    <div class="col-md-2">
+
+        <button
+            class="btn btn-primary w-100">
+
+            <i class="bi bi-search"></i>
+
+            Search
+
+        </button>
+
+    </div>
+
+</form>
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-primary">
+
+                    <tr>
+
+                        <th>Photo</th>
+                        <th>ESA ID</th>
+                        <th>Name</th>
+                        <th>Programme</th>
+                        <th>Graduation Year</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                 {% if alumni %}
+
+                 {% for member in alumni %}
+
+                    <tr>
+
+                        <td>
+
+                            {% if member.passport %}
+
+                            <img src="{{ url_for('static', filename='uploads/' ~ member.passport) }}"
+                                 width="45"
+                                 height="45"
+                                 class="rounded-circle">
+
+                            {% else %}
+
+                            <img src="{{ url_for('static',
+                                filename='images/default-avatar.png') }}"
+                                 width="45"
+                                 height="45"
+                                 class="rounded-circle">
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>{{ member.esa_id }}</td>
+
+                        <td>
+
+                            {{ member.first_name }}
+                            {{ member.last_name }}
+
+                        </td>
+
+                        <td>{{ member.programme }}</td>
+
+                        <td>{{ member.graduation_year }}</td>
+
+                        <td>{{ member.phone }}</td>
+
+                        <td>
+
+                            <span class="badge bg-success">
+
+                                {{ member.status }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                           <a href="{{ url_for('alumni.profile', id=member.id) }}"
+                                           class="btn btn-sm btn-primary">
+
+                                <i class="bi bi-eye"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                       {% else %}
+
+                             <tr>
+
+    <td colspan="8" class="text-center text-muted py-4">
+
+        <i class="bi bi-search"></i>
+
+        No alumni found.
+
+    </td>
+
+</tr>
+
+{% endif %}
+
+</tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

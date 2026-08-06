@@ -178,6 +178,48 @@ def edit_course_rep(rep_id):
         rep=rep
     )
 # ==========================================
+
+
+
+# ==========================================
+# Search Member by Index Number
+# ==========================================
+@course_reps_bp.route("/search", methods=["POST"])
+@login_required
+@roles_required("Administrator", "General Secretary")
+def search_course_rep_member():
+
+    student_id = request.form.get("student_id", "").strip()
+
+    member = Member.query.filter_by(
+        student_id=student_id
+    ).first()
+
+    if not member:
+        flash(
+            "No member found with the provided Index Number.",
+            "danger"
+        )
+
+        return render_template(
+            "course_reps/add.html",
+            member=None
+        )
+
+    # Check if already appointed
+    if CourseRep.query.filter_by(member_id=member.id).first():
+
+        flash(
+            "This member is already a Course Representative.",
+            "warning"
+        )
+
+    return render_template(
+        "course_reps/add.html",
+        member=member
+    )
+
+# ==========================================
 # Add Course Representative
 # ==========================================
 @course_reps_bp.route("/add", methods=["GET", "POST"])
@@ -189,44 +231,57 @@ def add_course_rep():
 
         member_id = request.form.get("member_id")
         position = request.form.get("position")
+
+        if not member_id or not position:
+            flash(
+                "Please search and select a member first.",
+                "danger"
+            )
+            return redirect(
+                url_for("course_reps.add_course_rep")
+            )
+
         member = Member.query.get_or_404(member_id)
-        print("=" * 60)
-        print("Selected Member:", member.first_name, member.last_name)
-        print("Member ID:", member.id)
-        print("Member Class Group ID:", member.class_group_id)
-        print("=" * 60)
+
         # -----------------------------------------
-        # Check if this class already has
-        # this position
+        # Check if member is already appointed
         # -----------------------------------------
-        existing_reps = CourseRep.query.all()
+        existing_member = CourseRep.query.filter_by(
+            member_id=member.id
+        ).first()
 
-        for rep in existing_reps:
+        if existing_member:
+            flash(
+                "This member has already been appointed.",
+                "warning"
+            )
+            return redirect(
+                url_for("course_reps.add_course_rep")
+            )
 
-            existing_member = rep.member
-
-            if (
-                    existing_member.programme == member.programme
-                    and existing_member.level == member.level
-                    and existing_member.session == member.session
-                    and rep.position == position
-            ):
-                flash(
-                    f"{member.programme} "
-                    f"Level {member.level} "
-                    f"({member.session}) "
-                    f"already has a {position}.",
-                    "danger"
-                )
-
-                return redirect(
-                    url_for("course_reps.add_course_rep")
-                )
-
-        # Ensure the selected member belongs to a class group
+        # -----------------------------------------
+        # Ensure member belongs to a class group
+        # -----------------------------------------
         if not member.class_group_id:
             flash(
                 "The selected member has not been assigned to a class group.",
+                "danger"
+            )
+            return redirect(
+                url_for("course_reps.add_course_rep")
+            )
+
+        # -----------------------------------------
+        # Check if class already has this position
+        # -----------------------------------------
+        existing_position = CourseRep.query.filter_by(
+            class_group_id=member.class_group_id,
+            position=position
+        ).first()
+
+        if existing_position:
+            flash(
+                f"This class already has a {position}.",
                 "danger"
             )
             return redirect(
@@ -242,7 +297,6 @@ def add_course_rep():
 
         db.session.add(rep)
 
-        # Update the ClassGroup leadership
         class_group = member.class_group
 
         if position == "Course Rep":
@@ -252,19 +306,13 @@ def add_course_rep():
             class_group.assistant_course_rep_id = member.id
 
         db.session.commit()
-        db.session.refresh(class_group)
-
-        print("=" * 60)
-        print("AFTER COMMIT")
-        print("Course Rep After:", class_group.course_rep_id)
-        print("Assistant Rep After:", class_group.assistant_course_rep_id)
-        print("=" * 60)
 
         log_activity(
             module="Course Representatives",
             action=f"Appointed {position}",
             description=f"{member.first_name} {member.last_name}"
         )
+
         flash(
             "Course Representative appointed successfully.",
             "success"
@@ -274,24 +322,10 @@ def add_course_rep():
             url_for("course_reps.course_reps")
         )
 
-    # Get IDs of members already appointed
-    appointed_ids = [
-        rep.member_id
-        for rep in CourseRep.query.all()
-    ]
-
-    # Only members who are not already appointed
-    members = Member.query.filter(
-        ~Member.id.in_(appointed_ids)
-    ).order_by(
-        Member.first_name
-    ).all()
-
     return render_template(
         "course_reps/add.html",
-        members=members
+        member=None
     )
-
 # Remove Course Representative
 # ==========================================
 @course_reps_bp.route("/delete/<int:rep_id>", methods=["GET", "POST"])
