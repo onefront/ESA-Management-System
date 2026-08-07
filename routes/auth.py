@@ -20,6 +20,7 @@ from flask import current_app
 from werkzeug.utils import secure_filename
 import os
 import uuid
+from utils.audit import log_activity
 from models.department import Department
 from models.faculty import Faculty
 from models.member_index import MemberIndex
@@ -56,6 +57,12 @@ def login():
                 return redirect(url_for("auth.login"))
 
             login_user(user)
+
+            log_activity(
+                module="Authentication",
+                action="LOGIN",
+                description=f"{user.full_name} logged into the system."
+            )
 
             if user.must_change_password:
                 return redirect(url_for("auth.change_password"))
@@ -116,6 +123,14 @@ def change_password():
 
         db.session.commit()
 
+        log_activity(
+            module="Authentication",
+            action="PASSWORD CHANGE",
+            description=f"{current_user.full_name} changed password."
+        )
+
+
+
         flash(
             "Password changed successfully.",
             "success"
@@ -134,15 +149,19 @@ def change_password():
     return render_template(
         "auth/change_password.html"
     )
-
 @auth_bp.route("/logout")
 @login_required
 def logout():
 
+    log_activity(
+        module="Authentication",
+        action="LOGOUT",
+        description=f"{current_user.full_name} logged out."
+    )
+
     logout_user()
 
     return redirect(url_for("auth.login"))
-
 
 
 

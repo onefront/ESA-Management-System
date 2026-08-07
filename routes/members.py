@@ -9,9 +9,16 @@ from flask import (
     flash,
     jsonify,make_response
 )
+from utils.audit import (
+    log_activity,
+    get_changes,
+    log_create,
+    log_update,
+    log_delete
+)
 from datetime import date
 from flask_login import login_required, current_user
-from utils.audit import log_activity
+
 from dateutil.relativedelta import relativedelta
 from models.course_rep import CourseRep
 from reportlab.lib.utils import ImageReader
@@ -166,6 +173,8 @@ def members():
         session=session,
       status = status
     )
+
+
 # ==========================================
 # Add Member
 # ==========================================
@@ -183,9 +192,12 @@ def add_member():
     if selected_class_group:
         selected_group = ClassGroup.query.get(selected_class_group)
     if request.method == "POST":
-        student_id = request.form["student_id"]
+
+
+        student_id = request.form["student_id"].strip()
 
         existing_member = Member.query.filter_by(student_id=student_id).first()
+
 
         if existing_member:
             flash("A member with this Student ID already exists.", "danger")
@@ -266,7 +278,9 @@ def add_member():
 
             esa_id=esa_id,
 
-            student_id=request.form["student_id"],
+            student_id=request.form["student_id"].strip(),
+
+
 
             first_name=request.form["first_name"],
 
@@ -358,11 +372,10 @@ def add_member():
 
         db.session.commit()
 
-
-        log_activity(
+        log_create(
             module="Members",
-            action="Added Member",
-            description=member.esa_id
+            record_name=f"{member.first_name} {member.last_name}",
+            record_id=member.esa_id
         )
         return redirect(url_for("members.members"))
 
@@ -724,7 +737,17 @@ def edit_member(member_id):
 
 
     member = Member.query.get_or_404(member_id)
-
+    old_values = {
+        "First Name": member.first_name,
+        "Last Name": member.last_name,
+        "Phone": member.phone,
+        "Email": member.email,
+        "Programme": member.programme,
+        "Department": member.department,
+        "Level": member.level,
+        "Session": member.session,
+        "Status": member.status,
+    }
     if request.method == "POST":
 
         # Convert Date of Birth
@@ -771,7 +794,19 @@ def edit_member(member_id):
 
         member.status = request.form.get("status")
         passport = request.files.get("passport")
+        new_values = {
+            "First Name": member.first_name,
+            "Last Name": member.last_name,
+            "Phone": member.phone,
+            "Email": member.email,
+            "Programme": member.programme,
+            "Department": member.department,
+            "Level": member.level,
+            "Session": member.session,
+            "Status": member.status,
+        }
 
+        changes = get_changes(old_values, new_values)
         if passport and passport.filename:
             filename = secure_filename(passport.filename)
 
@@ -784,7 +819,16 @@ def edit_member(member_id):
 
             member.passport = filename
         db.session.commit()
-
+        log_activity(
+            module="Members",
+            action="Updated Member",
+            description=(
+                f"{member.first_name} {member.last_name} ({member.esa_id}) | "
+                + "; ".join(changes)
+                if changes
+                else f"{member.first_name} {member.last_name} ({member.esa_id}) - No changes detected."
+            )
+        )
         return redirect(
             url_for(
                 "members.member_profile",
