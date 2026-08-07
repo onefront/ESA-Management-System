@@ -47,19 +47,14 @@
         <div class="input-group">
 
             <input
-                type="text"
-                class="form-control"
-                name="search"
-                placeholder="Search lecturer..."
-                value="{{ search }}">
+    type="text"
+    class="form-control"
+    id="searchInput"
+    name="search"
+    placeholder="Search lecturer..."
+    autocomplete="off">
 
-            <button class="btn btn-primary">
 
-                <i class="bi bi-search"></i>
-
-                Search
-
-            </button>
 
         </div>
 
@@ -185,5 +180,38 @@
     </div>
 
 </div>
+
+<script>
+
+const input = document.getElementById("searchInput");
+
+input.addEventListener("keyup", function () {
+
+    const value = this.value;
+
+    fetch("/lecturers?search=" + encodeURIComponent(value), {
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+
+    .then(response => response.text())
+
+    .then(html => {
+
+        const parser = new DOMParser();
+
+        const doc = parser.parseFromString(html, "text/html");
+
+        const newTable = doc.querySelector(".card");
+
+        document.querySelector(".card").innerHTML = newTable.innerHTML;
+
+    });
+
+});
+
+</script>
+
 
 {% endblock %}

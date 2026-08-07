@@ -41,9 +41,18 @@ def lecturers():
     query = Lecturer.query
 
     if search:
-
         query = query.filter(
-            Lecturer.lecturer_name.contains(search)
+
+            db.or_(
+
+                Lecturer.lecturer_name.ilike(f"%{search}%"),
+
+                Lecturer.phone_number.ilike(f"%{search}%"),
+
+                Lecturer.department.ilike(f"%{search}%")
+
+            )
+
         )
 
     lecturers = query.order_by(
