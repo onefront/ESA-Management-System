@@ -725,7 +725,17 @@ def restore_member(id):
     member.graduation_date = None
 
     db.session.commit()
-
+    log_update(
+        module="Members",
+        record_name=f"{member.first_name} {member.last_name}",
+        record_id=member.esa_id,
+        old_values={
+            "Status": "Alumni"
+        },
+        new_values={
+            "Status": "Active"
+        }
+    )
     flash(
         f"{member.full_name} has been restored to Active Members.",
         "success"
