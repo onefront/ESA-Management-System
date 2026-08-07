@@ -87,6 +87,13 @@
                     <td>{{ group.status }}</td>
 
                     <td>
+                        <a href="{{ url_for('class_groups.sync_members', group_id=group.id) }}"
+   class="btn btn-warning btn-sm"
+   onclick="return confirm('Synchronize all matching members to this class?');">
+
+    <i class="fas fa-sync-alt"></i> Sync Members
+
+</a>
 
   <div class="btn-group" role="group">
 

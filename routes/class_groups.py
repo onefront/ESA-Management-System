@@ -8,6 +8,15 @@ from utils.auth import admin_required
 from datetime import datetime
 from models.class_notice import ClassNotice
 from flask import request, flash, redirect, url_for
+from models.member import Member
+from models.programme import Programme
+from extensions import db
+from flask import flash, redirect, url_for
+from utils.audit import log_activity
+
+
+
+
 class_groups_bp = Blueprint(
     "class_groups",
     __name__,
@@ -345,7 +354,7 @@ def add():
 
         if existing:
             flash(
-                "This Academic Class already exists.",
+                "An active class already exists for this Programme, Level and Session.",
                 "warning"
             )
             return redirect(url_for("class_groups.add"))
@@ -436,6 +445,61 @@ def delete(id):
     flash("Class Group deleted successfully.", "success")
 
     return redirect(url_for("class_groups.index"))
+
+
+
+# ==========================================
+# Sync Members to Class
+# ==========================================
+
+@class_groups_bp.route("/<int:group_id>/sync")
+@login_required
+@admin_required
+def sync_members(group_id):
+
+    group = ClassGroup.query.get_or_404(group_id)
+
+    programme = Programme.query.get(group.programme_id)
+
+    if not programme:
+        flash("Programme not found.", "danger")
+        return redirect(url_for("class_groups.index"))
+
+    members = Member.query.filter_by(
+        programme=programme.programme_name,
+        level=group.level,
+        session=group.session
+    ).all()
+
+    count = 0
+
+    for member in members:
+
+        if member.class_group_id != group.id:
+            member.class_group_id = group.id
+            count += 1
+
+    db.session.commit()
+
+    log_activity(
+        module="Class Groups",
+        action="SYNC MEMBERS",
+        description=f"{count} members synchronized to {group.name}."
+    )
+
+    flash(
+        f"{count} member(s) synchronized successfully.",
+        "success"
+    )
+
+    return redirect(
+        url_for(
+            "class_groups.members",
+            id=group.id
+        )
+    )
+
+
 
 
 
@@ -543,7 +607,10 @@ def confirm_promotion(id):
     # -----------------------------------------
 
     existing = ClassGroup.query.filter_by(
-        name=new_name
+        programme_id=request.form["programme_id"],
+        level=request.form["level"],
+        session=request.form["session"],
+        status="Active"
     ).first()
 
     if existing:

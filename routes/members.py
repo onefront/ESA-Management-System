@@ -807,9 +807,34 @@ def edit_member(member_id):
 
         member.level = request.form.get("level")
         member.session = request.form.get("session")
+        class_group = None
+
+        if programme:
+            class_group = ClassGroup.query.filter_by(
+                programme_id=programme.id,
+                level=member.level,
+                session=member.session,
+                status="Active"
+            ).first()
 
         member.class_group_id = (
-                request.form.get("class_group_id") or None
+            class_group.id if class_group else None
+        )
+
+
+
+
+
+        # Automatically detect Class Group
+        class_group = ClassGroup.query.filter_by(
+            programme_id=programme.id if programme else None,
+            level=member.level,
+            session=member.session,
+            status="Active"
+        ).first()
+
+        member.class_group_id = (
+            class_group.id if class_group else None
         )
 
         member.status = request.form.get("status")
