@@ -34,6 +34,48 @@
         </a>
 
     </div>
+
+
+    <div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body">
+                <h6 class="text-muted">Today</h6>
+                <h2 class="text-primary">{{ today_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body">
+                <h6 class="text-muted">This Week</h6>
+                <h2 class="text-success">{{ week_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body">
+                <h6 class="text-muted">This Month</h6>
+                <h2 class="text-warning">{{ month_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body">
+                <h6 class="text-muted">Total Logs</h6>
+                <h2 class="text-danger">{{ total_count }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 <form method="GET" class="row g-3 mb-4">
 
     <div class="col-md-6">
@@ -85,6 +127,16 @@
 
     </div>
 
+    <a href="{{ url_for('audit.export_pdf') }}"
+   class="btn btn-danger">
+
+    <i class="bi bi-file-earmark-pdf"></i>
+
+    Export PDF
+
+</a>
+
+
 </form>
     <div class="card shadow-sm border-0">
 
@@ -111,15 +163,33 @@
 
                    <tr>
     <td>{{ log.action_time.strftime("%d %b %Y %I:%M %p") }}</td>
-    <td>{{ log.user }}</td>
     <td>
-        <span class="badge bg-primary">
-            {{ log.module }}
-        </span>
-    </td>
+
+<a
+    href="{{ url_for('audit.user_logs', username=log.user) }}"
+    class="text-decoration-none fw-bold">
+
+    {{ log.user }}
+
+</a>
+
+</td>
+    <td>
+
+<a
+    href="{{ url_for('audit.module_logs', module=log.module) }}"
+    class="text-decoration-none">
+
+    <span class="badge bg-primary">
+        {{ log.module }}
+    </span>
+
+</a>
+
+</td>
     <td>{{ log.action }}</td>
     <td>{{ log.description or "-" }}</td>
-   <td class="text-center">
+
 
     <td class="text-center">
 
