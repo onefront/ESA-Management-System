@@ -546,7 +546,17 @@ def graduation_wizard():
                 graduated += 1
 
         db.session.commit()
-
+        log_update(
+            module="Members",
+            record_name=f"{member.first_name} {member.last_name}",
+            record_id=member.esa_id,
+            old_values={
+                "Status": "Active"
+            },
+            new_values={
+                "Status": "Alumni"
+            }
+        )
         flash(
             f"{graduated} member(s) successfully moved to Alumni.",
             "success"
@@ -929,6 +939,12 @@ def delete_member(member_id):
             db.session.delete(member)
 
             db.session.commit()
+
+            log_delete(
+                module="Members",
+                record_name=f"{member.first_name} {member.last_name}",
+                record_id=member.esa_id
+            )
 
             flash(
                 "Member deleted successfully.",
