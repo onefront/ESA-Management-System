@@ -1,0 +1,281 @@
+{% extends "layout.html" %}
+
+{% block title %}Audit Receipt{% endblock %}
+
+{% block content %}
+
+<style>
+
+.receipt{
+    max-width:900px;
+    margin:auto;
+}
+
+.receipt-header{
+    border-bottom:3px solid #0d6efd;
+    padding-bottom:15px;
+    margin-bottom:20px;
+}
+
+.receipt-title{
+    font-size:28px;
+    font-weight:bold;
+    color:#0d6efd;
+}
+
+.receipt-subtitle{
+    color:#666;
+    font-size:15px;
+}
+
+.info-card{
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    margin-bottom:20px;
+}
+
+.label{
+    font-weight:bold;
+    color:#555;
+}
+
+.value{
+    font-size:16px;
+}
+
+.description-box{
+    background:#f8f9fa;
+    border-left:5px solid #0d6efd;
+    padding:20px;
+    border-radius:6px;
+}
+
+@media print{
+
+.navbar,
+.sidebar,
+.btn,
+footer{
+display:none!important;
+}
+
+.receipt{
+max-width:100%;
+}
+
+body{
+background:#fff;
+}
+
+}
+
+</style>
+
+<div class="receipt">
+
+<div class="card info-card">
+
+<div class="card-body">
+
+<div class="receipt-header d-flex justify-content-between align-items-center">
+
+<div>
+
+<div class="d-flex align-items-center">
+
+    <img
+        src="{{ url_for('static', filename='images/logo.png') }}"
+        width="70"
+        class="me-3">
+
+    <div>
+
+        <h2 class="receipt-title mb-0">
+            EXECUTIVE STUDENT ASSOCIATION
+        </h2>
+
+        <div class="receipt-subtitle">
+            ESA MANAGEMENT SYSTEM
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+<div class="text-end">
+
+<h4 class="text-primary">
+AUDIT RECEIPT
+</h4>
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<div class="label">Audit ID</div>
+<div class="value">#{{ "%06d"|format(audit.id) }}</div>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<div class="label">Date & Time</div>
+<div class="value">{{ audit.action_time.strftime("%d %B %Y %I:%M %p") }}</div>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<div class="label">Performed By</div>
+<div class="value">{{ audit.user }}</div>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<div class="label">Module</div>
+
+<span class="badge bg-primary">
+{{ audit.module }}
+</span>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<div class="label">Action</div>
+
+{% if audit.action=="Created" %}
+<span class="badge bg-success">{{ audit.action }}</span>
+
+{% elif audit.action=="Updated" %}
+<span class="badge bg-warning text-dark">{{ audit.action }}</span>
+
+{% elif audit.action=="Deleted" %}
+<span class="badge bg-danger">{{ audit.action }}</span>
+
+{% else %}
+{% set colors = {
+'Created':'success',
+'Updated':'warning',
+'Deleted':'danger',
+'LOGIN':'primary',
+'LOGOUT':'secondary',
+'PASSWORD CHANGE':'info'
+} %}
+
+<span class="badge bg-{{ colors.get(audit.action,'dark') }} fs-6">
+    {{ audit.action }}
+</span>
+{% endif %}
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<div class="label">IP Address</div>
+
+<div class="value">
+{{ audit.ip_address }}
+</div>
+
+</div>
+
+</div>
+
+<hr>
+
+<h5>Description</h5>
+{% if changes %}
+
+<hr>
+
+<h5 class="mt-4">
+Changes Made
+</h5>
+
+<table class="table table-striped table-bordered">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>Field</th>
+
+<th>Old Value</th>
+
+<th>New Value</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for c in changes %}
+
+<tr>
+
+<td>{{ c.field }}</td>
+
+<td>{{ c.old }}</td>
+
+<td class="text-success fw-bold">
+{{ c.new }}
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endif %}
+<div class="description-box">
+
+{% if audit.description %}
+{{ audit.description|replace(";", "<br>")|safe }}
+{% else %}
+No description available.
+{% endif %}
+
+</div>
+
+<hr>
+
+<div class="d-flex justify-content-between">
+
+<a
+href="{{ url_for('audit.dashboard') }}"
+class="btn btn-secondary">
+
+← Back
+
+</a>
+
+<button
+class="btn btn-primary"
+onclick="window.print()">
+
+🖨 Print Receipt
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

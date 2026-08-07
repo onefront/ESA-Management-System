@@ -60,3 +60,37 @@ def dashboard():
         search=search,
         selected_module=module
     )
+
+
+@audit_bp.route("/<int:audit_id>")
+@login_required
+@roles_required("Administrator", "General Secretary")
+def view_audit(audit_id):
+    audit = AuditLog.query.get_or_404(audit_id)
+
+    changes = []
+
+    if audit.action == "Updated" and audit.description:
+
+        parts = audit.description.split("|")
+
+        if len(parts) > 1:
+
+            for item in parts[1].split(";"):
+
+                if "→" in item and ":" in item:
+                    field, values = item.split(":", 1)
+
+                    old, new = values.split("→", 1)
+
+                    changes.append({
+                        "field": field.strip(),
+                        "old": old.strip(),
+                        "new": new.strip()
+                    })
+
+    return render_template(
+        "audit/view.html",
+        audit=audit,
+        changes=changes
+    )

@@ -9,6 +9,11 @@ from flask import (
 from flask_login import login_required
 from utils.auth import admin_required
 from extensions import db
+from utils.audit import (
+    log_create,
+    log_update,
+    log_delete,
+)
 from models.member import Member
 from models.payment import Payment
 from flask_login import login_required
@@ -52,6 +57,8 @@ def payments():
         total_payments=total_payments,
         total_revenue=total_revenue
     )
+
+
 # ==========================================
 # Add Payment (Dashboard)
 # ==========================================
@@ -87,6 +94,8 @@ def add_payment_dashboard():
             )
 
             db.session.commit()
+
+
 
         except Exception:
 
@@ -195,8 +204,20 @@ def add_payment(member_id):
                 f"ESA-REC-{payment.date_paid.year}-{payment.id:06d}"
             )
 
+
             db.session.commit()
 
+            print("=== PAYMENT SAVED ===")
+
+            try:
+                log_create(
+                    module="Payments",
+                    record_name=f"{member.first_name} {member.last_name}",
+                    record_id=payment.reference
+                )
+                print("=== AUDIT LOG CREATED ===")
+            except Exception as e:
+                print("=== AUDIT ERROR ===", e)
         except Exception:
 
             db.session.rollback()
@@ -222,9 +243,8 @@ def add_payment(member_id):
         member=member
     )
 
-# ==========================================
-# Edit Payment
-# ==========================================
+
+
 @payments_bp.route(
     "/payments/<int:payment_id>/edit",
     methods=["GET", "POST"]
@@ -237,12 +257,31 @@ def edit_payment(payment_id):
 
     if request.method == "POST":
 
+        old_values = {
+            "Payment Type": payment.payment_type,
+            "Amount": str(payment.amount),
+            "Payment Method": payment.payment_method
+        }
+
         payment.payment_type = request.form["payment_type"]
-        payment.amount = request.form["amount"]
+        payment.amount = float(request.form["amount"])
         payment.payment_method = request.form["payment_method"]
 
+        new_values = {
+            "Payment Type": payment.payment_type,
+            "Amount": str(payment.amount),
+            "Payment Method": payment.payment_method
+        }
 
         db.session.commit()
+
+        log_update(
+            module="Payments",
+            record_name=f"{payment.member.first_name} {payment.member.last_name}",
+            record_id=payment.reference,
+            old_values=old_values,
+            new_values=new_values
+        )
 
         return redirect(url_for("payments.payments"))
 
@@ -250,9 +289,9 @@ def edit_payment(payment_id):
         "payments/edit.html",
         payment=payment
     )
-# ==========================================
-# Delete Payment
-# ==========================================
+
+
+
 @payments_bp.route(
     "/payments/<int:payment_id>/delete",
     methods=["GET", "POST"]
@@ -263,10 +302,19 @@ def delete_payment(payment_id):
 
     payment = Payment.query.get_or_404(payment_id)
 
+    member_name = f"{payment.member.first_name} {payment.member.last_name}"
+    receipt_no = payment.reference
+
     if request.method == "POST":
 
         db.session.delete(payment)
         db.session.commit()
+
+        log_delete(
+            module="Payments",
+            record_name=member_name,
+            record_id=receipt_no
+        )
 
         return redirect(url_for("payments.payments"))
 
@@ -274,6 +322,8 @@ def delete_payment(payment_id):
         "payments/delete.html",
         payment=payment
     )
+
+
 
 # ==========================================
     # Payment Receipt

@@ -100,6 +100,7 @@
     <th>Module</th>
     <th>Action</th>
     <th>Description</th>
+   <th width="90">View</th>
 </tr>
 
                 </thead>
@@ -118,6 +119,20 @@
     </td>
     <td>{{ log.action }}</td>
     <td>{{ log.description or "-" }}</td>
+   <td class="text-center">
+
+    <td class="text-center">
+
+    <a href="{{ url_for('audit.view_audit', audit_id=log.id) }}"
+       class="btn btn-sm btn-outline-primary">
+
+        <i class="bi bi-eye"></i> View
+
+    </a>
+
+</td>
+
+</td>
 </tr>
 
                 {% endfor %}
