@@ -187,10 +187,13 @@ def verify_index():
             student_id=student_id
         ).first()
 
-        if not member_index:
+        existing_member = Member.query.filter_by(
+            student_id=student_id
+        ).first()
 
+        if existing_member:
             flash(
-                "Your Student Index Number is not registered with ESA.",
+                "An account has already been created using this Student Index Number.",
                 "danger"
             )
 
@@ -198,8 +201,11 @@ def verify_index():
                 url_for("auth.verify_index")
             )
 
-        if member_index.used:
+        existing_member = Member.query.filter_by(
+            student_id=student_id
+        ).first()
 
+        if existing_member:
             flash(
                 "An account has already been created using this Student Index Number.",
                 "warning"
@@ -336,9 +342,13 @@ def register():
                 url_for("auth.verify_index")
             )
 
-        if member_index.used:
+        existing_member = Member.query.filter_by(
+            student_id=student_id
+        ).first()
+
+        if existing_member:
             flash(
-                "This Student Index Number has already been used.",
+                "An account has already been created using this Student Index Number.",
                 "danger"
             )
 
