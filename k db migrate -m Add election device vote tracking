@@ -1,0 +1,12 @@
+[1mdiff --git a/models/programme.py b/models/programme.py[m
+[1mindex 0f94e12..52bde13 100644[m
+[1m--- a/models/programme.py[m
+[1m+++ b/models/programme.py[m
+[36m@@ -17,7 +17,6 @@[m [mclass Programme(db.Model):[m
+     # Programme abbreviation[m
+     programme_code = db.Column([m
+         db.String(20),[m
+[31m-        unique=True,[m
+         nullable=False[m
+     )[m
+ [m

@@ -17,9 +17,9 @@ class Programme(db.Model):
     # Programme abbreviation
     programme_code = db.Column(
         db.String(20),
-        unique=True,
         nullable=False
     )
+
 
     faculty_id = db.Column(
         db.Integer,

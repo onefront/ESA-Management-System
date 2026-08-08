@@ -60,6 +60,7 @@ from routes.library import library_bp
 from models.payment import Payment
 from models.election import Election
 from models.election_settings import ElectionSettings
+from models.election_device_vote import ElectionDeviceVote
 from models.portfolio import Portfolio
 from models.system_settings import SystemSettings
 from models.lecturer import Lecturer
