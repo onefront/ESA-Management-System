@@ -260,13 +260,14 @@ def results():
 
 
 
-
+# ==========================================
+# CONFIRM VOTE
+# ==========================================
 
 @voting_bp.route("/confirm", methods=["POST"])
 def confirm_vote():
 
     if "member_index_id" not in session:
-
         flash(
             "Session expired. Please enter your Index Number again.",
             "warning"
@@ -304,12 +305,12 @@ def confirm_vote():
                     "candidate": candidate
                 })
 
-            return render_template(
+    # IMPORTANT:
+    # This must be OUTSIDE the for loop
+    return render_template(
         "voting/confirm_vote.html",
-            selections=selections
+        selections=selections
     )
-
-
 
 @voting_bp.route("/submit", methods=["POST"])
 def submit_vote():
@@ -373,7 +374,7 @@ def submit_vote():
             )
 
             db.session.add(vote)
-            db.session.add(vote)
+
 
     index.used = True
     index.used_at = datetime.utcnow()
