@@ -42,7 +42,6 @@ def dashboard():
 # ==========================================
 # ADMIN - RESET VOTER
 # ==========================================
-
 @voting_bp.route("/admin/reset-voter", methods=["GET", "POST"])
 @login_required
 @roles_required("Administrator")
@@ -56,64 +55,84 @@ def reset_voter():
 
     if request.method == "POST":
 
-        student_id = request.form.get(
-            "student_id",
-            ""
-        ).strip().upper()
+        student_ids = request.form.getlist("student_id")
 
-        if not student_id:
+        # Remove empty entries
+        student_ids = [
+            student_id.strip().upper()
+            for student_id in student_ids
+            if student_id.strip()
+        ]
+
+        if not student_ids:
             flash(
-                "Please enter an Index Number.",
+                "Please enter at least one Index Number.",
                 "warning"
             )
-            return redirect(
-                url_for("voting.reset_voter")
-            )
+            return redirect(url_for("voting.reset_voter"))
 
-        index = MemberIndex.query.filter_by(
-            student_id=student_id
-        ).first()
-
-        if not index:
+        # Maximum of 10 Index Numbers
+        if len(student_ids) > 10:
             flash(
-                "Index Number not found.",
+                "You can reset a maximum of 10 Index Numbers at once.",
                 "danger"
             )
-            return redirect(
-                url_for("voting.reset_voter")
+            return redirect(url_for("voting.reset_voter"))
+
+        reset_count = 0
+        not_found = []
+
+        for student_id in student_ids:
+
+            index = MemberIndex.query.filter_by(
+                student_id=student_id
+            ).first()
+
+            if not index:
+                not_found.append(student_id)
+                continue
+
+            # Delete only this voter's votes
+            # from the active election
+            deleted_votes = Vote.query.filter_by(
+                election_id=settings.active_election_id,
+                member_index_id=index.id
+            ).delete(
+                synchronize_session=False
             )
 
-        # Delete only this voter's votes
-        # from the active election
-        deleted_votes = Vote.query.filter_by(
-            election_id=settings.active_election_id,
-            member_index_id=index.id
-        ).delete(
-            synchronize_session=False
-        )
+            # Make the Index Number available again
+            index.used = False
+            index.used_at = None
 
-        # Make the Index Number available again
-        index.used = False
-        index.used_at = None
+            reset_count += 1
+
+            # Record each reset separately
+            log_activity(
+                module="Elections",
+                action="Reset Voter",
+                description=(
+                    f"Index Number {student_id} was reset "
+                    f"for the active election. "
+                    f"{deleted_votes} vote(s) removed."
+                )
+            )
 
         db.session.commit()
 
-        # Record the reset in the Audit Log
-        log_activity(
-            module="Elections",
-            action="Reset Voter",
-            description=(
-                f"Index Number {student_id} was reset for "
-                f"the active election. "
-                f"{deleted_votes} vote(s) removed."
+        if reset_count:
+            flash(
+                f"{reset_count} voter(s) reset successfully. "
+                f"They can vote again.",
+                "success"
             )
-        )
 
-        flash(
-            f"Index Number {student_id} has been reset "
-            f"successfully. The voter can vote again.",
-            "success"
-        )
+        if not_found:
+            flash(
+                "Index Numbers not found: "
+                + ", ".join(not_found),
+                "warning"
+            )
 
         return redirect(
             url_for("voting.reset_voter")
@@ -122,10 +141,6 @@ def reset_voter():
     return render_template(
         "voting/reset_voter.html"
     )
-
-
-
-
 # ==========================================
 # STUDENT LOGIN
 @voting_bp.route("/login", methods=["GET", "POST"])

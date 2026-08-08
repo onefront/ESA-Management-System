@@ -8,7 +8,7 @@
 
         <div class="card-header bg-warning">
             <h4 class="mb-0">
-                🔄 Reset Voter
+                🔄 Reset Voters
             </h4>
         </div>
 
@@ -16,45 +16,57 @@
 
             <div class="alert alert-warning">
                 <strong>Important:</strong>
-                Resetting a voter will remove their votes
-                from the current election and allow the
-                Index Number to vote again.
+                You can reset up to 10 Index Numbers at once.
+                Resetting a voter removes their votes from the
+                current election and allows the Index Number to
+                vote again.
             </div>
 
             <form method="POST">
 
-                <div class="mb-3">
+                <div class="row g-3">
 
-                    <label class="form-label">
-                        Index Number
-                    </label>
+                    {% for i in range(1, 11) %}
 
-                    <input
-                        type="text"
-                        name="student_id"
-                        class="form-control"
-                        placeholder="Enter Index Number"
-                        required
-                    >
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Index Number {{ i }}
+                        </label>
+
+                        <input
+                            type="text"
+                            name="student_id"
+                            class="form-control"
+                            placeholder="Enter Index Number"
+                        >
+
+                    </div>
+
+                    {% endfor %}
 
                 </div>
 
-                <button
-                    type="submit"
-                    class="btn btn-warning"
-                    onclick="return confirm(
-                        'Are you sure you want to reset this voter? Their current-election votes will be removed.'
-                    );"
-                >
-                    🔄 Reset Voter
-                </button>
+                <div class="mt-4">
 
-                <a
-                    href="{{ url_for('voting.dashboard') }}"
-                    class="btn btn-secondary"
-                >
-                    Cancel
-                </a>
+                    <button
+                        type="submit"
+                        class="btn btn-warning"
+                        onclick="return confirm(
+                            'Are you sure you want to reset these voters? Their current-election votes will be removed.'
+                        );"
+                    >
+                        🔄 Reset Voters
+                    </button>
+
+                    <a
+                        href="{{ url_for('voting.dashboard') }}"
+                        class="btn btn-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
 
             </form>
 
