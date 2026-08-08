@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-warning">
+            <h4 class="mb-0">
+                🔄 Reset Voter
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="alert alert-warning">
+                <strong>Important:</strong>
+                Resetting a voter will remove their votes
+                from the current election and allow the
+                Index Number to vote again.
+            </div>
+
+            <form method="POST">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Index Number
+                    </label>
+
+                    <input
+                        type="text"
+                        name="student_id"
+                        class="form-control"
+                        placeholder="Enter Index Number"
+                        required
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-warning"
+                    onclick="return confirm(
+                        'Are you sure you want to reset this voter? Their current-election votes will be removed.'
+                    );"
+                >
+                    🔄 Reset Voter
+                </button>
+
+                <a
+                    href="{{ url_for('voting.dashboard') }}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

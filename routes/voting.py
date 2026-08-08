@@ -7,6 +7,10 @@ from flask import (
     flash,
     session,
 )
+
+from flask_login import login_required
+from utils.auth import roles_required
+from utils.audit import log_activity
 from extensions import db
 from models.member_index import MemberIndex
 from models.member import Member
@@ -33,6 +37,93 @@ def dashboard():
     return render_template(
         "voting/dashboard.html"
     )
+
+
+# ==========================================
+# ADMIN - RESET VOTER
+# ==========================================
+
+@voting_bp.route("/admin/reset-voter", methods=["GET", "POST"])
+@login_required
+@roles_required("Administrator")
+def reset_voter():
+
+    settings = ElectionSettings.query.first()
+
+    if not settings or not settings.active_election_id:
+        flash("No active election is configured.", "warning")
+        return redirect(url_for("voting.dashboard"))
+
+    if request.method == "POST":
+
+        student_id = request.form.get(
+            "student_id",
+            ""
+        ).strip().upper()
+
+        if not student_id:
+            flash(
+                "Please enter an Index Number.",
+                "warning"
+            )
+            return redirect(
+                url_for("voting.reset_voter")
+            )
+
+        index = MemberIndex.query.filter_by(
+            student_id=student_id
+        ).first()
+
+        if not index:
+            flash(
+                "Index Number not found.",
+                "danger"
+            )
+            return redirect(
+                url_for("voting.reset_voter")
+            )
+
+        # Delete only this voter's votes
+        # from the active election
+        deleted_votes = Vote.query.filter_by(
+            election_id=settings.active_election_id,
+            member_index_id=index.id
+        ).delete(
+            synchronize_session=False
+        )
+
+        # Make the Index Number available again
+        index.used = False
+        index.used_at = None
+
+        db.session.commit()
+
+        # Record the reset in the Audit Log
+        log_activity(
+            module="Elections",
+            action="Reset Voter",
+            description=(
+                f"Index Number {student_id} was reset for "
+                f"the active election. "
+                f"{deleted_votes} vote(s) removed."
+            )
+        )
+
+        flash(
+            f"Index Number {student_id} has been reset "
+            f"successfully. The voter can vote again.",
+            "success"
+        )
+
+        return redirect(
+            url_for("voting.reset_voter")
+        )
+
+    return render_template(
+        "voting/reset_voter.html"
+    )
+
+
 
 
 # ==========================================

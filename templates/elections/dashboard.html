@@ -109,98 +109,115 @@
     </div>
 
 </div>
+
 <!-- ================= Election Operations ================= -->
 
 <div class="mt-5">
 
-<h4 class="section-title">
-    Election Operations
-</h4>
+    <h4 class="section-title">
+        Election Operations
+    </h4>
 
     <div class="row g-4">
 
-    <div class="col-lg-3">
-        {{ dashboard_card(
-            "Voting",
-            " manage voting.",
-            "bi-check2-square",
-            "warning",
-            "voting.dashboard"
-        ) }}
-    </div>
+        <div class="col-lg-3 col-md-6">
+            {{ dashboard_card(
+                "Voting",
+                "Manage voting.",
+                "bi-check2-square",
+                "warning",
+                "voting.dashboard"
+            ) }}
+        </div>
 
-    <div class="col-lg-3">
-        {{ dashboard_card(
-            "Results",
-            "View election results.",
-            "bi-bar-chart-fill",
-            "danger",
-            "results.dashboard"
-        ) }}
-    </div>
+        <div class="col-lg-3 col-md-6">
+            {{ dashboard_card(
+                "Results",
+                "View election results.",
+                "bi-bar-chart-fill",
+                "danger",
+                "results.dashboard"
+            ) }}
+        </div>
 
-    <div class="col-lg-3">
-        {{ dashboard_card(
-            "Analytics",
-            "Live election statistics.",
-            "bi-graph-up-arrow",
-            "primary",
-            "analytics.dashboard"
-        ) }}
-    </div>
+        <div class="col-lg-3 col-md-6">
+            {{ dashboard_card(
+                "Analytics",
+                "Live election statistics.",
+                "bi-graph-up-arrow",
+                "primary",
+                "analytics.dashboard"
+            ) }}
+        </div>
 
-    <div class="col-lg-3">
-        {{ dashboard_card(
-            "Election Control",
-            "Open,close voting.",
-            "bi-sliders",
-            "secondary",
-            "control.dashboard"
-        ) }}
+        <div class="col-lg-3 col-md-6">
+            {{ dashboard_card(
+                "Election Control",
+                "Open, close and control voting.",
+                "bi-sliders",
+                "secondary",
+                "control.dashboard"
+            ) }}
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            {{ dashboard_card(
+                "Reset Voter",
+                "Reset an Index Number so the voter can vote again.",
+                "bi-arrow-repeat",
+                "warning",
+                "voting.reset_voter"
+            ) }}
+        </div>
+
     </div>
 
 </div>
-    </div>
+
+
 <!-- ================= Administration ================= -->
 
 <div class="mt-5">
 
-<h4 class="section-title">
-    Administration
-</h4>
+    <h4 class="section-title">
+        Administration
+    </h4>
 
-   <div class="row g-4">
+    <div class="row g-4">
 
-    <div class="col-lg-4">
-        {{ dashboard_card(
-            "Audit Log",
-            "View election activity history.",
-            "bi-clock-history",
-            "secondary",
-            "audit.dashboard"
-        ) }}
+        <div class="col-lg-4 col-md-6">
+            {{ dashboard_card(
+                "Audit Log",
+                "View election activity history.",
+                "bi-clock-history",
+                "secondary",
+                "audit.dashboard"
+            ) }}
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            {{ dashboard_card(
+                "Election History",
+                "Browse previous elections.",
+                "bi-calendar-week",
+                "primary",
+                "history.dashboard"
+            ) }}
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            {{ dashboard_card(
+                "Settings",
+                "Election configuration.",
+                "bi-gear-fill",
+                "warning",
+                "settings.dashboard"
+            ) }}
+        </div>
+
     </div>
 
-    <div class="col-lg-4">
-        {{ dashboard_card(
-            "Election History",
-            "Browse previous elections.",
-            "bi-calendar-week",
-            "primary",
-            "history.dashboard"
-        ) }}
-    </div>
-
-    <div class="col-lg-4">
-      {{ dashboard_card(
-    "Settings",
-    "Election configuration.",
-    "bi-gear-fill",
-    "warning",
-    "settings.dashboard"
-) }}
-    </div>
-   </div>
-   </div>
 </div>
-       {% endblock %}
+
+</div>
+{% endblock %}
