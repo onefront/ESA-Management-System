@@ -165,13 +165,35 @@
     <td>{{ log.action_time.strftime("%d %b %Y %I:%M %p") }}</td>
     <td>
 
-<a
-    href="{{ url_for('audit.user_logs', username=log.user) }}"
-    class="text-decoration-none fw-bold">
+    {% if log.module == "Voting" %}
 
-    {{ log.user }}
+        {% if log.description and "Index Number " in log.description %}
 
-</a>
+            {% set index_number = log.description.split("Index Number ")[1].split(" ")[0] %}
+
+            <span class="text-primary fw-bold">
+                Index: {{ index_number }}
+            </span>
+
+        {% else %}
+
+            <span class="text-primary fw-bold">
+                Voter
+            </span>
+
+        {% endif %}
+
+    {% else %}
+
+        <a
+            href="{{ url_for('audit.user_logs', username=log.user) }}"
+            class="text-decoration-none fw-bold">
+
+            {{ log.user }}
+
+        </a>
+
+    {% endif %}
 
 </td>
     <td>

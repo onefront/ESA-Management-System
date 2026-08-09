@@ -186,7 +186,25 @@ def verify_index():
         member_index = MemberIndex.query.filter_by(
             student_id=student_id
         ).first()
+        if not member_index:
+            flash(
+                "Invalid Student Index Number.",
+                "danger"
+            )
 
+            return redirect(
+                url_for("auth.verify_index")
+            )
+
+        if member_index.account_created:
+            flash(
+                "An account has already been created using this Student Index Number.",
+                "warning"
+            )
+
+            return redirect(
+                url_for("auth.verify_index")
+            )
         existing_member = Member.query.filter_by(
             student_id=student_id
         ).first()
@@ -341,7 +359,15 @@ def register():
             return redirect(
                 url_for("auth.verify_index")
             )
+        if member_index.account_created:
+            flash(
+                "An account has already been created using this Student Index Number.",
+                "danger"
+            )
 
+            return redirect(
+                url_for("auth.verify_index")
+            )
         existing_member = Member.query.filter_by(
             student_id=student_id
         ).first()
@@ -480,7 +506,7 @@ def register():
         member_index.used = True
         member_index.used_by = user.id
         member_index.used_at = datetime.utcnow()
-
+        member_index.account_created = True
         db.session.commit()
 
         generate_member_qrcode(member.esa_id)

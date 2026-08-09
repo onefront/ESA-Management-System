@@ -18,6 +18,14 @@ class MemberIndex(db.Model):
         db.Boolean,
         default=False
     )
+    account_created = db.Column(
+        db.Boolean,
+        default=False,
+        nullable=False
+    )
+
+
+
 
     used_by = db.Column(
         db.Integer,

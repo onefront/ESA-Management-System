@@ -17,6 +17,12 @@ class ElectionDeviceVote(db.Model):
         nullable=False
     )
 
+    member_index_id = db.Column(
+        db.Integer,
+        db.ForeignKey("member_indexes.id"),
+        nullable=False
+    )
+
     device_token = db.Column(
         db.String(128),
         nullable=False
@@ -35,6 +41,7 @@ class ElectionDeviceVote(db.Model):
             name="unique_election_device_vote"
         ),
     )
+
 
     election = db.relationship(
         "Election"
