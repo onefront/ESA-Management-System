@@ -669,14 +669,20 @@ def submit_vote():
             )
         )
 
-    session.clear()
+    # Preserve the ESA Connect login session
+    session.pop("member_index_id", None)
+    session.pop("device_token", None)
 
     flash(
         "Your vote has been submitted successfully.",
         "success"
     )
 
+    if current_user.is_authenticated and getattr(current_user, "role", None) == "Member":
+        return redirect(
+            url_for("member_portal.dashboard")
+        )
 
     return redirect(
         url_for("voting.success")
-)
+    )

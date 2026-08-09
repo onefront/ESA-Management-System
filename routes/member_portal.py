@@ -4,7 +4,8 @@ from flask import (
     redirect,
     url_for,
     flash,
-    request
+    request,
+    session
 )
 
 from datetime import date
@@ -19,7 +20,7 @@ import uuid
 from utils.qrcode_generator import generate_member_qrcode
 from sqlalchemy import func
 from flask import abort
-
+from utils.audit import log_activity
 from services.election_service import get_portfolio_results
 from flask import send_file
 import os
@@ -33,6 +34,8 @@ from models.faculty import Faculty
 from models.programme import Programme
 from models.department import Department
 from models.member import Member
+from models.member_index import MemberIndex
+from models.election_device_vote import ElectionDeviceVote
 from models.notice import Notice
 from models.event import Event
 from models.payment import Payment
@@ -372,13 +375,85 @@ def elections():
 
     election = Election.query.get(settings.active_election_id)
     portfolio_data = get_portfolio_results(election)
+
+    member_index = MemberIndex.query.filter_by(
+        student_id=member.student_id
+    ).first()
+
     return render_template(
         "member_portal/elections.html",
         member=member,
         election=election,
         settings=settings,
-        portfolio_data=portfolio_data
+        portfolio_data=portfolio_data,
+        has_voted=member_index.used if member_index else False
     )
+
+
+@member_portal_bp.route("/vote")
+@login_required
+def member_vote():
+
+    member = get_current_member()
+
+    if member is None:
+        flash("Member profile not found.", "warning")
+        return redirect(url_for("member_portal.dashboard"))
+
+    index = MemberIndex.query.filter_by(
+        student_id=member.student_id
+    ).first()
+
+    if index is None:
+        flash(
+            f"Index Number {member.student_id} was not found in the voting index.",
+            "danger"
+        )
+        return redirect(url_for("member_portal.elections"))
+
+    if index.used:
+        flash(
+            "You have already voted in this election.",
+            "warning"
+        )
+        return redirect(url_for("member_portal.elections"))
+
+    settings = ElectionSettings.query.first()
+
+    if not settings:
+        flash(
+            "Election settings were not found.",
+            "danger"
+        )
+        return redirect(url_for("member_portal.elections"))
+
+    if not settings.active_election_id:
+        flash(
+            "There is no active election.",
+            "danger"
+        )
+        return redirect(url_for("member_portal.elections"))
+
+    if settings.voting_status != "Open":
+        flash(
+            f"Voting status is currently: {settings.voting_status}",
+            "warning"
+        )
+        return redirect(url_for("member_portal.elections"))
+
+    session["member_index_id"] = index.id
+
+    log_activity(
+        module="Voting",
+        action="Ballot Accessed",
+        description=(
+            f"Index Number {member.student_id} accessed the ballot "
+            f"through ESA Connect member account"
+        )
+    )
+
+    return redirect(url_for("voting.ballot"))
+
 
 @member_portal_bp.route("/edit-profile", methods=["GET", "POST"])
 @login_required

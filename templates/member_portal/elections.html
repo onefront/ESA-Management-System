@@ -222,17 +222,26 @@
 <!--    class="btn btn-primary btn-lg mt-4 w-100 w-lg-auto vote-btn"-->
 
 
-       {% if settings.voting_status == "Open" %}
+        {% if settings.voting_status == "Open" and not has_voted %}
 
 <a
-    href="{{ url_for('voting.ballot') }}"
+    href="{{ url_for('member_portal.member_vote') }}"
     class="btn btn-primary btn-lg mt-4 w-100 w-lg-auto">
 
     <i class="bi bi-check-circle-fill me-2"></i>
-
-    Proceed to Ballot
-
+    Vote Now
 </a>
+
+{% elif has_voted %}
+
+<button
+    class="btn btn-success btn-lg mt-4 w-100 w-lg-auto"
+    disabled>
+
+    <i class="bi bi-check-circle-fill me-2"></i>
+    You Have Already Voted
+
+</button>
 
 {% elif result.winner %}
 
