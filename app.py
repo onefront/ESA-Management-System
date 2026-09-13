@@ -18,6 +18,7 @@ from config import Config
 from routes.events import events_bp
 from routes.member_import import member_import_bp
 from models.event import Event
+from routes.registration_qr import registration_qr_bp
 from extensions import db, login_manager
 from routes.programmes import programmes_bp
 from routes.attendance import attendance_bp
@@ -37,7 +38,6 @@ from routes.data_management import data_management_bp
 
 
 # Import models
-
 from models.library_category import LibraryCategory
 from models.library_resource import LibraryResource
 from models.sms_setting import SMSSetting
@@ -239,10 +239,11 @@ app.register_blueprint(voting_bp)
 app.register_blueprint(programmes_bp)
 app.register_blueprint(users_bp)
 app.register_blueprint(portfolios_bp)
-app.register_blueprint(registration_bp)
 app.register_blueprint(settings_bp)
 app.register_blueprint(election_settings_bp)
 app.register_blueprint(class_groups_bp)
+app.register_blueprint(registration_bp)
+app.register_blueprint(registration_qr_bp)
 
 
 

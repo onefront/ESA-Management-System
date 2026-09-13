@@ -1,0 +1,207 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-8 col-lg-9">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="text-center">
+
+                        <img
+                            src="{{ url_for('static', filename='images/logo.png') }}"
+                            alt="ESA Logo"
+                            style="width:90px;"
+                            class="mb-3"
+                        >
+
+                        <h2 class="fw-bold text-primary mb-2">
+                            ESA CONNECT
+                        </h2>
+
+                        <h4 class="fw-semibold mb-2">
+                            Student Registration QR Code
+                        </h4>
+
+                        <p class="text-muted">
+                            Scan this QR code to begin ESA CONNECT account registration.
+                        </p>
+
+                    </div>
+
+
+                    <div class="text-center my-4">
+
+                        <div
+                            class="d-inline-block bg-white p-4 rounded-4 shadow-sm"
+                            style="border: 1px solid #e9ecef;"
+                        >
+
+                            <img
+                                src="{{ url_for('registration_qr.registration_qr_image') }}"
+                                alt="ESA CONNECT Registration QR Code"
+                                style="width:350px; max-width:100%;"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="text-center">
+
+                        <div class="alert alert-light border rounded-3">
+
+                            <i class="bi bi-link-45deg"></i>
+
+                            <strong>Registration Link</strong>
+
+                            <div class="mt-2 text-break">
+                                {{ registration_url }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-3 mt-3">
+
+                        <div class="col-md-4">
+
+                            <div class="text-center p-3 bg-light rounded-3 h-100">
+
+                                <i class="bi bi-phone fs-2 text-primary"></i>
+
+                                <h6 class="fw-bold mt-2">
+                                    1. Scan
+                                </h6>
+
+                                <small class="text-muted">
+                                    Scan the QR code with a phone camera.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="text-center p-3 bg-light rounded-3 h-100">
+
+                                <i class="bi bi-person-vcard fs-2 text-primary"></i>
+
+                                <h6 class="fw-bold mt-2">
+                                    2. Verify
+                                </h6>
+
+                                <small class="text-muted">
+                                    Enter your Student Index Number.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="text-center p-3 bg-light rounded-3 h-100">
+
+                                <i class="bi bi-check-circle fs-2 text-success"></i>
+
+                                <h6 class="fw-bold mt-2">
+                                    3. Register
+                                </h6>
+
+                                <small class="text-muted">
+                                    Complete your ESA CONNECT account.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-center gap-2 flex-wrap mt-4">
+
+                        <a
+                            href="{{ url_for('registration_qr.registration_qr_image') }}"
+                            class="btn btn-primary"
+                            download="ESA_CONNECT_Registration_QR.png"
+                        >
+
+                            <i class="bi bi-download"></i>
+
+                            Download QR Code
+
+                        </a>
+
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            onclick="window.print()"
+                        >
+
+                            <i class="bi bi-printer"></i>
+
+                            Print
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+@media print {
+
+    .sidebar,
+    .top-navbar,
+    #installCard,
+    #updateBanner,
+    .btn,
+    nav {
+        display: none !important;
+    }
+
+    .content {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+
+}
+
+</style>
+
+{% endblock %}
