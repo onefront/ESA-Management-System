@@ -5,8 +5,8 @@
   "name": "ESA Management System",
   "short_name": "ESA",
   "description": "Executive Students Association Management System",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/member/dashboard",
+"scope": "/",
   "display": "standalone",
   "display_override": [
   "window-controls-overlay",

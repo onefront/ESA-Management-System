@@ -2,7 +2,10 @@
 <html lang="en">
 
 <head>
-
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+<meta name="theme-color" content="#0d6efd">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -295,10 +298,41 @@
 
         <div class="content-area">
 
-            {% block content %}
-            {% endblock %}
+    <!-- ESA PWA Installation Card -->
+    <div id="installCard" class="container-fluid mb-4" style="display: none;">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body d-flex align-items-center justify-content-between flex-wrap gap-3">
 
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary-subtle text-primary rounded-4 p-3">
+                        <i class="bi bi-phone-fill fs-3"></i>
+                    </div>
+
+                    <div>
+                        <h5 class="fw-bold mb-1">
+                            Install ESA CONNECT
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Install the ESA app on your device for quick and easy access.
+                        </p>
+                    </div>
+                </div>
+
+                <button id="installBtn"
+                        class="btn btn-primary rounded-3 px-4">
+                    <i class="bi bi-download me-2"></i>
+                    Install App
+                </button>
+
+            </div>
         </div>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+</div>
 
     </main>
 
@@ -308,7 +342,9 @@
 
 {% block scripts %}
 {% endblock %}
-<script src="{{ url_for('static', filename='js/member_portal.js') }}"></script>
-</body>
 
+<script src="{{ url_for('static', filename='js/member_portal.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pwa-install.js') }}"></script>
+
+</body>
 </html>
