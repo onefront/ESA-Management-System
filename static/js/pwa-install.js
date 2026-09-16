@@ -4,10 +4,6 @@ const installCard = document.getElementById("installCard");
 const installBtn = document.getElementById("installBtn");
 
 
-/*
- * Check whether ESA CONNECT is currently
- * running as an installed PWA.
- */
 function isESAInstalled() {
 
     return (
@@ -20,19 +16,13 @@ function isESAInstalled() {
 }
 
 
-/*
- * Show the installation card.
- */
 function showInstallCard() {
 
     if (!installCard) return;
 
     if (isESAInstalled()) {
-
         hideInstallCard();
-
         return;
-
     }
 
     installCard.style.display = "block";
@@ -40,23 +30,20 @@ function showInstallCard() {
 }
 
 
-/*
- * Hide the installation card.
- */
 function hideInstallCard() {
 
     if (installCard) {
-
         installCard.style.display = "none";
-
     }
 
 }
 
 
 /*
- * Browser provides the native installation
- * prompt.
+ * Capture the browser installation event.
+ *
+ * Store it in both the local variable and window so the
+ * Install App button can access the same event reliably.
  */
 window.addEventListener("beforeinstallprompt", (event) => {
 
@@ -65,33 +52,46 @@ window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
 
     deferredPrompt = event;
+    window.esaDeferredPrompt = event;
 
     showInstallCard();
 
 });
 
 
-/*
- * Install button.
- */
 if (installBtn) {
 
     installBtn.addEventListener("click", async () => {
 
-        /*
-         * Native installation prompt available.
-         */
-        if (deferredPrompt) {
+        const installEvent =
+            deferredPrompt || window.esaDeferredPrompt;
 
-            deferredPrompt.prompt();
+        console.log(
+            "ESA install event available:",
+            !!installEvent
+        );
+
+        if (!installEvent) {
+
+            showInstallHelp();
+
+            return;
+
+        }
+
+
+        try {
+
+            await installEvent.prompt();
 
             const choiceResult =
-                await deferredPrompt.userChoice;
+                await installEvent.userChoice;
 
             console.log(
                 "ESA installation choice:",
                 choiceResult.outcome
             );
+
 
             if (choiceResult.outcome === "accepted") {
 
@@ -99,44 +99,32 @@ if (installBtn) {
                     "✅ ESA CONNECT installation accepted"
                 );
 
-                /*
-                 * The appinstalled event will
-                 * hide the card.
-                 */
-
             } else {
 
                 console.log(
                     "ℹ️ ESA CONNECT installation cancelled"
                 );
 
-                /*
-                 * Keep the card visible.
-                 */
-                showInstallCard();
-
             }
 
-            deferredPrompt = null;
+        } catch (error) {
 
-            return;
+            console.error(
+                "❌ ESA CONNECT installation failed:",
+                error
+            );
 
         }
 
 
-        /*
-         * Native prompt is unavailable.
-         */
-        showInstallHelp();
+        deferredPrompt = null;
+        window.esaDeferredPrompt = null;
 
     });
 
 }
 
 
-/*
- * Manual installation instructions.
- */
 function showInstallHelp() {
 
     if (!installCard) return;
@@ -169,9 +157,6 @@ function showInstallHelp() {
 }
 
 
-/*
- * Fired when the PWA has actually been installed.
- */
 window.addEventListener("appinstalled", () => {
 
     console.log(
@@ -179,15 +164,13 @@ window.addEventListener("appinstalled", () => {
     );
 
     deferredPrompt = null;
+    window.esaDeferredPrompt = null;
 
     hideInstallCard();
 
 });
 
 
-/*
- * Initial check.
- */
 window.addEventListener("load", () => {
 
     setTimeout(() => {
@@ -207,9 +190,6 @@ window.addEventListener("load", () => {
 });
 
 
-/*
- * Check again whenever the page becomes visible.
- */
 document.addEventListener("visibilitychange", () => {
 
     if (isESAInstalled()) {
