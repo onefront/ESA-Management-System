@@ -15,7 +15,7 @@ analytics_bp = Blueprint(
 
 @analytics_bp.route("/")
 @login_required
-@roles_required("Administrator", "General Secretary")
+@roles_required("Administrator", "General Secretary", "Executive")
 def dashboard():
 
     total_members = Member.query.count()

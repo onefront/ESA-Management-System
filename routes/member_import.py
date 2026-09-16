@@ -11,6 +11,7 @@ from flask import (
 from openpyxl import Workbook, load_workbook
 
 from models.member import Member
+
 from extensions import db
 
 member_import_bp = Blueprint("member_import", __name__)

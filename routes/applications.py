@@ -15,7 +15,7 @@ applications_bp = Blueprint(
 
 @applications_bp.route("/")
 @login_required
-@roles_required("Administrator", "General Secretary")
+@roles_required("Administrator", "General Secretary", "Executive")
 def dashboard():
 
     applications = MemberApplication.query.order_by(

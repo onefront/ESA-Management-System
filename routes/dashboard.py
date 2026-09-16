@@ -12,7 +12,7 @@ dashboard_bp = Blueprint("dashboard", __name__)
 
 @dashboard_bp.route("/")
 @login_required
-@roles_required("Administrator", "General Secretary")
+@roles_required("Administrator", "General Secretary", "Executive")
 def dashboard():
 
     # Statistics

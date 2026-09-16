@@ -101,6 +101,7 @@ def delete_executive(executive_id):
     )
 from flask import jsonify
 from models.member import Member
+from models.user import User
 @executives_bp.route("/search-member")
 @login_required
 def search_member():
@@ -224,6 +225,21 @@ def add_executive():
 
             if member is None:
                 return f"Member not found. member_id={member_id}", 400
+
+            # ==========================================
+            # Assign Executive System Role
+            # ==========================================
+
+            if member.user_id:
+
+                user = User.query.get(member.user_id)
+
+                if user:
+                    user.role = "Executive"
+
+                    print(
+                        f"Executive role assigned to {user.username}"
+                    )
 
             executive = Executive(
                 member_id=member.id,

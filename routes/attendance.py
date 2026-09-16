@@ -8,7 +8,7 @@ from flask import (
 
 from extensions import db
 from flask_login import login_required
-from utils.auth import admin_required
+from utils.auth import roles_required
 from models.attendance import Attendance
 from models.member import Member
 from models.event import Event
@@ -21,7 +21,7 @@ attendance_bp = Blueprint("attendance", __name__)
 # ==========================================
 @attendance_bp.route("/attendance")
 @login_required
-@admin_required
+@roles_required("Administrator", "General Secretary", "Executive")
 def attendance():
 
     attendance_records = Attendance.query.order_by(
@@ -40,7 +40,7 @@ def attendance():
 @attendance_bp.route("/attendance/add",
                      methods=["GET", "POST"])
 @login_required
-@admin_required
+@roles_required("Administrator", "General Secretary", "Executive")
 def add_attendance():
 
     members = Member.query.order_by(
@@ -90,7 +90,7 @@ def add_attendance():
 # ==========================================
 @attendance_bp.route("/attendance/event", methods=["GET", "POST"])
 @login_required
-@admin_required
+@roles_required("Administrator", "General Secretary", "Executive")
 def attendance_by_event():
 
     events = Event.query.order_by(
