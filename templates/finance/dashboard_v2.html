@@ -552,49 +552,64 @@
 </div>
 
 
+
 <script>
 
-const revenueCtx = document.getElementById('monthlyRevenueChart');
+window.addEventListener("load", function () {
 
-new Chart(revenueCtx,{
+    const revenueCtx = document.getElementById("monthlyRevenueChart");
 
-    type:'bar',
+    if (!revenueCtx) {
+        return;
+    }
 
-    data:{
+    new Chart(revenueCtx, {
 
-        labels: {{ chart_labels|tojson }},
+        type: "bar",
 
-        datasets:[{
+        data: {
 
-            label:'Revenue (GH₵)',
+            labels: {{ chart_labels|tojson }},
 
-            data: {{ chart_values|tojson }},
+            datasets: [{
 
-            backgroundColor:'#2563eb',
+                label: "Revenue (GH₵)",
 
-            borderRadius:8
+                data: {{ chart_values|tojson }},
 
-        }]
+                backgroundColor: "#2563eb",
 
-    },
+                borderRadius: 8
 
-    options:{
+            }]
 
-        responsive:true,
-
-        plugins:{
-            legend:{
-                display:false
-            }
         },
 
-        scales:{
-            y:{
-                beginAtZero:true
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                legend: {
+                    display: false
+                }
+
+            },
+
+            scales: {
+
+                y: {
+                    beginAtZero: true
+                }
+
             }
+
         }
 
-    }
+    });
 
 });
 
