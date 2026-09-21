@@ -233,9 +233,9 @@ def complete_payment_from_paystack(reference):
     if not payment.sms_sent and member and member.phone:
 
         message = (
-            f"ESA CONNECT: Dear {member.first_name}, "
-            f"your payment of GH₵{float(payment.amount):.2f} "
-            f"for {payment.payment_type} has been received successfully. "
+            f"ESA CONNECT: Payment received. "
+            f"Amount: GHS {float(payment.amount):.2f}. "
+            f"Type: {payment.payment_type}. "
             f"Ref: {payment.reference}. Thank you."
         )
 
