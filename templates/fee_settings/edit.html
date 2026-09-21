@@ -4,139 +4,161 @@
 
 {% block content %}
 
-
 <div class="container mt-4">
 
-<div class="card shadow">
+    <div class="card shadow">
 
-<div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                Edit Fee Setting
+            </h4>
+        </div>
 
-<h4 class="mb-0">
+        <div class="card-body">
 
-Edit Fee Setting
+            <form method="POST">
 
-</h4>
+                <div class="row">
 
-</div>
+                    <!-- Academic Year -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Academic Year</label>
+                        <input
+                            type="text"
+                            name="academic_year"
+                            class="form-control"
+                            value="{{ fee.academic_year }}"
+                            required>
+                    </div>
 
-<div class="card-body">
+                    <!-- Registration Fee -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Registration Fee</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="registration_fee"
+                            class="form-control"
+                            value="{{ fee.registration_fee }}"
+                            min="0"
+                            required>
+                    </div>
 
-<form method="POST">
+                    <!-- Annual Dues -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Annual Dues</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="annual_dues"
+                            class="form-control"
+                            value="{{ fee.annual_dues }}"
+                            min="0"
+                            required>
+                    </div>
 
-<div class="row">
+                    <!-- ESA Cloth -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">ESA Cloth</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="esa_cloth"
+                            class="form-control"
+                            value="{{ fee.esa_cloth }}"
+                            min="0"
+                            required>
+                    </div>
 
-<div class="col-md-6 mb-3">
+                    <!-- Excursion Fee -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Excursion Fee</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="excursion_fee"
+                            class="form-control"
+                            value="{{ fee.excursion_fee }}"
+                            min="0"
+                            required>
+                    </div>
 
-<label>Academic Year</label>
+                    <!-- Event Fee -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Event Fee</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="event_fee"
+                            class="form-control"
+                            value="{{ fee.event_fee }}"
+                            min="0"
+                            required>
+                    </div>
 
-<input
-type="text"
-name="academic_year"
-class="form-control"
-value="{{ fee.academic_year }}"
-required>
+                    <!-- Welfare Contribution -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Welfare Contribution</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="welfare_levy"
+                            class="form-control"
+                            value="{{ fee.welfare_levy }}"
+                            min="0"
+                            required>
+                    </div>
 
-</div>
+                    <!-- Other Fee -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Other Fee</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="other_fee"
+                            class="form-control"
+                            value="{{ fee.other_fee }}"
+                            min="0"
+                            required>
+                    </div>
 
-<div class="col-md-6 mb-3">
+                    <!-- Active -->
+                    <div class="col-md-6 mb-3 d-flex align-items-center">
+                        <div class="form-check mt-4">
 
-<label>Registration Fee</label>
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="active"
+                                {% if fee.active %}checked{% endif %}>
 
-<input
-type="number"
-step="0.01"
-name="registration_fee"
-class="form-control"
-value="{{ fee.registration_fee }}"
-required>
+                            <label class="form-check-label">
+                                Set as Active Fee
+                            </label>
 
-</div>
+                        </div>
+                    </div>
 
-<div class="col-md-6 mb-3">
+                </div>
 
-<label>Annual Dues</label>
+                <hr>
 
-<input
-type="number"
-step="0.01"
-name="annual_dues"
-class="form-control"
-value="{{ fee.annual_dues }}"
-required>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Update Fee Setting
+                </button>
 
-</div>
+                <a
+                    href="{{ url_for('fee_settings.index') }}"
+                    class="btn btn-secondary">
+                    Cancel
+                </a>
 
-<div class="col-md-6 mb-3">
+            </form>
 
-<label>Welfare Levy</label>
+        </div>
 
-<input
-type="number"
-step="0.01"
-name="welfare_levy"
-class="form-control"
-value="{{ fee.welfare_levy }}"
-
-</div>
-
-<div class="col-md-6 mb-3">
-
-<label>Other Fee</label>
-
-<input
-type="number"
-step="0.01"
-name="other_fee"
-class="form-control"
-value="{{ fee.other_fee }}"
-
-</div>
-
-<div class="col-md-6 mb-3 d-flex align-items-center">
-
-<div class="form-check mt-4">
-
-<input
-class="form-check-input"
-type="checkbox"
-name="active"
-{% if fee.active %}checked{% endif %}>
-
-<label class="form-check-label">
-
-Set as Active Fee
-
-</label>
-
-</div>
-
-</div>
-
-</div>
-
-<hr>
-
-<button class="btn btn-primary">
-
-<i class="fas fa-save"></i>
-
-Update Fee Setting
-
-</button>
-
-<a
-href="{{ url_for('fee_settings.index') }}"
-class="btn btn-secondary">
-
-Cancel
-
-</a>
-
-</form>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 

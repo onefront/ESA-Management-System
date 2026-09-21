@@ -9,13 +9,47 @@ class FeeSetting(db.Model):
 
     academic_year = db.Column(db.String(20), nullable=False)
 
-    registration_fee = db.Column(db.Float, nullable=False, default=200)
+    registration_fee = db.Column(
+        db.Float,
+        nullable=False,
+        default=200
+    )
 
-    annual_dues = db.Column(db.Float, nullable=False, default=50)
+    annual_dues = db.Column(
+        db.Float,
+        nullable=False,
+        default=50
+    )
 
-    welfare_levy = db.Column(db.Float, nullable=False, default=0)
+    welfare_levy = db.Column(
+        db.Float,
+        nullable=False,
+        default=0
+    )
 
-    other_fee = db.Column(db.Float, nullable=False, default=0)
+    esa_cloth = db.Column(
+        db.Float,
+        nullable=False,
+        default=0
+    )
+
+    excursion_fee = db.Column(
+        db.Float,
+        nullable=False,
+        default=0
+    )
+
+    event_fee = db.Column(
+        db.Float,
+        nullable=False,
+        default=0
+    )
+
+    other_fee = db.Column(
+        db.Float,
+        nullable=False,
+        default=0
+    )
 
     active = db.Column(db.Boolean, default=True)
 

@@ -72,21 +72,21 @@
     </div>
 
     <!-- Email -->
-    <div class="col-md-6 mb-3">
+    <!-- Email -->
+<div class="col-md-6 mb-3">
 
-        <label class="form-label">
+    <label class="form-label">
+        Email
+    </label>
 
-            Email
+    <input
+        type="email"
+        name="email"
+        class="form-control"
+        value="{{ member.email if member and member.email else '' }}"
+        placeholder="Enter your email address">
 
-        </label>
-
-        <input
-            type="email"
-            class="form-control"
-            value="{{ current_user.email }}"
-            readonly>
-
-    </div>
+</div>
 
     <!-- Gender -->
     <div class="col-md-6 mb-3">

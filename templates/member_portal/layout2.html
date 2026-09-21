@@ -115,11 +115,17 @@
         <span>Digital ID</span>
     </a>
 
-    <a href="{{ url_for('member_portal.payments') }}"
-        class="{% if request.endpoint == 'member_portal.payments' %}active{% endif %}">
-        <i class="bi bi-wallet2"></i>
-        <span>Payments</span>
-    </a>
+    <a href="{{ url_for('member_payments.make_payment') }}"
+   class="{% if request.endpoint == 'member_payments.make_payment' %}active{% endif %}">
+    <i class="bi bi-credit-card"></i>
+    <span>Make Payment</span>
+</a>
+
+<a href="{{ url_for('member_payments.payment_history') }}"
+   class="{% if request.endpoint == 'member_payments.payment_history' %}active{% endif %}">
+    <i class="bi bi-wallet2"></i>
+    <span>Payment History</span>
+</a>
 
      <a href="{{ url_for('timetable.my_timetable') }}"
     class="{% if request.endpoint == 'timetable.my_timetable' %}active{% endif %}">

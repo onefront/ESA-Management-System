@@ -4,126 +4,306 @@
 
 {% block content %}
 
-<div class="container mt-4">
+<div class="container-fluid py-4">
 
-    <div class="card shadow">
-
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Make Payment</h4>
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">
+                <i class="bi bi-credit-card me-2"></i>
+                Make Payment
+            </h3>
+            <p class="text-muted mb-0">
+                Pay your ESA fees securely through Paystack.
+            </p>
         </div>
 
-        <div class="card-body">
+        <a href="{{ url_for('member_payments.payment_history') }}"
+           class="btn btn-outline-primary">
+            <i class="bi bi-clock-history me-2"></i>
+            Payment History
+        </a>
+    </div>
 
-            <div class="alert alert-info">
 
-                <h5>Payment Details</h5>
+    <!-- Payment Card -->
+    <div class="row justify-content-center">
 
-                <p><strong>Network:</strong> {{ settings.momo_network }}</p>
+        <div class="col-lg-7 col-xl-6">
 
-                <p><strong>MoMo Number:</strong> {{ settings.momo_number }}</p>
+            <div class="card border-0 shadow-sm rounded-4">
 
-                <p><strong>Account Name:</strong> {{ settings.account_name }}</p>
+                <div class="card-body p-4 p-md-5">
 
-                <p><strong>Instructions:</strong><br>
-                    {{ settings.payment_instruction }}
-                </p>
+                    <div class="text-center mb-4">
 
-            </div>
+                        <div class="bg-primary-subtle text-primary rounded-circle d-inline-flex
+                                    align-items-center justify-content-center mb-3"
+                             style="width: 70px; height: 70px;">
 
-            <form
-    action="{{ url_for('member_payments.make_payment') }}"
-    method="POST"
-    enctype="multipart/form-data">
+                            <i class="bi bi-wallet2 fs-2"></i>
 
-                <div class="mb-3">
-                    <label class="form-label">Payment Type</label>
+                        </div>
 
-                    <select class="form-select" name="payment_type" required>
-                        <option value="">Select Payment Type</option>
-                        <option value="">Select Payment Type</option>
+                        <h4 class="fw-bold mb-2">
+                            ESA Payment
+                        </h4>
 
-<option value="Registration Fee">
-    Registration Fee
-</option>
+                        <p class="text-muted mb-0">
+                            Select the payment you want to make.
+                        </p>
 
-<option value="Annual Dues">
-    Annual Dues
-</option>
+                    </div>
 
-<option value="ESA Cloth">
-    ESA Cloth
-</option>
 
-<option value="Excursion Fee">
-    Excursion Fee
-</option>
+                    <form method="POST"
+                          action="{{ url_for('member_payments.make_payment') }}">
+<!-- Payment Type -->
+<div class="mb-4">
 
-<option value="Event Fee">
-    Event Fee
-</option>
+    <label for="payment_type"
+           class="form-label fw-semibold">
+        Payment Type
+    </label>
 
-<option value="Welfare Contribution">
-    Welfare Contribution
-</option>
+    <select
+        id="payment_type"
+        name="payment_type"
+        class="form-select form-select-lg"
+        required>
 
-<option value="Donation">
-    Donation
-</option>
+        <option value="">
+            Select payment type
+        </option>
 
-<option value="Other">
-    Other
-</option>
-                    </select>
-                </div>
+        <option value="Registration Fee"
+                data-amount="{{ fee_setting.registration_fee if fee_setting else 0 }}">
+            Registration Fee
+        </option>
 
-                <div class="mb-3">
-                    <label class="form-label">Amount (GH₵)</label>
+        <option value="Annual Dues"
+                data-amount="{{ fee_setting.annual_dues if fee_setting else 0 }}">
+            Annual Dues
+        </option>
 
-                    <input
-                        type="number"
-                        step="0.01"
-                        class="form-control"
-                        name="amount"
-                        required>
-                </div>
+        <option value="ESA Cloth"
+                data-amount="{{ fee_setting.esa_cloth if fee_setting else 0 }}">
+            ESA Cloth
+        </option>
 
-                <div class="mb-3">
-                    <label class="form-label">
-                        Transaction Reference
-                    </label>
+        <option value="Excursion Fee"
+                data-amount="{{ fee_setting.excursion_fee if fee_setting else 0 }}">
+            Excursion Fee
+        </option>
 
-                    <input
-                        type="text"
-                        class="form-control"
-                        name="reference"
-                        required>
-                </div>
+        <option value="Event Fee"
+                data-amount="{{ fee_setting.event_fee if fee_setting else 0 }}">
+            Event Fee
+        </option>
 
-                <div class="mb-4">
-                    <label class="form-label">
-                        Upload Payment Proof
-                    </label>
+        <option value="Welfare Contribution"
+                data-amount="{{ fee_setting.welfare_levy if fee_setting else 0 }}">
+            Welfare Contribution
+        </option>
 
-                    <input
-                        type="file"
-                        class="form-control"
-                        name="proof_image"
-                        accept=".jpg,.jpeg,.png,.pdf"
-                        required>
-                </div>
+        <option value="Donation">
+            Donation
+        </option>
 
-                <button
-    type="submit"
-    class="btn btn-success">
-    Submit Payment
-</button>
+        <option value="Other"
+                data-amount="{{ fee_setting.other_fee if fee_setting else 0 }}">
+            Other
+        </option>
 
-            </form>
+    </select>
+
+    <!-- Fixed Payment Amount -->
+    <div id="fixedAmountContainer"
+         class="alert alert-success border-0 rounded-3 mt-3"
+         style="display: none;">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <span class="fw-semibold">
+                Amount to Pay
+            </span>
+
+            <span id="fixedAmount"
+                  class="fw-bold fs-5">
+                GH₵0.00
+            </span>
 
         </div>
 
     </div>
 
 </div>
+                        <!-- Donation Amount -->
+                        <div class="mb-4"
+                             id="donationAmountContainer"
+                             style="display: none;">
+
+                            <label for="amount"
+                                   class="form-label fw-semibold">
+                                Donation Amount (GH₵)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="amount"
+                                name="amount"
+                                class="form-control form-control-lg"
+                                step="0.01"
+                                min="1"
+                                placeholder="Enter donation amount">
+
+                            <div class="form-text">
+                                Enter the amount you would like to donate.
+                            </div>
+
+                        </div>
+
+
+                        <!-- Payment Information -->
+                        <div class="alert alert-info border-0 rounded-3 mb-4">
+
+                            <div class="d-flex gap-3">
+
+                                <i class="bi bi-info-circle-fill fs-5"></i>
+
+                                <div>
+
+                                    <strong>Pay securely with Paystack</strong>
+
+                                    <p class="mb-0 mt-1 small">
+                                        You will be redirected to Paystack to complete
+                                        your payment using the available payment
+                                        methods, including Mobile Money and cards.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Submit -->
+                        <button type="submit"
+                                class="btn btn-primary btn-lg w-100 rounded-3">
+
+                            <i class="bi bi-lock-fill me-2"></i>
+                            Continue to Paystack
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- Security Notice -->
+                    <div class="text-center mt-4">
+
+                        <small class="text-muted">
+
+                            <i class="bi bi-shield-check me-1"></i>
+
+                            Your payment is processed securely by Paystack.
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const paymentType = document.getElementById("payment_type");
+
+    const donationContainer =
+        document.getElementById("donationAmountContainer");
+
+    const amountInput =
+        document.getElementById("amount");
+
+    const fixedAmountContainer =
+        document.getElementById("fixedAmountContainer");
+
+    const fixedAmount =
+        document.getElementById("fixedAmount");
+
+
+    function updatePaymentForm() {
+
+        const selectedOption =
+            paymentType.options[paymentType.selectedIndex];
+
+        const selectedType =
+            paymentType.value;
+
+
+        // Donation
+        if (selectedType === "Donation") {
+
+            donationContainer.style.display = "block";
+
+            amountInput.required = true;
+
+            fixedAmountContainer.style.display = "none";
+
+            return;
+        }
+
+
+        // Other fixed payments
+        donationContainer.style.display = "none";
+
+        amountInput.required = false;
+
+        amountInput.value = "";
+
+
+        if (!selectedType) {
+
+            fixedAmountContainer.style.display = "none";
+
+            return;
+        }
+
+
+        const amount =
+            parseFloat(
+                selectedOption.dataset.amount || "0"
+            );
+
+
+        fixedAmount.textContent =
+            "GH₵" + amount.toFixed(2);
+
+        fixedAmountContainer.style.display = "block";
+
+    }
+
+
+    paymentType.addEventListener(
+        "change",
+        updatePaymentForm
+    );
+
+
+    updatePaymentForm();
+
+});
+
+</script>
 
 {% endblock %}

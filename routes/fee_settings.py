@@ -40,6 +40,9 @@ def add():
             registration_fee=request.form["registration_fee"],
             annual_dues=request.form["annual_dues"],
             welfare_levy=request.form["welfare_levy"],
+            esa_cloth=request.form["esa_cloth"],
+            excursion_fee=request.form["excursion_fee"],
+            event_fee=request.form["event_fee"],
             other_fee=request.form["other_fee"],
             active=bool(request.form.get("active"))
         )
@@ -52,6 +55,7 @@ def add():
         return redirect(url_for("fee_settings.index"))
 
     return render_template("fee_settings/add.html")
+
 
 
 @fee_settings_bp.route("/edit/<int:id>", methods=["GET", "POST"])
@@ -68,6 +72,9 @@ def edit(id):
         fee.academic_year = request.form["academic_year"]
         fee.registration_fee = request.form["registration_fee"]
         fee.annual_dues = request.form["annual_dues"]
+        fee.esa_cloth = request.form["esa_cloth"]
+        fee.excursion_fee = request.form["excursion_fee"]
+        fee.event_fee = request.form["event_fee"]
         fee.welfare_levy = request.form["welfare_levy"]
         fee.other_fee = request.form["other_fee"]
         fee.active = bool(request.form.get("active"))
@@ -82,6 +89,9 @@ def edit(id):
         "fee_settings/edit.html",
         fee=fee
     )
+
+
+
 @fee_settings_bp.route("/delete/<int:id>")
 @login_required
 def delete(id):
