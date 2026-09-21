@@ -1,9 +1,14 @@
-from flask import Blueprint
-from flask import render_template
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    jsonify,
+    redirect,
+    url_for,
+    flash
+)
 from services.sms_service import SMSService
-from flask import request, jsonify
 from flask_login import login_required
-from flask import jsonify, request
 from models.member import Member
 from utils.auth import roles_required
 from models.programme import Programme
@@ -14,10 +19,18 @@ from models.sms_log import SMSLog
 from models.sms_recipient import SMSRecipient
 from models.department import Department
 from models.faculty import Faculty
+
+from models.sms_setting import SMSSetting
+
 sms_bp = Blueprint(
     "sms",
     __name__
 )
+
+
+
+
+
 
 
 @sms_bp.route("/sms")
@@ -32,6 +45,72 @@ def dashboard():
     return render_template(
         "sms/dashboard.html"
     )
+
+
+
+@sms_bp.route("/sms/settings", methods=["GET", "POST"])
+@login_required
+@roles_required(
+    "Administrator",
+    "CEO",
+    "General Secretary"
+)
+def settings():
+
+    sms_settings = SMSSetting.query.first()
+
+    if not sms_settings:
+        sms_settings = SMSSetting(
+            provider="MNotify",
+            base_url="https://api.mnotify.com/api/sms/quick",
+            is_active=True
+        )
+
+        db.session.add(sms_settings)
+        db.session.commit()
+
+    if request.method == "POST":
+
+        sms_settings.provider = request.form.get(
+            "provider",
+            "MNotify"
+        ).strip()
+
+        sms_settings.api_key = request.form.get(
+            "api_key",
+            ""
+        ).strip()
+
+        sms_settings.sender_id = request.form.get(
+            "sender_id",
+            ""
+        ).strip()
+
+        sms_settings.base_url = request.form.get(
+            "base_url",
+            "https://api.mnotify.com/api/sms/quick"
+        ).strip()
+
+        sms_settings.is_active = (
+            request.form.get("is_active") == "on"
+        )
+
+        db.session.commit()
+
+        flash(
+            "SMS settings updated successfully.",
+            "success"
+        )
+
+        return redirect(
+            url_for("sms.settings")
+        )
+
+    return render_template(
+        "sms/settings.html",
+        settings=sms_settings
+    )
+
 
 
 @sms_bp.route("/sms/compose")
