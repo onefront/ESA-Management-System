@@ -33,6 +33,15 @@ class Payment(db.Model):
         default="Pending"
     )
 
+    sms_sent = db.Column(
+        db.Boolean,
+        nullable=False,
+        default=False
+    )
+
+
+
+
     proof_image = db.Column(
         db.String(255),
         nullable=True

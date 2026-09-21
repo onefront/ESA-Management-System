@@ -19,6 +19,7 @@ from flask_login import login_required, current_user
 from extensions import db
 from models.payment import Payment
 from models.fee_setting import FeeSetting
+from services.sms_service import SMSService
 
 
 member_payments_bp = Blueprint(
@@ -170,21 +171,19 @@ def verify_paystack_transaction(reference):
 
     return response_data.get("data")
 
-
 def complete_payment_from_paystack(reference):
     """
     Verify a Paystack transaction and mark the matching ESA
-    payment as approved when all values match.
+    payment as approved.
+
+    After successful approval, send one SMS confirmation
+    to the member.
     """
 
     payment = Payment.query.filter_by(reference=reference).first()
 
     if not payment:
         return False, "Payment record was not found."
-
-    # Already processed. This protects against duplicate callbacks/webhooks.
-    if payment.status == "Approved":
-        return True, "Payment has already been processed."
 
     transaction = verify_paystack_transaction(reference)
 
@@ -206,13 +205,63 @@ def complete_payment_from_paystack(reference):
     if transaction.get("currency") != "GHS":
         return False, "The payment currency is not valid."
 
+    # Lock this payment row so the callback and webhook
+    # cannot send duplicate SMS messages.
+    payment = (
+        Payment.query
+        .filter_by(id=payment.id)
+        .with_for_update()
+        .first()
+    )
+
+    if not payment:
+        return False, "Payment record was not found."
+
+    # If already approved and SMS was already sent,
+    # nothing more needs to be done.
+    if payment.status == "Approved" and payment.sms_sent:
+        return True, "Payment has already been processed."
+
+    # Approve the payment.
     payment.status = "Approved"
     payment.date_paid = db.func.now()
     payment.payment_method = "Paystack"
 
+    member = payment.member
+
+    # Send SMS only once.
+    if not payment.sms_sent and member and member.phone:
+
+        message = (
+            f"ESA CONNECT: Dear {member.first_name}, "
+            f"your payment of GH₵{float(payment.amount):.2f} "
+            f"for {payment.payment_type} has been received successfully. "
+            f"Ref: {payment.reference}. Thank you."
+        )
+
+        sms_success, sms_response = SMSService.send_sms(
+            member.phone,
+            message
+        )
+
+        if sms_success:
+            payment.sms_sent = True
+            current_app.logger.info(
+                "Payment SMS sent successfully for %s",
+                payment.reference
+            )
+        else:
+            current_app.logger.error(
+                "Payment SMS failed for %s: %s",
+                payment.reference,
+                sms_response
+            )
+
     db.session.commit()
 
     return True, "Payment verified successfully."
+
+
 
 
 @member_payments_bp.route("/make-payment", methods=["GET", "POST"])
