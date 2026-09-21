@@ -72,11 +72,11 @@ def dashboard():
             + welfare_total
     )
 
-
-
     # Payment Statistics
-    paid_members = 0
-    partial_members = 0
+    registration_paid_members = 0
+    dues_paid_members = 0
+    welfare_paid_members = 0
+
     outstanding_members = 0
 
     members = Member.query.all()
@@ -101,30 +101,36 @@ def dashboard():
             and p.status == "Approved"
         )
 
+
+        # Count members who have paid Registration Fee
+        if registration_paid > 0:
+            registration_paid_members += 1
+
+        # Count members who have fully paid Annual Dues
+        if dues_paid >= annual_dues_required:
+            dues_paid_members += 1
+
+        # Count members who have paid Welfare Contribution
+        if welfare_paid > 0:
+            welfare_paid_members += 1
+
         total_paid = (
                 registration_paid
                 + dues_paid
                 + welfare_paid
         )
 
-        if (
-                registration_paid >= registration_required
-                and dues_paid >= annual_dues_required
-                and welfare_paid >= welfare_required
-        ):
-            paid_members += 1
-
-        elif total_paid > 0:
-            partial_members += 1
-
-        else:
+        if total_paid == 0:
             outstanding_members += 1
+
+    # Overall Collection Rate
+    total_expected_revenue = total_required * total_members
 
     collection_rate = 0
 
-    if total_members > 0:
+    if total_expected_revenue > 0:
         collection_rate = round(
-            (paid_members / total_members) * 100,
+            (total_revenue / total_expected_revenue) * 100,
             1
         )
 
@@ -208,7 +214,7 @@ def dashboard():
         chart_values.append(float(total))
 
 
-        # "finance/dashboard.html",
+
     return render_template(
         "finance/dashboard_v2.html",
         total_members=total_members,
@@ -217,8 +223,9 @@ def dashboard():
         total_revenue=total_revenue,
         total_required=total_required,
 
-        paid_members=paid_members,
-        partial_members=partial_members,
+        registration_paid_members=registration_paid_members,
+        dues_paid_members=dues_paid_members,
+        welfare_paid_members=welfare_paid_members,
         outstanding_members=outstanding_members,
         collection_rate=collection_rate,
         recent_payments=recent_payments,
