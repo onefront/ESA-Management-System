@@ -1,11 +1,9 @@
 from flask import Blueprint, render_template
 from flask_login import login_required
-from sqlalchemy import func
 from extensions import db
 from models.member import Member
 from models.payment import Payment
 from models.fee_setting import FeeSetting
-from sqlalchemy import extract
 from sqlalchemy import func, extract
 
 finance_bp = Blueprint(
@@ -57,8 +55,24 @@ def dashboard():
         .scalar() or 0
     )
 
+    # Welfare Contributions Collected
+    welfare_total = (
+            db.session.query(func.sum(Payment.amount))
+            .filter(
+                Payment.payment_type == "Welfare Contribution",
+                Payment.status == "Approved"
+            )
+            .scalar() or 0
+    )
+
     # Total Revenue
-    total_revenue = registration_total + annual_dues_total
+    total_revenue = (
+            registration_total
+            + annual_dues_total
+            + welfare_total
+    )
+
+
 
     # Payment Statistics
     paid_members = 0
@@ -81,11 +95,22 @@ def dashboard():
             and p.status == "Approved"
         )
 
-        total_paid = registration_paid + dues_paid
+        welfare_paid = sum(
+            p.amount for p in member.payments
+            if p.payment_type == "Welfare Contribution"
+            and p.status == "Approved"
+        )
+
+        total_paid = (
+                registration_paid
+                + dues_paid
+                + welfare_paid
+        )
 
         if (
                 registration_paid >= registration_required
                 and dues_paid >= annual_dues_required
+                and welfare_paid >= welfare_required
         ):
             paid_members += 1
 
@@ -129,7 +154,18 @@ def dashboard():
             and p.status == "Approved"
         )
 
-        total_paid = registration_paid + dues_paid
+        welfare_paid = sum(
+            p.amount for p in member.payments
+            if p.payment_type == "Welfare Contribution"
+            and p.status == "Approved"
+        )
+
+        total_paid = (
+                registration_paid
+                + dues_paid
+                + welfare_paid
+        )
+
         balance = max(total_required - total_paid, 0)
 
         if balance > 0:
