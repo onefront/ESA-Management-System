@@ -110,7 +110,7 @@ class Config:
     # =========================
 
     if "PYTHONANYWHERE_SITE" in os.environ:
-        password = quote_plus("YOUR_DATABASE_PASSWORD")
+        password = quote_plus(os.environ.get("ESA_DB_PASSWORD", ""))
 
         SQLALCHEMY_DATABASE_URI = (
             f"mysql+pymysql://onefront:{password}"
